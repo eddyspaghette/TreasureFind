@@ -25,3 +25,6 @@ TreasureFind is a 21st century style of hide and seek revamped.
 
 ## Database
 ![db](db.png)
+
+## Workload Distribute
+![workload](workload.png)
