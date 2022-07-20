@@ -1,0 +1,36 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:context=".HomeFragment">
+
+    <ImageView
+        android:id="@+id/logoView_home"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_centerInParent="true"
+        app:srcCompat="@drawable/tf_logo" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/logoView_home">
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="200dp"
+            android:layout_marginTop="50dp"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:layout_gravity="center"/>
+        <Button
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Use as guest"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+</RelativeLayout>
