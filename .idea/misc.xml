@@ -4,8 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/SFU/CMPT362/TreasureFind/app/src/main/res/layout/activity_main.xml" value="0.32472826086956524" />
-        <entry key="..\:/SFU/CMPT362/TreasureFind/app/src/main/res/layout/fragment_home.xml" value="0.18802083333333333" />
-        <entry key="..\:/SFU/CMPT362/TreasureFind/app/src/main/res/layout/fragment_login.xml" value="0.25" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/activity_firebase_ui.xml" value="0.2796875" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/activity_home.xml" value="0.2222222222222222" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/activity_main.xml" value="0.28072916666666664" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/fragment_home.xml" value="0.264" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/fragment_login.xml" value="0.264" />
       </map>
     </option>
   </component>
