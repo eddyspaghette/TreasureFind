@@ -11,19 +11,26 @@
         android:gravity="center"
         android:orientation="vertical">
 
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/tf_logo"
+            android:layout_marginBottom="20dp" />
+
         <Button
             android:id="@+id/saveInfoButton"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="LOCAL TREASURE" />
+            android:text="HIDE" />
 
         <Button
             android:id="@+id/cancelInfoButton"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="GLOBAL TREASURE" />
+            android:text="SEEK" />
 
     </LinearLayout>
 
