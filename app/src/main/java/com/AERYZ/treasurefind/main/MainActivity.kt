@@ -1,9 +1,9 @@
-package com.AERYZ.treasurefind
+package com.AERYZ.treasurefind.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.FragmentManager
-import kotlin.math.log
+import com.AERYZ.treasurefind.ui.login.LoginFragment
+import com.AERYZ.treasurefind.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
