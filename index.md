@@ -8,9 +8,9 @@ TreasureFind is a 21st century style of hide and seek revamped.
 
 ![Logo](https://github.com/eddyspaghette/TreasureFind/blob/gh-pages/tf_logo.JPG)
 
-### Large image
 
-![Branching](https://guides.github.com/activities/hello-world/branching.png)
+### App Flow
+![Flow](https://guides.github.com/activities/hello-world/branching.png)
 
 
 ### Definition lists can be used with HTML syntax.
