@@ -34,7 +34,7 @@ class GameScopeSelectFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_game_scope_select, container, false)
+        return inflater.inflate(R.layout.fragment_game_start, container, false)
     }
 
     companion object {

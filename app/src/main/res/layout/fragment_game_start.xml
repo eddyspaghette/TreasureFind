@@ -19,18 +19,18 @@
             android:layout_marginBottom="20dp" />
 
         <Button
-            android:id="@+id/saveInfoButton"
-            android:layout_width="150dp"
+            android:id="@+id/hideButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="HIDE" />
+            android:text="HIDE TREASURES" />
 
         <Button
-            android:id="@+id/cancelInfoButton"
-            android:layout_width="150dp"
+            android:id="@+id/seekButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="SEEK" />
+            android:text="SEEK TREASURES" />
 
     </LinearLayout>
 
