@@ -3,11 +3,10 @@ package com.AERYZ.treasurefind.main.ui.gallery
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.AERYZ.treasurefind.main.Treasure
 
 class GalleryViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is gallery Fragment"
-    }
-    val text: LiveData<String> = _text
+    var treasureList = ArrayList<Treasure>()
+
 }

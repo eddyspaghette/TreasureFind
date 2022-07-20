@@ -8,10 +8,13 @@
         <entry key="..\:/SFU/CMPT362/TreasureFind/app/src/main/res/layout/activity_home2.xml" value="0.10461956521739131" />
         <entry key="..\:/SFU/CMPT362/TreasureFind/app/src/main/res/layout/activity_main.xml" value="0.2571428571428571" />
         <entry key="..\:/SFU/CMPT362/TreasureFind/app/src/main/res/layout/app_bar_home.xml" value="0.10461956521739131" />
+        <entry key="..\:/SFU/CMPT362/TreasureFind/app/src/main/res/layout/content_home.xml" value="0.11702127659574468" />
         <entry key="..\:/SFU/CMPT362/TreasureFind/app/src/main/res/layout/fragment_gallery.xml" value="0.10461956521739131" />
-        <entry key="..\:/SFU/CMPT362/TreasureFind/app/src/main/res/layout/fragment_home.xml" value="0.1" />
+        <entry key="..\:/SFU/CMPT362/TreasureFind/app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="..\:/SFU/CMPT362/TreasureFind/app/src/main/res/layout/fragment_login.xml" value="0.11481481481481481" />
+        <entry key="..\:/SFU/CMPT362/TreasureFind/app/src/main/res/layout/fragment_slideshow.xml" value="0.11702127659574468" />
         <entry key="..\:/SFU/CMPT362/TreasureFind/app/src/main/res/layout/nav_header_home.xml" value="0.10461956521739131" />
+        <entry key="..\:/SFU/CMPT362/TreasureFind/app/src/main/res/layout/treasure_listviewadapter.xml" value="0.14513677811550152" />
         <entry key="..\:/Users/raiza/Desktop/CMPT362/TreasureFind/app/src/main/res/layout/activity_sign_up.xml" value="0.33" />
         <entry key="..\:/Users/raiza/Desktop/CMPT362/TreasureFind/app/src/main/res/layout/fragment_login.xml" value="0.33" />
       </map>

@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
@@ -33,19 +35,17 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        //val textView: TextView = binding.textHome
-       // homeViewModel.text.observe(viewLifecycleOwner) {
-        //    textView.text = it
-        //}
-        //
+        val editText_1: EditText = root.findViewById(R.id.editText_1)
+        val editText_2: EditText = root.findViewById(R.id.editText_2)
+
         val addBtn = root.findViewById<Button>(R.id.add_btn)
         val db = Firebase.firestore
         addBtn.setOnClickListener {
-
+            val title = editText_1.text.toString()
+            val desc = editText_2.text.toString()
             val user = hashMapOf(
-                "first" to "Ada",
-                "last" to "Lovelace",
-                "born" to 1815
+                "title" to title,
+                "desc" to desc,
             )
 
             // Add a new document with a generated ID
@@ -53,24 +53,10 @@ class HomeFragment : Fragment() {
                 .add(user)
                 .addOnSuccessListener { documentReference ->
                     Log.d("F", "DocumentSnapshot added with ID: ${documentReference.id}")
+                    Toast.makeText(requireActivity(), "Added to firebase!", Toast.LENGTH_SHORT).show()
                 }
                 .addOnFailureListener { e ->
                     Log.w("F", "Error adding document", e)
-                }
-
-        }
-
-        val retrieveBtn = root.findViewById<Button>(R.id.retrieve_btn)
-        retrieveBtn.setOnClickListener {
-            db.collection("users")
-                .get()
-                .addOnSuccessListener { result ->
-                    for (document in result) {
-                        Log.d("F", "${document.id} => ${document.data}")
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.w("F", "Error getting documents.", exception)
                 }
         }
 
