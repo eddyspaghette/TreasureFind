@@ -12,14 +12,14 @@ TreasureFind is a 21st century style of hide and seek revamped.
 
 [Show and Tell](https://www.youtube.com/watch?v=jzxiTeOsli0)
 
-![Logo](https://github.com/eddyspaghette/TreasureFind/blob/gh-pages/tf_logo.JPG)
+![Logo](tf_logo.JPG)
 
 
 ## App Flow
-![Flow](https://github.com/eddyspaghette/TreasureFind/blob/gh-pages/flow.png)
+![Flow](flow.png)
 
 ## MVVM
-![MVVM](https://github.com/eddyspaghette/TreasureFind/blob/gh-pages/mvvm.JPG)
+![MVVM](mvvm.JPG)
 
 ## Database
-![db](https://github.com/eddyspaghette/TreasureFind/blob/gh-pages/db.png)
+![db](db.png)
