@@ -18,6 +18,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="round_corner">
         <item name="cornerSize">20dp</item>
     </style>
