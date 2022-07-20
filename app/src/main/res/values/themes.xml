@@ -19,6 +19,9 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="round_corner">
+        <item name="cornerSize">20dp</item>
+    </style>
     <style name="Theme.TreasureFind.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.TreasureFind.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
