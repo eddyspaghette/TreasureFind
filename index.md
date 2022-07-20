@@ -10,7 +10,7 @@ TreasureFind is a 21st century style of hide and seek revamped.
 
 
 ### App Flow
-![Flow]((https://github.com/eddyspaghette/TreasureFind/blob/gh-pages/flow.JPG)
+![Flow](https://github.com/eddyspaghette/TreasureFind/blob/gh-pages/flow.JPG)
 
 
 ### Definition lists can be used with HTML syntax.
