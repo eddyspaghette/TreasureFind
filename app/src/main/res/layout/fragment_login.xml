@@ -8,11 +8,11 @@
     tools:context=".LoginFragment">
 
     <ImageView
+        android:id="@+id/logoView"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:id="@+id/logoView"
-        app:srcCompat="@drawable/tf_logo"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        app:srcCompat="@drawable/tf_logo" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
