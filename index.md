@@ -15,5 +15,5 @@ TreasureFind is a 21st century style of hide and seek revamped.
 ## MVVM
 ![MVVM](https://github.com/eddyspaghette/TreasureFind/blob/gh-pages/mvvm.JPG)
 
-## MVVM
+## Database
 ![db](https://github.com/eddyspaghette/TreasureFind/blob/gh-pages/db.png)
