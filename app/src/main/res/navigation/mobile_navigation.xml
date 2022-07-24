@@ -12,14 +12,14 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.AERYZ.treasurefind.main.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_treasure"
+        android:name="com.AERYZ.treasurefind.main.ui.Treasures.TreasureFragment"
+        android:label="@string/menu_treasure"
+        tools:layout="@layout/fragment_treasure" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.AERYZ.treasurefind.main.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_feed"
+        android:name="com.AERYZ.treasurefind.main.ui.feed.FeedFragment"
+        android:label="@string/menu_feed"
+        tools:layout="@layout/fragment_feed" />
 </navigation>

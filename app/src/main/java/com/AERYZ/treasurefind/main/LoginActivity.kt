@@ -9,7 +9,7 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 
-class MainActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract()
@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             val user = FirebaseAuth.getInstance().currentUser
             val intent = Intent(applicationContext, HomeActivity::class.java)
             startActivity(intent)
+            finish()
         } else {
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check

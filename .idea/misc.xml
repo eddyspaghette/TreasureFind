@@ -4,13 +4,25 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/SFU/CMPT362/TreasureFind/app/src/main/res/layout/activity_main.xml" value="0.32472826086956524" />
-        <entry key="..\:/Users/yuchu/AndroidStudioProjects/TreasureFind/app/src/main/res/layout/activity_hide_treasures.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/yuchu/AndroidStudioProjects/TreasureFind/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/yuchu/AndroidStudioProjects/TreasureFind/app/src/main/res/layout/fragment_game_scope_select.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/yuchu/AndroidStudioProjects/TreasureFind/app/src/main/res/layout/fragment_game_start.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/yuchu/AndroidStudioProjects/TreasureFind/app/src/main/res/layout/fragment_game_start2.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/yuchu/AndroidStudioProjects/TreasureFind/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/yuchu/AndroidStudioProjects/TreasureFind/app/src/main/res/layout/fragment_login.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/drawable/ic_menu_camera.xml" value="0.2275" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.1555" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/drawable/side_nav_bar.xml" value="0.2275" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/activity_firebase_ui.xml" value="0.2796875" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/activity_home.xml" value="0.2222222222222222" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/activity_main.xml" value="0.28072916666666664" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/app_bar_home.xml" value="0.1" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/content_home.xml" value="0.14322916666666666" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/fragment_feed.xml" value="0.28958333333333336" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/fragment_gallery.xml" value="0.14322916666666666" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/fragment_game_start.xml" value="0.13333333333333333" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/fragment_home.xml" value="0.25" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/fragment_login.xml" value="0.264" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/fragment_slideshow.xml" value="0.14322916666666666" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/fragment_treasure.xml" value="0.24635416666666668" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/nav_header_home.xml" value="0.22083333333333333" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/layout/treasure_listviewadapter.xml" value="0.10277777777777777" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/menu/activity_home_drawer.xml" value="0.22083333333333333" />
+        <entry key="..\:/Users/edwar/Downloads/TreasureFind/app/src/main/res/menu/home.xml" value="0.22083333333333333" />
       </map>
     </option>
   </component>

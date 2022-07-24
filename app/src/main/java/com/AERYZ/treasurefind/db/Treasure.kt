@@ -1,4 +1,4 @@
-package com.AERYZ.treasurefind.main
+package com.AERYZ.treasurefind.db
 
 import android.net.Uri
 

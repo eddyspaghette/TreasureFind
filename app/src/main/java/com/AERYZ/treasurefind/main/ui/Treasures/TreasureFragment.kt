@@ -1,4 +1,4 @@
-package com.AERYZ.treasurefind.main.ui.gallery
+package com.AERYZ.treasurefind.main.ui.Treasures
 
 import android.os.Bundle
 import android.util.Log
@@ -6,20 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
-import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
-import com.AERYZ.treasurefind.databinding.FragmentGalleryBinding
-import com.AERYZ.treasurefind.main.MyListViewAdapter
-import com.AERYZ.treasurefind.main.Treasure
+import com.AERYZ.treasurefind.databinding.FragmentTreasureBinding
+import com.AERYZ.treasurefind.db.Treasure
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class GalleryFragment : Fragment() {
+class TreasureFragment : Fragment() {
 
-    private var _binding: FragmentGalleryBinding? = null
+    private var _binding: FragmentTreasureBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -31,16 +28,16 @@ class GalleryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val galleryViewModel =
-            ViewModelProvider(this).get(GalleryViewModel::class.java)
+        val treasureViewModel =
+            ViewModelProvider(this).get(TreasureViewModel::class.java)
 
-        _binding = FragmentGalleryBinding.inflate(inflater, container, false)
+        _binding = FragmentTreasureBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val listView = root.findViewById<ListView>(R.id.listView)
 
 
-        val myListViewAdapter = MyListViewAdapter(requireActivity(), galleryViewModel.treasureList)
+        val myListViewAdapter = MyListViewAdapter(requireActivity(), treasureViewModel.treasureList)
         val db = Firebase.firestore
         db.collection("users")
             .get()
@@ -51,11 +48,11 @@ class GalleryFragment : Fragment() {
                     val keys = data.keys
                     var title: String = data.get("title").toString()
                     var desc: String = data.get("desc").toString()
-                    galleryViewModel.treasureList.add(Treasure(title, desc))
+                    treasureViewModel.treasureList.add(Treasure(title, desc))
                 }
-                myListViewAdapter.updatelist(galleryViewModel.treasureList)
+                myListViewAdapter.updatelist(treasureViewModel.treasureList)
                 listView.adapter = myListViewAdapter
-                Log.d("Debug", "firebase size: ${galleryViewModel.treasureList.size}")
+                Log.d("Debug", "firebase size: ${treasureViewModel.treasureList.size}")
             }
             .addOnFailureListener { exception ->
                 Log.w("F", "Error getting documents.", exception)

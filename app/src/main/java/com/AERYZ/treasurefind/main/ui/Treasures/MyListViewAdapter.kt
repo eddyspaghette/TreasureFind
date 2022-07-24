@@ -1,4 +1,4 @@
-package com.AERYZ.treasurefind.main
+package com.AERYZ.treasurefind.main.ui.Treasures
 
 import android.content.Context
 import android.view.View
@@ -7,7 +7,7 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.AERYZ.treasurefind.R
-import com.example.anhkhoa_nguyen_myruns4.Util
+import com.AERYZ.treasurefind.db.Treasure
 
 class MyListViewAdapter(private var context: Context, private var treasureList: ArrayList<Treasure>): BaseAdapter() {
     override fun getCount(): Int {
