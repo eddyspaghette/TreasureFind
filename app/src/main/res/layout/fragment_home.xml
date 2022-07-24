@@ -1,36 +1,65 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    tools:context=".HomeFragment">
+    tools:context=".main.ui.home.HomeFragment">
 
-    <ImageView
-        android:id="@+id/logoView_home"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_centerInParent="true"
-        app:srcCompat="@drawable/tf_logo" />
-    <LinearLayout
+
+    <Button
+        android:id="@+id/add_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_below="@+id/logoView_home">
-        <Button
-            android:id="@+id/login_btn"
-            android:layout_width="200dp"
-            android:layout_marginTop="50dp"
-            android:layout_height="wrap_content"
-            android:text="Login"
-            android:layout_gravity="center"/>
-        <Button
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Use as guest"
-            android:layout_gravity="center"/>
-    </LinearLayout>
+        android:layout_marginTop="296dp"
+        android:text="ADD"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</RelativeLayout>
+    <EditText
+        android:id="@+id/editText_1"
+        android:layout_width="336dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="36dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <EditText
+        android:id="@+id/editText_2"
+        android:layout_width="341dp"
+        android:layout_height="54dp"
+        android:layout_marginEnd="36dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/add_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="356dp"
+        android:text="Title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="312dp"
+        android:text="Description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_1" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
