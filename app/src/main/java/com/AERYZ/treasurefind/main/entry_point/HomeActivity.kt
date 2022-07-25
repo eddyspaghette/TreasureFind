@@ -1,4 +1,4 @@
-package com.AERYZ.treasurefind.main
+package com.AERYZ.treasurefind.main.entry_point
 
 import android.os.Bundle
 import android.util.Log

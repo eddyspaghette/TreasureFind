@@ -1,4 +1,4 @@
-package com.AERYZ.treasurefind.main
+package com.AERYZ.treasurefind.main.entry_point
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
