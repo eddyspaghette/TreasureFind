@@ -14,11 +14,11 @@
         android:theme="@style/Theme.TreasureFind"
         tools:targetApi="31">
         <activity
-            android:name=".main.HomeActivity"
+            android:name=".main.entry_point.HomeActivity"
             android:exported="false"
             android:theme="@style/Theme.TreasureFind.NoActionBar"/>
         <activity
-            android:name=".main.LoginActivity"
+            android:name=".main.entry_point.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
