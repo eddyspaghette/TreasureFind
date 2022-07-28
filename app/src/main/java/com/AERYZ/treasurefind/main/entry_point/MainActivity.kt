@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.databinding.ActivityHomeBinding
 
-class HomeActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityHomeBinding
@@ -37,7 +37,7 @@ class HomeActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_treasure, R.id.nav_feed
+                R.id.nav_home, R.id.nav_treasure, R.id.nav_feed, R.id.nav_profile
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
