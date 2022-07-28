@@ -18,7 +18,7 @@
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_application_id"/>
         <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
         <activity
-            android:name=".main.entry_point.HomeActivity"
+            android:name=".main.entry_point.MainActivity"
             android:exported="false"
             android:theme="@style/Theme.TreasureFind.NoActionBar"/>
         <activity

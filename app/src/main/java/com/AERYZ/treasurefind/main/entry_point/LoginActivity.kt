@@ -1,9 +1,8 @@
 package com.AERYZ.treasurefind.main.entry_point
 
 import android.content.Intent
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.AERYZ.treasurefind.R
 import com.firebase.ui.auth.AuthUI
@@ -46,11 +45,12 @@ class LoginActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK) {
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
-            val intent = Intent(applicationContext, HomeActivity::class.java)
+            val intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
             finish()
         } else {
             finish()
+            Log.d("Debug", "not ok")
         }
     }
 }
