@@ -7,18 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
-import com.AERYZ.treasurefind.databinding.FragmentHomeBinding
+import com.AERYZ.treasurefind.databinding.FragmentTreasureAddBinding
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class HomeFragment : Fragment() {
+class TreasureAddingFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentTreasureAddBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -32,17 +31,17 @@ class HomeFragment : Fragment() {
         val homeViewModel =
             ViewModelProvider(this).get(HomeViewModel::class.java)
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentTreasureAddBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val editText_1: EditText = root.findViewById(R.id.editText_1)
-        val editText_2: EditText = root.findViewById(R.id.editText_2)
+        val trTitle: EditText = root.findViewById(R.id.treasureTitle)
+        val trDescription: EditText = root.findViewById(R.id.treasureDescription)
 
-        val addBtn = root.findViewById<Button>(R.id.add_btn)
+        val addBtn = root.findViewById<Button>(R.id.addButton)
         val db = Firebase.firestore
         addBtn.setOnClickListener {
-            val title = editText_1.text.toString()
-            val desc = editText_2.text.toString()
+            val title = trTitle.text.toString()
+            val desc = trDescription.text.toString()
             val user = hashMapOf(
                 "title" to title,
                 "desc" to desc,
