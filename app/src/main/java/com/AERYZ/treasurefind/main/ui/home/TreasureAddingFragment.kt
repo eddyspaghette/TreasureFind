@@ -16,7 +16,7 @@ import com.AERYZ.treasurefind.databinding.FragmentHomeBinding
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class HomeFragment : Fragment() {
+class TreasureAddingFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
 
