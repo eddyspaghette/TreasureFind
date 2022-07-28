@@ -1,13 +1,16 @@
 package com.AERYZ.treasurefind.main.entry_point
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.AERYZ.treasurefind.R
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -24,8 +27,8 @@ class LoginActivity : AppCompatActivity() {
         // Choose authentication providers
         val providers = arrayListOf(
             AuthUI.IdpConfig.GoogleBuilder().build(),
+            AuthUI.IdpConfig.FacebookBuilder().build(),
             AuthUI.IdpConfig.EmailBuilder().build(),
-            AuthUI.IdpConfig.TwitterBuilder().build()
         )
 
         // Create and launch sign-in intent
@@ -47,10 +50,7 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         } else {
-            // Sign in failed. If response is null the user canceled the
-            // sign-in flow using the back button. Otherwise check
-            // response.getError().getErrorCode() and handle the error.
-            // ...
+            finish()
         }
     }
 }

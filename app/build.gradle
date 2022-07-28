@@ -64,4 +64,6 @@ dependencies {
 //    implementation "com.twitter:twitter-api-java-sdk:1.1.4"
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.android.gms:play-services-auth:20.0.1'
+
+    implementation 'com.facebook.android:facebook-android-sdk:14.1.0'
 }
