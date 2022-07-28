@@ -8,6 +8,9 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.AERYZ.treasurefind.R
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 
 class FeedAdapter(private var context: Context, private var feedList: List<StorageReference>) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
     /**
@@ -32,9 +35,10 @@ class FeedAdapter(private var context: Context, private var feedList: List<Stora
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // feedList[position] returns a StorageReference
         // https://firebase.google.com/docs/storage/android/create-reference
-        GlideApp.with(context)
-            .load(feedList[position])
-            .into(holder.imageView)
+            GlideApp.with(context)
+                .load(feedList[position])
+                .error(R.drawable.tf_logo)
+                .into(holder.imageView)
 //        holder.imageView.setOnClickListener {
 //            println("DEBUG: image clicked")
 //        }

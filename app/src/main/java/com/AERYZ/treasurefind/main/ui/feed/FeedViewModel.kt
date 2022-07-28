@@ -15,15 +15,21 @@ class FeedViewModel : ViewModel() {
     var listImagesURI = MutableLiveData<List<StorageReference>>()
 
     companion object {
-        private const val MAX_ITEMS = 10
+        private const val MAX_ITEMS = 5
     }
 
     init {
+        listImagesURI.value = listOf()
         listAllPaginated(null)
     }
 
     private fun processResults(items: List<StorageReference>, prefixes: List<StorageReference>) {
-        listImagesURI.value = items
+        if (listImagesURI.value!!.isEmpty()) {
+            listImagesURI.value = items
+        } else {
+            listImagesURI.value = listImagesURI.value!! + items
+        }
+        println("DEBUG $items")
     }
 
     private fun listAllPaginated(pageToken: String?) {
