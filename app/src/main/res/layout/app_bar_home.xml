@@ -20,7 +20,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_home" />
+    <include layout="@layout/fragment_home" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

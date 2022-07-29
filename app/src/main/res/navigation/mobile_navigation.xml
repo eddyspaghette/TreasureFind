@@ -3,19 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
-
-    <fragment
-        android:id="@+id/nav_home"
-        android:name="com.AERYZ.treasurefind.main.ui.home.TreasureAddingFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_treasure_add" />
-
-    <fragment
-        android:id="@+id/nav_treasure"
-        android:name="com.AERYZ.treasurefind.main.ui.Treasures.TreasureFragment"
-        android:label="@string/menu_treasure"
-        tools:layout="@layout/fragment_treasure" />
+    app:startDestination="@+id/nav_feed">
 
     <fragment
         android:id="@+id/nav_feed"
@@ -28,4 +16,11 @@
         android:name="com.AERYZ.treasurefind.main.ui.profile.ProfileFragment"
         android:label="@string/menu_profile"
         tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/nav_treasure"
+        android:name="com.AERYZ.treasurefind.main.ui.test.TestFragment"
+        android:label="@string/menu_test"
+        tools:layout="@layout/fragment_test" />
+
 </navigation>
