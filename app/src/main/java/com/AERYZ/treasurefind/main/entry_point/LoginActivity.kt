@@ -46,7 +46,12 @@ class LoginActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK) {
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
-            val intent = Intent(applicationContext, OnboardingActivity::class.java)
+            var intent = Intent(applicationContext, MainActivity::class.java)
+
+            // Show onboarding activity if new user
+            if (response != null && response.isNewUser()) {
+                intent = Intent(applicationContext, OnboardingActivity::class.java)
+            }
             startActivity(intent)
             finish()
         } else {
