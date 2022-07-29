@@ -27,9 +27,9 @@ class OnboardingActivity: AppCompatActivity() {
 
         val onboardingData:MutableList<OnboardingData> = ArrayList()
 
-        onboardingData.add(OnboardingData("title1", "desc1", R.drawable.pic1))
-        onboardingData.add(OnboardingData("title2", "desc2", R.drawable.pic2))
-        onboardingData.add(OnboardingData("title3", "desc3", R.drawable.pic3))
+        onboardingData.add(OnboardingData(getString(R.string.onboarding_title1), getString(R.string.onboarding_desc1), R.drawable.pic1))
+        onboardingData.add(OnboardingData(getString(R.string.onboarding_title2), getString(R.string.onboarding_desc2), R.drawable.pic2))
+        onboardingData.add(OnboardingData(getString(R.string.onboarding_title3), getString(R.string.onboarding_desc3), R.drawable.pic3))
 
         setOnboardingAdapter(onboardingData)
 
