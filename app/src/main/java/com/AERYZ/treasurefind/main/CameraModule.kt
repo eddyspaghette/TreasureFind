@@ -13,7 +13,8 @@ import androidx.lifecycle.MutableLiveData
 class CameraModule(var activity: FragmentActivity, var CameraOutputBitmap: MutableLiveData<Bitmap>) {
     private var cameraResultListener: ActivityResultLauncher<Intent>
     init {
-        CameraOutputBitmap.value = Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888)
+        if (CameraOutputBitmap.value == null)
+            CameraOutputBitmap.value = Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888)
         cameraResultListener = activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == Activity.RESULT_OK) {
                     if (it.data != null && it.data!!.extras != null)
