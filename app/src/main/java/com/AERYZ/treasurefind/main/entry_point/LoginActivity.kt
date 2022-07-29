@@ -40,7 +40,6 @@ class LoginActivity : AppCompatActivity() {
             .build()
         signInLauncher.launch(signInIntent)
         Util.checkPermissions(this)
-
     }
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
