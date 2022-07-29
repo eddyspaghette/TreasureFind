@@ -28,5 +28,10 @@ jobs:
         DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
       run: echo $DATA > /home/runner/work/TreasureFind/TreasureFind/app/google-services.json
       
+    - name: Create Local Properties file
+      env:
+        PROPERTIES_DATA: ${{ secrets.GRADLE_LOCAL_PROPERTIES }}
+      run: echo $PROPERTIES_DATA > /home/runner/work/TreasureFind/TreasureFind/local.properties
+      
     - name: Build with Gradle
       run: ./gradlew build
