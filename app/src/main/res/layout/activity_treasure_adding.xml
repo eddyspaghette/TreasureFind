@@ -21,9 +21,10 @@
             android:id="@+id/photo"
             android:layout_width="180dp"
             android:layout_height="200dp"
-            android:contentDescription="treasureImage"
             android:layout_gravity="center"
-            android:layout_margin="15dp" />
+            android:layout_margin="15dp"
+            android:contentDescription="treasureImage"
+            android:src="@color/black"/>
 
         <Button
             android:id="@+id/changeImgButton"

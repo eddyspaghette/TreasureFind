@@ -3,12 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.AERYZ.treasurefind" >
 
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission
-        android:name="com.google.android.gms.permission.AD_ID"
-        tools:node="remove" />
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
 
     <application
         android:allowBackup="true"
@@ -52,6 +54,16 @@
             android:exported="false"
             android:theme="@style/Theme.TreasureFind.NoActionBar" />
         <activity android:name=".main.entry_point.onboarding.OnboardingActivity" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.AERYZ.treasurefind"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/paths" />
+        </provider>
 
         <service android:name=".main.ui.map.TrackingService" />
     </application>
