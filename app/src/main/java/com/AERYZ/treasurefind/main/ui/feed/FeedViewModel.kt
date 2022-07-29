@@ -11,7 +11,6 @@ import com.google.firebase.storage.ktx.component2
 import com.google.firebase.storage.ktx.component3
 
 class FeedViewModel : ViewModel() {
-    private val storage = Firebase.storage
     var listImagesURI = MutableLiveData<List<StorageReference>>()
 
     companion object {
