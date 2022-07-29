@@ -15,6 +15,13 @@
     <string name="menu_feed">Feed</string>
     <string name="menu_profile">Profile</string>
 
+    <string name="onboarding_title1">Ahoy, Matey!</string>
+    <string name="onboarding_title2">Shiver me timbers!</string>
+    <string name="onboarding_title3">Avast!</string>
+    <string name="onboarding_desc1">Arrr you ready to find some treasures!</string>
+    <string name="onboarding_desc2">treasure treasure treasure</string>
+    <string name="onboarding_desc3">"If you choose to lock your heart away, you'll lose it for certain"
+        -Jack Sparrow, Pirates of the Caribbean</string>
 
     <string name="facebook_application_id">1355344324874942</string>
     <string name="facebook_client_token">a488ec6c4c19e8b4198614eaff47293d</string>
