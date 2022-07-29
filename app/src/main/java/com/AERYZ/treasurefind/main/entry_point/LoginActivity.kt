@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.AERYZ.treasurefind.R
+import com.AERYZ.treasurefind.main.util.Util
 import com.AERYZ.treasurefind.main.entry_point.onboarding.OnboardingActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
@@ -39,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
             .setAvailableProviders(providers)
             .build()
         signInLauncher.launch(signInIntent)
-
+        Util.checkPermissions(this)
     }
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {

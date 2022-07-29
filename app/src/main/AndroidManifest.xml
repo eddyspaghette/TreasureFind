@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.AERYZ.treasurefind">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
     <application
@@ -17,10 +20,20 @@
         tools:targetApi="31">
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_application_id"/>
         <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
+        <activity
+            android:name=".main.ui.map.MapsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_maps" />
         <activity
             android:name=".main.entry_point.MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.TreasureFind.NoActionBar"/>
+            android:theme="@style/Theme.TreasureFind.NoActionBar" />
         <activity
             android:name=".main.entry_point.LoginActivity"
             android:exported="true">
@@ -31,6 +44,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".main.entry_point.onboarding.OnboardingActivity"/>
+        
+        <service android:name=".main.ui.map.TrackingService" />
     </application>
 
 </manifest>

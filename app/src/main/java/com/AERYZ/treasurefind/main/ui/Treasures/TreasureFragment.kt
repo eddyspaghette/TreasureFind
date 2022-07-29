@@ -1,16 +1,19 @@
 package com.AERYZ.treasurefind.main.ui.Treasures
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ListView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.databinding.FragmentTreasureBinding
 import com.AERYZ.treasurefind.db.Treasure
+import com.AERYZ.treasurefind.main.ui.map.MapsActivity
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -34,30 +37,11 @@ class TreasureFragment : Fragment() {
         _binding = FragmentTreasureBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val listView = root.findViewById<ListView>(R.id.listView)
-
-
-        val myListViewAdapter = MyListViewAdapter(requireActivity(), treasureViewModel.treasureList)
-        val db = Firebase.firestore
-        db.collection("users")
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    Log.d("F", "${document.id} => ${document.data}")
-                    val data = document.data
-                    val keys = data.keys
-                    var title: String = data.get("title").toString()
-                    var desc: String = data.get("desc").toString()
-                    treasureViewModel.treasureList.add(Treasure(title, desc))
-                }
-                myListViewAdapter.updatelist(treasureViewModel.treasureList)
-                listView.adapter = myListViewAdapter
-                Log.d("Debug", "firebase size: ${treasureViewModel.treasureList.size}")
-            }
-            .addOnFailureListener { exception ->
-                Log.w("F", "Error getting documents.", exception)
-            }
-
+        val btn_mapsActivity: Button = root.findViewById(R.id.btn_map)
+        btn_mapsActivity.setOnClickListener() {
+            val intent = Intent(requireContext(), MapsActivity::class.java)
+            startActivity(intent)
+        }
         return root
     }
 
