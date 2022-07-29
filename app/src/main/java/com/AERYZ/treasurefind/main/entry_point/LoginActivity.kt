@@ -23,8 +23,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        Util.checkPermissions(this)
+        setContentView(R.layout.activity_login)
 
         // Choose authentication providers
         val providers = arrayListOf(
@@ -41,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
             .setAvailableProviders(providers)
             .build()
         signInLauncher.launch(signInIntent)
-
+        Util.checkPermissions(this)
     }
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {

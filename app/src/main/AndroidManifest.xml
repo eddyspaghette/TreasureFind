@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.AERYZ.treasurefind">
-
+    package="com.AERYZ.treasurefind" >
 
     <uses-feature android:name="android.hardware.camera" />
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -21,23 +21,40 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TreasureFind"
-        tools:targetApi="31">
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_application_id"/>
-        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
-        <activity
-            android:name=".main.entry_point.MainActivity"
-            android:exported="false"
-            android:theme="@style/Theme.TreasureFind.NoActionBar"/>
+        tools:targetApi="31" >
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_application_id" />
+        <meta-data
+            android:name="com.facebook.sdk.ClientToken"
+            android:value="@string/facebook_client_token" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
         <activity
             android:name=".main.entry_point.LoginActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".main.entry_point.onboarding.OnboardingActivity"/>
+        <activity
+            android:name=".main.ui.treasureadding.TreasureAddingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".main.ui.map.MapsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_maps" />
+        <activity
+            android:name=".main.entry_point.MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TreasureFind.NoActionBar" />
+        <activity android:name=".main.entry_point.onboarding.OnboardingActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.AERYZ.treasurefind"
@@ -47,6 +64,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/paths" />
         </provider>
+
+        <service android:name=".main.ui.map.TrackingService" />
     </application>
 
 </manifest>

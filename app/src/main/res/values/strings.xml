@@ -10,10 +10,9 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_treasure">Treasure</string>
     <string name="menu_feed">Feed</string>
     <string name="menu_profile">Profile</string>
+    <string name="menu_test">Test</string>
 
     <string name="onboarding_title1">Ahoy, Matey!</string>
     <string name="onboarding_title2">Shiver me timbers!</string>
@@ -25,4 +24,5 @@
 
     <string name="facebook_application_id">1355344324874942</string>
     <string name="facebook_client_token">a488ec6c4c19e8b4198614eaff47293d</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>
