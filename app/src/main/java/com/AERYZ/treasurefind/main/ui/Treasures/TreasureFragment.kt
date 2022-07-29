@@ -58,13 +58,6 @@ class TreasureFragment : Fragment() {
                 Log.w("F", "Error getting documents.", exception)
             }
 
-        //galleryViewModel.treasureList.observe(requireActivity()) {
-        //   Log.d("Debug size", it.size.toString())
-        //    myListViewAdapter.updatelist(it)
-        //    myListViewAdapter.notifyDataSetChanged()
-        //
-        //}
-
         return root
     }
 
