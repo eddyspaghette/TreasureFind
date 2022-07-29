@@ -18,4 +18,5 @@
 
     <string name="facebook_application_id">1355344324874942</string>
     <string name="facebook_client_token">a488ec6c4c19e8b4198614eaff47293d</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>
