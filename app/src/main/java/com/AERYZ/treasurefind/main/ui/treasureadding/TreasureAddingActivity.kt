@@ -32,11 +32,15 @@ class TreasureAddingActivity : AppCompatActivity() {
     }
 
     private fun addTreasureBtnListener() {
-        TODO("Not yet implemented")
+        val btn: Button = findViewById(R.id.addButton)
+        btn.setOnClickListener {
+
+        }
     }
 
     private fun setTakePhotoBtnListener() {
         val btn: Button = findViewById(R.id.changeImgButton)
+        // cameraModule is responsible for adding bitmap to viewmodel
         val cameraModule = CameraModule(this, treasureAddingViewModel.treasurePhoto)
         btn.setOnClickListener {
             cameraModule.takePhoto()
