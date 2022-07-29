@@ -14,7 +14,7 @@ class OnboardingActivity: AppCompatActivity() {
     var onboardingAdapter: OnboardingAdapter? = null
     var tabLayout: TabLayout? = null
     var onboardingViewPager: ViewPager? = null
-    var skipBtn: Button? = null
+    var skip: TextView? = null
     var next: TextView? = null
     var position = 0
 
