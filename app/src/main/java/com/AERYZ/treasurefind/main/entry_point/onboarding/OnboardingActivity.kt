@@ -20,6 +20,7 @@ class OnboardingActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_onboarding)
+        supportActionBar?.hide()
         tabLayout = findViewById(R.id.tabLayout)
         skip = findViewById(R.id.onboardSkip)
         next = findViewById(R.id.onboardNext)
