@@ -51,7 +51,7 @@ class LoginActivity : AppCompatActivity() {
             var intent = Intent(applicationContext, MainActivity::class.java)
 
             // Show onboarding activity if new user
-            if (response != null && response.isNewUser()) {
+            if (response != null && response.isNewUser) {
                 intent = Intent(applicationContext, OnboardingActivity::class.java)
             }
             startActivity(intent)
