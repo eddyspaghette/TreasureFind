@@ -24,7 +24,7 @@
 
 
             <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/circularImageView"
+                android:id="@+id/circularImageViewProfile"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -44,7 +44,7 @@
                 android:text="0"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toTopOf="@+id/textView6"
-                app:layout_constraintStart_toEndOf="@+id/circularImageView" />
+                app:layout_constraintStart_toEndOf="@+id/circularImageViewProfile" />
 
             <TextView
                 android:id="@+id/textView6"
@@ -55,7 +55,7 @@
                 android:text="Found"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/circularImageView" />
+                app:layout_constraintStart_toEndOf="@+id/circularImageViewProfile" />
 
             <TextView
                 android:id="@+id/textView8"

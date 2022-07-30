@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
@@ -19,7 +20,8 @@ import com.google.firebase.storage.ktx.storage
 class TreasureAddingActivity : AppCompatActivity() {
     private lateinit var treasureAddingViewModel: TreasureAddingViewModel
     private lateinit var progressBar: CircularProgressIndicator
-    private var storage = Firebase.storage
+    private lateinit var titleEditText: EditText
+    private lateinit var descEditText: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +35,9 @@ class TreasureAddingActivity : AppCompatActivity() {
         }
         progressBar = findViewById(R.id.progress_bar)
         progressBar.visibility = View.INVISIBLE
+
+        titleEditText = findViewById(R.id.treasureTitle)
+        descEditText = findViewById(R.id.treasureDescription)
 
         setButtonListeners()
 
@@ -52,6 +57,8 @@ class TreasureAddingActivity : AppCompatActivity() {
                 val myFirebase = MyFirebase()
                 val myTreasure = Treasure(
                     it,
+                    titleEditText.text.toString(),
+                    descEditText.text.toString(),
                     LatLng(0.0, 0.0),
                     treasureAddingViewModel.treasurePhoto.value!!
                 )
