@@ -20,7 +20,6 @@ import com.google.firebase.storage.ktx.storage
 
 class TreasureAddingActivity : AppCompatActivity() {
     private lateinit var treasureAddingViewModel: TreasureAddingViewModel
-    private lateinit var progressBar: CircularProgressIndicator
     private lateinit var titleEditText: EditText
     private lateinit var descEditText: EditText
 
@@ -34,8 +33,6 @@ class TreasureAddingActivity : AppCompatActivity() {
             // everytime the bitmap changes, set the imageview
             treasureImageView.setImageBitmap(it)
         }
-//        progressBar = findViewById(R.id.progress_bar)
-//        progressBar.visibility = View.INVISIBLE
 
         titleEditText = findViewById(R.id.treasureTitle)
         descEditText = findViewById(R.id.treasureDescription)
@@ -63,7 +60,9 @@ class TreasureAddingActivity : AppCompatActivity() {
                     LatLng(0.0, 0.0),
                     treasureAddingViewModel.treasurePhoto.value!!
                 )
-                myFirebase.insert(myTreasure, progressBar)
+                val dialog = ProgressDialog.progressDialog(this)
+                val successDialog = ProgressDialog.successDialog(this)
+                myFirebase.insert(myTreasure, dialog, successDialog)
             }
         }
     }

@@ -1,0 +1,18 @@
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector android:name="vector" android:width="500dp" android:height="500dp" android:viewportWidth="500" android:viewportHeight="500">
+            <group android:name="wecqfpnicyn5af8pzcbzo">
+                <path android:name="qa2pkbr4ubmfuyxrrvoiy" android:pathData="M 250 43.2 C 135.743 43.2 43.2 135.743 43.2 250 C 43.2 364.257 135.743 456.8 250 456.8 C 364.257 456.8 456.8 364.257 456.8 250 C 456.8 135.743 364.257 43.2 250 43.2 Z" android:fillColor="#ffffff" android:strokeColor="#64ffa2" android:strokeWidth="20"/>
+                <path android:name="bpocamcbgogur0fb3co4a" android:pathData="M 374.08 157.457 C 383.903 167.28 383.903 183.307 374.08 193.13 L 224.667 342.543 C 219.497 347.713 213.293 349.781 207.089 349.781 C 200.885 349.781 194.164 347.196 189.511 342.543 L 125.92 279.469 C 116.097 269.646 116.097 253.619 125.92 243.796 C 135.743 233.973 151.77 233.973 161.593 243.796 L 207.089 289.292 L 338.924 157.457 C 348.23 147.634 364.257 147.634 374.08 157.457 Z" android:fillColor="#ffffff" android:strokeColor="#ffffff" android:strokeWidth="20"/>
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="qa2pkbr4ubmfuyxrrvoiy">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator android:propertyName="trimPathEnd" android:duration="1352" android:valueFrom="0" android:valueTo="1" android:valueType="floatType" android:interpolator="@android:interpolator/fast_out_slow_in"/>
+                <objectAnimator android:propertyName="fillColor" android:startOffset="1352" android:duration="448" android:valueFrom="#ffffff" android:valueTo="#64ffa2" android:valueType="colorType" android:interpolator="@android:anim/accelerate_decelerate_interpolator"/>
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

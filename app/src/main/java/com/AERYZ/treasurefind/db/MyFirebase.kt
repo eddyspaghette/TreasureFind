@@ -1,14 +1,13 @@
 package com.AERYZ.treasurefind.db
 
+import android.app.Dialog
 import android.graphics.Bitmap
 import android.util.Log
-import android.view.View
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.main.ui.feed.GlideApp
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -19,6 +18,9 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+import java.util.*
+import kotlin.concurrent.schedule
+import kotlin.concurrent.timerTask
 
 
 class User(var uid: String, var userName: String, var email: String, var profileImage: Bitmap) {
@@ -38,27 +40,38 @@ class MyFirebase {
     private var db = Firebase.firestore
     private var storageReference = storage.reference
 
-    private fun insertToFirebaseStorage(bitmap: Bitmap, path: String, progressBar: CircularProgressIndicator?) {
+    private fun insertToFirebaseStorage(bitmap: Bitmap, path: String, dialog: Dialog? = null, successDialog: Dialog? = null) {
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()
         val reference = storageReference.child(path)
         val uploadTask = reference.putBytes(data)
-        uploadTask.addOnFailureListener {
-            Log.d("DEBUG: failed upload", "$it")
-        }.addOnSuccessListener {
-            progressBar?.let {
-                progressBar.visibility = View.INVISIBLE
+        if (dialog != null) {
+            uploadTask.addOnFailureListener {
+                dialog.dismiss()
+                Log.d("DEBUG: failed upload", "$it")
+            }.addOnSuccessListener {
+                dialog.dismiss()
+                successDialog?.let {
+                    successDialog.show()
+                    Timer().schedule(2400) {
+                        successDialog.dismiss()
+                    }
+                }
+                Log.d("DEBUG: uploaded successfully", "$it")
+            }.addOnProgressListener {
+                dialog.show()
             }
-            Log.d("DEBUG: uploaded successfully", "$it")
-        }.addOnProgressListener {
-            progressBar?.let {
-                progressBar.visibility = View.VISIBLE
+        } else {
+            uploadTask.addOnFailureListener {
+                Log.d("DEBUG: failed upload", "$it")
+            }.addOnSuccessListener {
+                Log.d("DEBUG: uploaded successfully", "$it")
             }
         }
     }
 
-    fun insert(user: User, progressBar: CircularProgressIndicator? = null) {
+    fun insert(user: User) {
         var profileImagePath = "images/profile/${user.uid}.jpg"
         val data = hashMapOf(
             "username" to user.userName,
@@ -67,10 +80,10 @@ class MyFirebase {
         )
 
         db.collection("users").document(user.uid).set(data)
-        insertToFirebaseStorage(user.profileImage, profileImagePath, progressBar)
+        insertToFirebaseStorage(user.profileImage, profileImagePath)
     }
 
-    fun insert(treasure: Treasure, progressBar: CircularProgressIndicator? = null) {
+    fun insert(treasure: Treasure, dialog: Dialog? = null, successDialog: Dialog? = null) {
         val data = hashMapOf(
             "title" to treasure.title,
             "desc" to treasure.desc,
@@ -87,7 +100,7 @@ class MyFirebase {
             .addOnSuccessListener {
                 val treasureImagePath = "images/treasures/${it.id}/image.jpg"
                 it.update("treasure_image_path", treasureImagePath)
-                insertToFirebaseStorage(treasure.treasureImage, treasureImagePath, progressBar)
+                insertToFirebaseStorage(treasure.treasureImage, treasureImagePath, dialog, successDialog)
             }
     }
 
@@ -95,15 +108,15 @@ class MyFirebase {
         db.collection("treasures").document(tid).update("seekers", FieldValue.arrayUnion(sid))
     }
 
-    fun updateSR(tid: String, sR: SR, progressBar: CircularProgressIndicator? = null) {
+    fun updateSR(tid: String, sR: SR) {
         db.collection("treasures").document(tid).update("sr", FieldValue.arrayUnion(sR.sid))
         val sRImagePath =  "images/treasures/${tid}/${sR.sid}.jpg"
-        insertToFirebaseStorage(sR.sRImage, sRImagePath, progressBar)
+        insertToFirebaseStorage(sR.sRImage, sRImagePath)
     }
 
-    fun updateProfileImage(uid: String, image: Bitmap, progressBar: CircularProgressIndicator? = null) {
+    fun updateProfileImage(uid: String, image: Bitmap) {
         var profileImagePath = "images/profile/${uid}.jpg"
-        insertToFirebaseStorage(image, profileImagePath, progressBar)
+        insertToFirebaseStorage(image, profileImagePath)
 
     }
 
