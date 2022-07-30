@@ -65,7 +65,7 @@
                 android:resource="@xml/paths" />
         </provider>
 
-        <service android:name=".main.ui.map.TrackingService" />
+        <service android:name=".main.services.TrackingService" />
     </application>
 
 </manifest>

@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.databinding.ActivityMapsBinding
+import com.AERYZ.treasurefind.main.services.ServiceViewModel
+import com.AERYZ.treasurefind.main.services.TrackingService
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
