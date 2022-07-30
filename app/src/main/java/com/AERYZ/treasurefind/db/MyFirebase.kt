@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.MutableLiveData
 import com.AERYZ.treasurefind.main.ui.feed.GlideApp
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.progressindicator.CircularProgressIndicator
@@ -11,6 +12,11 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
 
@@ -100,14 +106,20 @@ class MyFirebase {
 
     }
 
-    fun getProfileImage(activity: FragmentActivity, uid: String): Bitmap {
+    fun getProfileImage(activity: FragmentActivity, uid: String, mutableLiveData: MutableLiveData<Bitmap>) {
         var profileImagePath = "images/profile/${uid}.jpg"
         val reference = storageReference.child(profileImagePath)
-        return GlideApp.with(activity)
-            .asBitmap()
-            .load(reference)
-            .submit()
-            .get()
+        mutableLiveData.value = Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888)
+        CoroutineScope(IO).launch {
+            val bitmap = GlideApp.with(activity)
+                .asBitmap()
+                .load(reference)
+                .submit()
+                .get()
+            withContext(Main) {
+                mutableLiveData.value = bitmap
+            }
+        }
     }
 
 }

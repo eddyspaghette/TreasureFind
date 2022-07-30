@@ -16,6 +16,7 @@ import android.widget.ImageView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.MutableLiveData
 import androidx.viewpager2.widget.ViewPager2
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.db.MyFirebase
@@ -44,9 +45,11 @@ class ProfileFragment : Fragment() {
         val profileImageView: CircularImageView = view.findViewById(R.id.circularImageViewProfile)
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
-        val profileImage = myFirebase.getProfileImage(requireActivity(), uid)
-        profileImageView.setImageBitmap(profileImage)
-
+        val mutableLiveData = MutableLiveData<Bitmap>()
+        myFirebase.getProfileImage(requireActivity(), uid, mutableLiveData)
+        mutableLiveData.observe(requireActivity()) {
+            profileImageView.setImageBitmap(mutableLiveData.value)
+        }
         activityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 it : ActivityResult ->
             if (it.resultCode == Activity.RESULT_OK) {
