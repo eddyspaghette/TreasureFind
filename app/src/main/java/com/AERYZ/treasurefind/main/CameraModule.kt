@@ -10,20 +10,24 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 
-class CameraModule(var activity: FragmentActivity, var CameraOutputBitmap: MutableLiveData<Bitmap>) {
+class CameraModule(activity: FragmentActivity, var CameraOutputBitmap: MutableLiveData<Bitmap>) {
     private var cameraResultListener: ActivityResultLauncher<Intent>
+
     init {
-        CameraOutputBitmap.value = Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888)
+        if (CameraOutputBitmap.value == null) {
+            CameraOutputBitmap.value = Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888)
+        }
         cameraResultListener = activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                if (it.resultCode == Activity.RESULT_OK) {
-                    if (it.data != null && it.data!!.extras != null)
-                        CameraOutputBitmap.value = it.data!!.extras!!.get("data") as Bitmap
+            if (it.resultCode == Activity.RESULT_OK) {
+                if (it.data != null && it.data!!.extras != null) {
+                    CameraOutputBitmap.value = it.data!!.extras!!.get("data") as Bitmap
                 }
             }
+        }
     }
 
     fun takePhoto() {
-        val CameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        cameraResultListener.launch(CameraIntent)
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        cameraResultListener.launch(cameraIntent)
     }
 }

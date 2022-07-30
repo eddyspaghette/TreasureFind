@@ -80,4 +80,7 @@ dependencies {
 
     implementation 'com.mikhaellopez:circularimageview:4.3.0'
     implementation 'com.facebook.android:facebook-android-sdk:14.1.0'
+
+    // material theme
+    implementation 'com.google.android.material:material:1.6.1'
 }
