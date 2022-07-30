@@ -11,6 +11,7 @@ import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.Treasure
 import com.AERYZ.treasurefind.main.CameraModule
+import com.AERYZ.treasurefind.main.ui.dialogs.ProgressDialog
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.firebase.auth.FirebaseAuth
@@ -33,8 +34,8 @@ class TreasureAddingActivity : AppCompatActivity() {
             // everytime the bitmap changes, set the imageview
             treasureImageView.setImageBitmap(it)
         }
-        progressBar = findViewById(R.id.progress_bar)
-        progressBar.visibility = View.INVISIBLE
+//        progressBar = findViewById(R.id.progress_bar)
+//        progressBar.visibility = View.INVISIBLE
 
         titleEditText = findViewById(R.id.treasureTitle)
         descEditText = findViewById(R.id.treasureDescription)
