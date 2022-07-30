@@ -44,7 +44,7 @@ class ProfileFragment : Fragment() {
         val profileImageView: CircularImageView = view.findViewById(R.id.circularImageViewProfile)
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
-        val profileImage = myFirebase.getProfileImage(uid)
+        val profileImage = myFirebase.getProfileImage(requireActivity(), uid)
         profileImageView.setImageBitmap(profileImage)
 
         activityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
