@@ -1,20 +1,24 @@
 package com.AERYZ.treasurefind.main.entry_point
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.AERYZ.treasurefind.R
+import com.AERYZ.treasurefind.db.MyFirebase
+import com.AERYZ.treasurefind.db.User
 import com.AERYZ.treasurefind.main.util.Util
 import com.AERYZ.treasurefind.main.entry_point.onboarding.OnboardingActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 
 
 class LoginActivity : AppCompatActivity() {
-
+    var myFirebase = MyFirebase()
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract()
     ) { res ->
@@ -51,7 +55,11 @@ class LoginActivity : AppCompatActivity() {
             var intent = Intent(applicationContext, MainActivity::class.java)
 
             // Show onboarding activity if new user
-            if (response != null && response.isNewUser()) {
+            if (response != null && response.isNewUser) {
+                val u = User(user!!.uid, "blue", user.email!!,
+                    BitmapFactory.decodeResource(resources,
+                        R.drawable.tf_logo))
+                myFirebase.insert(u)
                 intent = Intent(applicationContext, OnboardingActivity::class.java)
             }
             startActivity(intent)

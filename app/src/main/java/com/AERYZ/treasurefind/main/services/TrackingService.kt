@@ -1,4 +1,4 @@
-package com.AERYZ.treasurefind.main.ui.map
+package com.AERYZ.treasurefind.main.services
 
 
 import android.app.NotificationChannel
@@ -14,6 +14,7 @@ import android.os.*
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.AERYZ.treasurefind.R
+import com.AERYZ.treasurefind.main.ui.map.MapsActivity
 
 class TrackingService : Service(), LocationListener {
     private lateinit var notificationManager: NotificationManager
@@ -80,7 +81,7 @@ class TrackingService : Service(), LocationListener {
         if (msgHandler != null) {
             val bundle = Bundle()
             //passing the whole object to the message
-            bundle.putParcelable("LOCATION_KEY", location)
+            bundle.putParcelable(LOC_KEY, location)
             val msg = msgHandler!!.obtainMessage()
             msg.data = bundle
             msg.what = MSG_LOC_ID
