@@ -3,6 +3,8 @@ package com.AERYZ.treasurefind.db
 import android.graphics.Bitmap
 import android.util.Log
 import android.view.View
+import androidx.fragment.app.FragmentActivity
+import com.AERYZ.treasurefind.main.ui.feed.GlideApp
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.firebase.firestore.FieldValue
@@ -98,10 +100,14 @@ class MyFirebase {
 
     }
 
-//    fun getProfileImage(uid: String): Bitmap {
-//        var profileImagePath = "images/profile/${uid}.jpg"
-//        val reference = storageReference.child(profileImagePath)
-//        //Continue
-//    }
+    fun getProfileImage(activity: FragmentActivity, uid: String): Bitmap {
+        var profileImagePath = "images/profile/${uid}.jpg"
+        val reference = storageReference.child(profileImagePath)
+        return GlideApp.with(activity)
+            .asBitmap()
+            .load(reference)
+            .submit()
+            .get()
+    }
 
 }
