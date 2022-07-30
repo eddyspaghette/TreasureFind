@@ -98,10 +98,10 @@ class MyFirebase {
 
     }
 
-//    fun getProfileImage(uid: String): Bitmap {
-//        var profileImagePath = "images/profile/${uid}.jpg"
-//        val reference = storageReference.child(profileImagePath)
-//        //Continue
-//    }
+    fun getProfileImage(uid: String): Bitmap {
+        var profileImagePath = "images/profile/${uid}.jpg"
+        val reference = storageReference.child(profileImagePath)
+        return Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888)
+    }
 
 }
