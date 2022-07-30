@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.main.CameraModule
+import com.AERYZ.treasurefind.main.ui.dialogs.ProgressDialog
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
@@ -33,8 +34,8 @@ class TreasureAddingActivity : AppCompatActivity() {
             // everytime the bitmap changes, set the imageview
             treasureImageView.setImageBitmap(it)
         }
-        progressBar = findViewById(R.id.progress_bar)
-        progressBar.visibility = View.INVISIBLE
+//        progressBar = findViewById(R.id.progress_bar)
+//        progressBar.visibility = View.INVISIBLE
 
         setButtonListeners()
 
@@ -51,26 +52,28 @@ class TreasureAddingActivity : AppCompatActivity() {
         val titleView: TextView = findViewById(R.id.treasureTitle)
         val descriptionView: TextView = findViewById(R.id.treasureDescription)
         btn.setOnClickListener {
-            val uid = FirebaseAuth.getInstance().currentUser?.uid
-            if (uid != null) {
-                val baos = ByteArrayOutputStream()
-                treasureAddingViewModel.treasurePhoto.value!!.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                val data = baos.toByteArray()
-
-                val treasureRef = storage.reference
-                    .child("images/treasures/uid/${uid}/${System.currentTimeMillis()}")
-
-                val uploadTask = treasureRef.putBytes(data)
-                uploadTask.addOnFailureListener {
-                    Log.d("DEBUG: failed upload", "$it")
-                }.addOnSuccessListener {
-                    progressBar.visibility = View.INVISIBLE
-                    Toast.makeText(this, "Uploaded Successfully", Toast.LENGTH_SHORT)
-                    Log.d("DEBUG: uploaded successfully", "$it")
-                }.addOnProgressListener {
-                    progressBar.visibility = View.VISIBLE
-                }
-            }
+//            val uid = FirebaseAuth.getInstance().currentUser?.uid
+//            if (uid != null) {
+//                val baos = ByteArrayOutputStream()
+//                treasureAddingViewModel.treasurePhoto.value!!.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+//                val data = baos.toByteArray()
+//
+//                val treasureRef = storage.reference
+//                    .child("images/treasures/uid/${uid}/${System.currentTimeMillis()}")
+//
+//                val uploadTask = treasureRef.putBytes(data)
+//                uploadTask.addOnFailureListener {
+//                    Log.d("DEBUG: failed upload", "$it")
+//                }.addOnSuccessListener {
+//                    progressBar.visibility = View.INVISIBLE
+//                    Toast.makeText(this, "Uploaded Successfully", Toast.LENGTH_SHORT)
+//                    Log.d("DEBUG: uploaded successfully", "$it")
+//                }.addOnProgressListener {
+//                    progressBar.visibility = View.VISIBLE
+//                }
+//            }
+            val dialog = ProgressDialog.progressDialog(this)
+            dialog.show()
         }
     }
 
