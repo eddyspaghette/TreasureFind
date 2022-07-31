@@ -14,6 +14,7 @@ import com.AERYZ.treasurefind.db.MyUser
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import java.text.DateFormat
 
 class FeedAdapter(private var context: Context, private var feedList: ArrayList<Treasure>) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
     private val storage = Firebase.storage
@@ -25,10 +26,12 @@ class FeedAdapter(private var context: Context, private var feedList: ArrayList<
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imageView: ImageView
         val postedTextView: TextView
+        val feedDateTextView: TextView
 
         init {
             imageView = view.findViewById(R.id.feed_item)
             postedTextView = view.findViewById(R.id.feed_posted)
+            feedDateTextView = view.findViewById(R.id.feed_date)
         }
     }
 
@@ -48,10 +51,18 @@ class FeedAdapter(private var context: Context, private var feedList: ArrayList<
                 .centerCrop()
                 .into(holder.imageView)
         }
+        imageRef?.metadata?.addOnSuccessListener {
+            val date = DateFormat.getDateInstance().format(it.creationTimeMillis)
+            holder.feedDateTextView.text = "Date posted: $date"
+        }?.addOnFailureListener {
+            holder.feedDateTextView.text = "Date posted: N/A"
+        }
+
+
         val ownerId = feedList[position].oid
         val myFirebase = MyFirebase()
         if (ownerId != null && ownerId != "") {
-            val docRef = myFirebase.getUserDocument(ownerId!!)
+            val docRef = myFirebase.getUserDocument(ownerId)
             docRef.get()
                 .addOnSuccessListener {
                     val myUser: MyUser? = it.toObject<MyUser>()

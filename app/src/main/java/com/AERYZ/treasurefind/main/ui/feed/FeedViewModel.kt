@@ -16,6 +16,7 @@ class FeedViewModel : ViewModel(), MyFirebase.FirebaseFeedListener {
     // when treasure data transfer fails
     override fun onFailure(exception: Exception) {
         println("DEBUG error: $exception")
+        feedList.value = arrayListOf()
     }
 
     // this function is called when all treasure data is successfully loaded

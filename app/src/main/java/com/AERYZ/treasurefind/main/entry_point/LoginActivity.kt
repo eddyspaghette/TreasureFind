@@ -58,8 +58,8 @@ class LoginActivity : AppCompatActivity() {
                 user?.let {
                     val u = MyUser(
                         it.uid,
-                        it.displayName!!,
-                        it.email!!,
+                        it.displayName ?: "N/A",
+                        it.email ?: "N/A",
                         BitmapFactory.decodeResource(resources, R.drawable.tf_logo)
                     )
                     myFirebase.insert(u)
