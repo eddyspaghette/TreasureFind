@@ -1,5 +1,6 @@
 package com.AERYZ.treasurefind.db
 
+import android.app.Activity
 import android.app.Dialog
 import android.graphics.Bitmap
 import android.util.Log
@@ -8,7 +9,10 @@ import androidx.lifecycle.MutableLiveData
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.main.ui.feed.GlideApp
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -26,9 +30,9 @@ import kotlin.concurrent.timerTask
 class User(var uid: String, var userName: String, var email: String, var profileImage: Bitmap) {
 }
 
-class Treasure(var oid: String, var title: String,
-               var desc: String, var location: LatLng,
-               var treasureImage: Bitmap, var wid: String = "",
+class Treasure(var oid: String = "", var title: String = "",
+               var desc: String = "", var location: LatLng = LatLng(0.0,0.0),
+               var treasureImage: Bitmap? = null, var wid: String = "",
                var startTime: String? = null, var length: String? = null) {
 }
 
@@ -100,8 +104,42 @@ class MyFirebase {
             .addOnSuccessListener {
                 val treasureImagePath = "images/treasures/${it.id}/image.jpg"
                 it.update("treasure_image_path", treasureImagePath)
-                insertToFirebaseStorage(treasure.treasureImage, treasureImagePath, dialog, successDialog)
+                insertToFirebaseStorage(treasure.treasureImage!!, treasureImagePath, dialog, successDialog)
             }
+    }
+    fun getTreasure(tid: String, mutableLiveData: MutableLiveData<Treasure>) {
+        val docRef = db.collection("treasures").document(tid)
+        val source = Source.CACHE
+        docRef.get(source).addOnCompleteListener() {
+            if (it.isSuccessful) {
+                val treasure = Treasure(it.result.get("oid").toString(),
+                    it.result.get("title").toString(),
+                    it.result.get("desc").toString())
+                mutableLiveData.value = treasure
+                Log.d("Debug", "${treasure.title} ${treasure.desc}")
+            }
+
+        }.addOnFailureListener() {
+            Log.d("Debug", "Failed to achieve data")
+        }
+    }
+
+    fun getTreasureImage(activity: Activity, tid: String, mutableLiveData: MutableLiveData<Bitmap>) {
+        var treasureImagePath = "images/treasures/${tid}/image.jpg"
+        val reference = storageReference.child(treasureImagePath)
+        mutableLiveData.value = Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888)
+        CoroutineScope(IO).launch {
+            val bitmap = GlideApp.with(activity)
+                .asBitmap()
+                .error(R.drawable.tf_logo)
+                .load(reference)
+                .submit()
+                .get()
+            withContext(Main) {
+                mutableLiveData.value = bitmap
+                Log.d("Debug", "Got Loading treasure image")
+            }
+        }
     }
 
     fun updateSeeker(tid: String, sid: String) {
