@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.ui.treasuredetails.TreasureDetailsActivity">
+
+    <ImageView
+        android:id="@+id/TDImageView"
+        android:layout_width="187dp"
+        android:layout_height="181dp"
+        app:layout_constraintBottom_toTopOf="@+id/TDtitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/side_nav_bar" />
+
+    <Button
+        android:id="@+id/TDAccept_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:text="Accept"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/TDtitle"
+        android:layout_width="270dp"
+        android:layout_height="42dp"
+        android:layout_marginBottom="52dp"
+        android:text="title"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toTopOf="@+id/TDdesc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/TDdesc"
+        android:layout_width="270dp"
+        android:layout_height="42dp"
+        android:layout_marginBottom="52dp"
+        android:text="desc"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toTopOf="@+id/TDdistance"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/TDdistance"
+        android:layout_width="270dp"
+        android:layout_height="42dp"
+        android:layout_marginBottom="40dp"
+        android:text="How far?"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toTopOf="@+id/TDtid"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/TDtid"
+        android:layout_width="270dp"
+        android:layout_height="42dp"
+        android:layout_marginBottom="40dp"
+        android:text="tid"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toTopOf="@+id/TDAccept_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
