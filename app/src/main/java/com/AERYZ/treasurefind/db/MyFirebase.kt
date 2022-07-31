@@ -3,16 +3,11 @@ package com.AERYZ.treasurefind.db
 import android.app.Dialog
 import android.graphics.Bitmap
 import android.util.Log
-import androidx.annotation.Keep
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.main.ui.feed.GlideApp
-import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.firestore.Exclude
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.IgnoreExtraProperties
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -25,10 +20,14 @@ import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import java.util.*
 import kotlin.concurrent.schedule
-import kotlin.concurrent.timerTask
 
-data class User(var uid: String, var userName: String, var email: String, var profileImage: Bitmap) {
-}
+data class MyUser(
+    var uid: String = "",
+    var userName: String = "",
+    var email: String = "",
+    @Exclude @set:Exclude @get:Exclude var profileImage: Bitmap? = null,
+    var profileImagePath: String = ""
+)
 
 data class Treasure(
     var oid: String? = "",
@@ -105,16 +104,17 @@ class MyFirebase {
         }
     }
 
-    fun insert(user: User) {
-        var profileImagePath = "images/profile/${user.uid}.jpg"
-        val data = hashMapOf(
-            "username" to user.userName,
-            "email" to user.email,
-            "profile_image_path" to profileImagePath
-        )
+    // returns document reference, caller has to implement listeners
+    fun getUserDocument(uid: String): DocumentReference {
+        val docRef = db.collection("users").document(uid)
+        return docRef
+    }
 
-        db.collection("users").document(user.uid).set(data)
-        insertToFirebaseStorage(user.profileImage, profileImagePath)
+    fun insert(myUser: MyUser) {
+        val profileImagePath = "images/profile/${myUser.uid}.jpg"
+        myUser.profileImagePath = profileImagePath
+        db.collection("users").document(myUser.uid).set(myUser)
+        insertToFirebaseStorage(myUser.profileImage!!, profileImagePath)
     }
 
     fun insert(treasure: Treasure, dialog: Dialog? = null, successDialog: Dialog? = null) {

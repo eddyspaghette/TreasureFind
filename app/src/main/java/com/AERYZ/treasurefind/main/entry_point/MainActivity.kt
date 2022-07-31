@@ -12,8 +12,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.databinding.ActivityMainBinding
-import com.AERYZ.treasurefind.db.MyFirebase
-import com.AERYZ.treasurefind.db.User
 
 class MainActivity : AppCompatActivity() {
 

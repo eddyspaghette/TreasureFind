@@ -28,10 +28,6 @@ class FeedViewModel : ViewModel(), MyFirebase.FirebaseFeedListener {
         feedList.value = list
     }
 
-    companion object {
-        private const val MAX_ITEMS = 5
-    }
-
     init {
         // this retrieves all documents in the treasure collection
         val myFirebase = MyFirebase()
