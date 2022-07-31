@@ -27,11 +27,13 @@ class FeedAdapter(private var context: Context, private var feedList: ArrayList<
         val imageView: ImageView
         val postedTextView: TextView
         val feedDateTextView: TextView
+        val profileImageView: ImageView
 
         init {
             imageView = view.findViewById(R.id.feed_item)
             postedTextView = view.findViewById(R.id.feed_posted)
             feedDateTextView = view.findViewById(R.id.feed_date)
+            profileImageView = view.findViewById(R.id.feed_profile)
         }
     }
 
@@ -70,6 +72,9 @@ class FeedAdapter(private var context: Context, private var feedList: ArrayList<
                     myUser?.let { user ->
                         println("DEBUG: feedUser $user")
                         holder.postedTextView.text = "Posted by: ${user.userName}"
+                        GlideApp.with(context)
+                            .load(storageRef.child(user.profileImagePath))
+                            .into(holder.profileImageView)
                     }
                 }
                 .addOnFailureListener{
