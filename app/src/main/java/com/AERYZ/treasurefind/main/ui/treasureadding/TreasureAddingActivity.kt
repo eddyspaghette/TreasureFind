@@ -94,10 +94,10 @@ class TreasureAddingActivity : AppCompatActivity() {
                     it,
                     titleEditText.text.toString(),
                     descEditText.text.toString(),
-                    LatLng(location!!.latitude, location!!.longitude),
+                    location!!.latitude,
+                    location.longitude,
                     treasureAddingViewModel.treasurePhoto.value!!
                 )
-                Log.d("Debug", "${myTreasure.location.latitude}, ${myTreasure.location.longitude}")
                 val dialog = ProgressDialog.progressDialog(this)
                 val successDialog = ProgressDialog.successDialog(this)
                 myFirebase.insert(myTreasure, dialog, successDialog)

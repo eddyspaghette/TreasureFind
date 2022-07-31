@@ -7,9 +7,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.AERYZ.treasurefind.R
+import com.AERYZ.treasurefind.db.Treasure
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 
-class FeedAdapter(private var context: Context, private var feedList: List<StorageReference>) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
+class FeedAdapter(private var context: Context, private var feedList: ArrayList<Treasure>) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
+    private val storage = Firebase.storage
+    private val storageRef = storage.reference
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -30,12 +35,14 @@ class FeedAdapter(private var context: Context, private var feedList: List<Stora
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        // feedList[position] returns a StorageReference
         // https://firebase.google.com/docs/storage/android/create-reference
+        val imageRef = feedList[position].treasureImagePath?.let { storageRef.child(it) }
+        if (imageRef != null) {
             GlideApp.with(context)
-                .load(feedList[position])
+                .load(imageRef)
                 .centerCrop()
                 .into(holder.imageView)
+        }
 //        holder.imageView.setOnClickListener {
 //            println("DEBUG: image clicked")
 //        }
@@ -45,7 +52,7 @@ class FeedAdapter(private var context: Context, private var feedList: List<Stora
         return feedList.size
     }
 
-    fun updateList(newList: List<StorageReference>) {
+    fun updateList(newList: ArrayList<Treasure>) {
         feedList = newList
     }
 }

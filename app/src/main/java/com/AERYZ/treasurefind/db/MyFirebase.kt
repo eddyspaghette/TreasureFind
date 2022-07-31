@@ -3,12 +3,16 @@ package com.AERYZ.treasurefind.db
 import android.app.Dialog
 import android.graphics.Bitmap
 import android.util.Log
+import androidx.annotation.Keep
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.main.ui.feed.GlideApp
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.IgnoreExtraProperties
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -18,27 +22,57 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+import java.lang.Exception
 import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.concurrent.timerTask
 
-
-class User(var uid: String, var userName: String, var email: String, var profileImage: Bitmap) {
+data class User(var uid: String, var userName: String, var email: String, var profileImage: Bitmap) {
 }
 
-class Treasure(var oid: String, var title: String,
-               var desc: String, var location: LatLng,
-               var treasureImage: Bitmap, var wid: String = "",
-               var startTime: String? = null, var length: String? = null) {
-}
+data class Treasure(
+    var oid: String? = "",
+    var title: String? = "",
+    var desc: String? = "",
+    var latitude: Double? = 0.0,
+    var longitude: Double? = 0.0,
+    // this prevents firebase collections from saving the bitmap
+    @Exclude @set:Exclude @get:Exclude var treasureImage: Bitmap? = null,
+    var wid: String? = "",
+    var startTime: String? = "",
+    var seekers: ArrayList<String> = arrayListOf<String>(),
+    var sr: ArrayList<String> = arrayListOf<String>(),
+    var length: String? = "",
+    var treasureImagePath: String? = "treasureImagePath",
+)
 
-class SR(var sid: String, var sRImage: Bitmap) {
+
+data class SR(var sid: String, var sRImage: Bitmap) {
 }
 
 class MyFirebase {
     private var storage = Firebase.storage
     private var db = Firebase.firestore
     private var storageReference = storage.reference
+
+    interface FirebaseFeedListener {
+        fun onSuccess(snapshot: QuerySnapshot)
+        fun onFailure(exception: Exception)
+    }
+
+    fun getAllTreasures(listener: FirebaseFeedListener) {
+        db.collection("treasures")
+            .get()
+            .addOnSuccessListener { result ->
+                Log.d("DEBUG: result", "$result")
+                listener.onSuccess(result)
+            }.addOnFailureListener { exception ->
+                Log.d("DEBUG: failure", "$exception")
+                listener.onFailure(exception)
+            }
+    }
+
+
 
     private fun insertToFirebaseStorage(bitmap: Bitmap, path: String, dialog: Dialog? = null, successDialog: Dialog? = null) {
         val baos = ByteArrayOutputStream()
@@ -84,23 +118,12 @@ class MyFirebase {
     }
 
     fun insert(treasure: Treasure, dialog: Dialog? = null, successDialog: Dialog? = null) {
-        val data = hashMapOf(
-            "title" to treasure.title,
-            "desc" to treasure.desc,
-            "oid" to treasure.oid,
-            "lat" to treasure.location.latitude.toString(),
-            "long" to treasure.location.longitude.toString(),
-            "wid" to treasure.wid,
-            "seekers" to arrayListOf<String>(),
-            "sr" to arrayListOf<String>(),
-            "treasure_image_path" to ""
-        )
         db.collection("treasures")
-            .add(data)
+            .add(treasure)
             .addOnSuccessListener {
                 val treasureImagePath = "images/treasures/${it.id}/image.jpg"
-                it.update("treasure_image_path", treasureImagePath)
-                insertToFirebaseStorage(treasure.treasureImage, treasureImagePath, dialog, successDialog)
+                it.update("${treasure.treasureImagePath}", treasureImagePath)
+                treasure.treasureImage?.let { it1 -> insertToFirebaseStorage(it1, treasureImagePath, dialog, successDialog) }
             }
     }
 
