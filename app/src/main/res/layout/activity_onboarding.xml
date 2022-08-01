@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".main.entry_point.LoginActivity">
 
     <TextView
@@ -14,7 +13,7 @@
         android:layout_height="wrap_content"
         android:background="#00000000"
         android:text="SKIP"
-        android:textColor="@color/orange"
+        android:textColor="@color/pirate_orange"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -44,21 +43,20 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        android:background="@color/white">
+        app:layout_constraintVertical_bias="1.0">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.09"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0"
+            android:background="#00000000"
             app:tabBackground="@drawable/onboardingindicatorselector"
             app:tabIndicatorHeight="0dp"></com.google.android.material.tabs.TabLayout>
 
@@ -69,7 +67,7 @@
             android:background="#00000000"
             android:text="NEXT"
             android:textAllCaps="true"
-            android:textColor="@color/orange"
+            android:textColor="@color/pirate_orange"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

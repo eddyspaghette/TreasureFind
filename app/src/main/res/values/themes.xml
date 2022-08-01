@@ -12,9 +12,17 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="android:textColor">@color/pirate_orange</item>
+        <item name="android:textColor">@color/title</item>
+        <item name="android:textColorPrimary">@color/white</item>
     </style>
-
+    <style name="LoginTheme" parent="FirebaseUI">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_light</item>
+        <item name="colorAccent">@color/pirate_orange</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
     <style name="Theme.TreasureFind.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
