@@ -23,6 +23,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="Theme.TreasureFind.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
