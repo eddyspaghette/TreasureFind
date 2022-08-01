@@ -14,4 +14,13 @@
     <color name="pirate_orange">#faae4e</color>
     <color name="pirate_gray">#aa9b91</color>
     <color name="pirate_blue">#818d92</color>
+
+    <color name="primary">#607D8B</color>
+    <color name="primary_dark">#455A64</color>
+    <color name="primary_light">#CFD8DC</color>
+    <color name="accent">#FF9800</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#757575</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#BDBDBD</color>
 </resources>

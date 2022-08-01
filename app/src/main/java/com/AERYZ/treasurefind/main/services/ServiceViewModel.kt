@@ -1,4 +1,4 @@
-package com.AERYZ.treasurefind.main.ui.map
+package com.AERYZ.treasurefind.main.services
 
 import android.content.ComponentName
 import android.content.ServiceConnection
@@ -10,8 +10,9 @@ import android.os.Message
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.AERYZ.treasurefind.main.services.TrackingService
 
-class ServiceViewModel:ViewModel(),ServiceConnection {
+open class ServiceViewModel:ViewModel(),ServiceConnection {
     private var myMessageHandler = MyMessageHandler(Looper.getMainLooper())
     private val _location=MutableLiveData<Location>()
     val location:LiveData<Location>
@@ -32,7 +33,7 @@ class ServiceViewModel:ViewModel(),ServiceConnection {
     inner class MyMessageHandler(looper: Looper) : Handler(looper) {
         override fun handleMessage(msg: Message) {
 
-            if(msg.what==TrackingService.MSG_LOC_ID){
+            if(msg.what== TrackingService.MSG_LOC_ID){
                 val bundle=msg.data
                 _location.value=bundle.getParcelable(TrackingService.LOC_KEY)
             }
