@@ -24,7 +24,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TreasureFind"
         tools:targetApi="31">
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id" />
@@ -41,17 +40,17 @@
         <activity
             android:name=".main.entry_point.LoginActivity"
             android:exported="true"
-            android:theme="@style/Theme.TreasureFind.NoActionBar" >
+            android:theme="@style/Theme.TreasureFind.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".main.ui.treasureadding.TreasureAddingActivity"
             android:exported="false"
-            android:theme="@style/Theme.TreasureFind.NoActionBar"/>
+            android:theme="@style/Theme.TreasureFind.NoActionBar" />
         <activity
             android:name=".main.ui.map.MapsActivity"
             android:exported="false"
