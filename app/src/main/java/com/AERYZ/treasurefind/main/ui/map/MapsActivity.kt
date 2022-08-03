@@ -23,19 +23,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.w3c.dom.Text
 
-class ModalBottomSheet : BottomSheetDialogFragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.mapsbottomsheet, container, false)
-
-    companion object {
-        const val TAG = "ModalBottomSheet"
-    }
-}
-
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
@@ -69,8 +56,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             isBind = savedInstanceState.getBoolean(BINDING_STATUS_KEY, false)
         }
 
-        val modalBottomSheet = ModalBottomSheet()
-        modalBottomSheet.show(supportFragmentManager, ModalBottomSheet.TAG)
 
         val who = intent.getIntExtra(who_KEY, 0)
         val tid  = intent.getStringExtra(tid_KEY)
