@@ -5,11 +5,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="60dp"
     tools:context=".main.ui.hider_place.HiderPlaceFragment">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="671dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -18,9 +20,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Treasure Photo:"
+                android:layout_marginLeft="15dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginLeft="15dp" />
+                android:text="Treasure Photo:" />
 
             <ImageView
                 android:id="@+id/treasurePhoto"
@@ -29,20 +31,27 @@
                 android:layout_gravity="center"
                 android:layout_margin="15dp"
                 android:contentDescription="treasureImage"
-                android:src="@color/black"/>
+                android:src="@color/black" />
 
             <Button
                 android:id="@+id/changeImgButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="TAKE A PHOTO"/>
+                android:text="TAKE A PHOTO" />
+
+            <Button
+                android:id="@+id/getLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="TREASURE LOCATION" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
                 android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
                 android:text="Title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -51,21 +60,21 @@
                 android:id="@+id/treasureTitle"
                 android:layout_width="336dp"
                 android:layout_height="57dp"
+                android:layout_marginLeft="15dp"
                 android:inputType="text"
                 android:text=""
                 android:textColor="@color/black"
-                android:layout_marginLeft="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
                 android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
                 android:text="Description"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText_1"/>
+                app:layout_constraintTop_toBottomOf="@+id/editText_1" />
 
             <EditText
                 android:id="@+id/treasureDescription"
@@ -77,14 +86,14 @@
                 android:textColor="@color/black"
                 app:layout_constraintBottom_toTopOf="@+id/addButton"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView3"/>
+                app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
             <Button
                 android:id="@+id/addButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
                 android:text="Create Session"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

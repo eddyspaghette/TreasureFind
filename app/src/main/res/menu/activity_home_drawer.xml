@@ -10,7 +10,7 @@
             android:title="@string/menu_seeker_feed" />
         <item
             android:id="@+id/nav_hider"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_compass"
             android:title="@string/menu_hider_place" />
         <item
             android:id="@+id/nav_profile"
