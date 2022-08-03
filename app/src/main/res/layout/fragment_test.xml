@@ -22,10 +22,10 @@
         android:layout_margin="5dp"/>
 
     <Button
-        android:id="@+id/btn_treasureprofile"
+        android:id="@+id/btn_sradding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Treasure Profile"
+        android:text="SR Adding"
         android:layout_margin="5dp"/>
 
 </LinearLayout>

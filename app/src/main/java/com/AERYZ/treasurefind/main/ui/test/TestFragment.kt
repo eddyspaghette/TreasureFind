@@ -11,6 +11,7 @@ import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.databinding.FragmentTestBinding
 import com.AERYZ.treasurefind.main.ui.feed.FeedFragment
 import com.AERYZ.treasurefind.main.ui.map.MapsActivity
+import com.AERYZ.treasurefind.main.ui.sr.SRActivity
 import com.AERYZ.treasurefind.main.ui.treasureadding.TreasureAddingActivity
 import com.AERYZ.treasurefind.main.ui.treasuredetails.TreasureDetailsActivity
 
@@ -39,21 +40,21 @@ class TestFragment : Fragment() {
             startActivity(intent)
         }
 
-        //Map Activity button
+        //Treasure adding button
         val btn_treasureAdding: Button = root.findViewById(R.id.btn_treasureadding)
         btn_treasureAdding.setOnClickListener() {
             val intent = Intent(requireContext(), TreasureAddingActivity::class.java)
             startActivity(intent)
         }
 
-        //Map Activity button
-        val btn_treasureProfile: Button = root.findViewById(R.id.btn_treasureprofile)
-        btn_treasureProfile.setOnClickListener() {
-            val intent = Intent(requireContext(), TreasureDetailsActivity::class.java)
-            val tid = "o3HmVHe2Z6ziy4p4SguP"
-            intent.putExtra(FeedFragment.tid_KEY, tid)
+        //SR button
+        val btn_SRAdding: Button = root.findViewById(R.id.btn_sradding)
+        btn_SRAdding.setOnClickListener() {
+            val intent = Intent(requireContext(), SRActivity::class.java)
+            intent.putExtra(MapsActivity.tid_KEY, "Qqt7DNLsk12CWOtK26uE")
             startActivity(intent)
         }
+            
 
         return root
     }

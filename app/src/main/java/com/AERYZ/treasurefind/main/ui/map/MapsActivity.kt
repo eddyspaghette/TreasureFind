@@ -26,6 +26,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mapsViewModel: MapsViewModel
     private val BINDING_STATUS_KEY = "BINDING_STATUS"
 
+    companion object {
+        var tid_KEY = "tid"
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
