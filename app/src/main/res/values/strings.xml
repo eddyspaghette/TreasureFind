@@ -17,9 +17,9 @@
     <string name="onboarding_title1">Ahoy, Matey!</string>
     <string name="onboarding_title2">Shiver me timbers!</string>
     <string name="onboarding_title3">Avast!</string>
-    <string name="onboarding_desc1">Arrr you ready to find some treasures!</string>
-    <string name="onboarding_desc2">treasure treasure treasure</string>
-    <string name="onboarding_desc3">pirate pirate pirate</string>
+    <string name="onboarding_desc1">Arrr you ready to find some treasures?</string>
+    <string name="onboarding_desc2">Go on an adventure and seek treasures...</string>
+    <string name="onboarding_desc3">...or, post your prized possession and let the best pirate find it!</string>
 
     <string name="facebook_application_id">1355344324874942</string>
     <string name="facebook_client_token">a488ec6c4c19e8b4198614eaff47293d</string>
