@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.main.ui.feed.GlideApp
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -150,13 +151,13 @@ class MyFirebase {
         CoroutineScope(IO).launch {
             val bitmap = GlideApp.with(activity)
                 .asBitmap()
-                .error(R.drawable.tf_logo)
+                .error(com.google.android.material.R.drawable.ic_clock_black_24dp)
                 .load(reference)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .submit()
                 .get()
-            withContext(Main) {
-                mutableLiveData.value = bitmap
-            }
+                mutableLiveData.postValue(bitmap)
         }
     }
 
