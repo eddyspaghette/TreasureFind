@@ -11,6 +11,7 @@ import com.AERYZ.treasurefind.main.ui.feed.GlideApp
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.CoroutineScope
@@ -144,11 +145,7 @@ class MyFirebase {
         val source = Source.CACHE
         docRef.get(source).addOnCompleteListener() {
             if (it.isSuccessful) {
-                val treasure = Treasure(it.result.get("oid").toString(),
-                    it.result.get("title").toString(),
-                    it.result.get("desc").toString())
-                mutableLiveData.value = treasure
-                Log.d("Debug", "${treasure.title} ${treasure.desc}")
+                mutableLiveData.value = it.result.toObject<Treasure>()
             }
 
         }.addOnFailureListener() {

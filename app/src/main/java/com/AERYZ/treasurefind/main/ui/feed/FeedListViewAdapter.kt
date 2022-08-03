@@ -91,7 +91,6 @@ class FeedAdapter(private var context: Context, private var feedList: ArrayList<
             val intent = Intent(context, TreasureDetailsActivity::class.java)
             val tid = feedList[position].tid
             intent.putExtra(FeedFragment.tid_KEY, tid)
-            intent.putExtra(MapsActivity.who_KEY, 1) // 0 is hider, 1 is seeker
             context.startActivity(intent)
         }
     }
