@@ -1,7 +1,10 @@
 package com.AERYZ.treasurefind.main.ui.hider_place
 
-import androidx.lifecycle.ViewModel
+import android.graphics.Bitmap
+import androidx.lifecycle.MutableLiveData
+import com.AERYZ.treasurefind.main.services.ServiceViewModel
 
-class HiderPlaceViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
+class HiderPlaceViewModel : ServiceViewModel() {
+    var treasurePhoto = MutableLiveData<Bitmap>()
+
 }

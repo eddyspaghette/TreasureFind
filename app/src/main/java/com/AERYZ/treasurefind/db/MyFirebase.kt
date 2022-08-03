@@ -62,6 +62,11 @@ class MyFirebase {
         fun onFailure(exception: Exception)
     }
 
+    interface TreasureInsertionListener {
+        fun onSuccess(tid: String)
+        fun onFailure(exception: Exception)
+    }
+
     fun getAllTreasures(listener: FirebaseFeedListener) {
         db.collection("treasures")
             .get()
@@ -74,9 +79,7 @@ class MyFirebase {
             }
     }
 
-
-
-    private fun insertToFirebaseStorage(bitmap: Bitmap, path: String, dialog: Dialog? = null, successDialog: Dialog? = null) {
+    private fun insertToFirebaseStorage(bitmap: Bitmap, path: String, id: String? = null, dialog: Dialog? = null, successDialog: Dialog? = null, listener: TreasureInsertionListener?=null) {
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()
@@ -92,6 +95,9 @@ class MyFirebase {
                     successDialog.show()
                     Timer().schedule(2400) {
                         successDialog.dismiss()
+                        if (listener != null && id != null) {
+                            listener.onSuccess(id)
+                        }
                     }
                 }
                 Log.d("DEBUG: uploaded successfully", "$it")
@@ -120,16 +126,19 @@ class MyFirebase {
         insertToFirebaseStorage(myUser.profileImage!!, profileImagePath)
     }
 
-    fun insert(treasure: Treasure, dialog: Dialog? = null, successDialog: Dialog? = null) {
+    fun insert(treasure: Treasure, dialog: Dialog? = null, successDialog: Dialog? = null, listener: TreasureInsertionListener? = null) {
         db.collection("treasures")
             .add(treasure)
             .addOnSuccessListener {
                 val treasureImagePath = "images/treasures/${it.id}/image.jpg"
                 it.update("treasureImagePath", treasureImagePath)
                 it.update("tid", it.id)
-                treasure.treasureImage?.let { it1 -> insertToFirebaseStorage(it1, treasureImagePath, dialog, successDialog) }
+                treasure.treasureImage?.let { it1 ->
+                    insertToFirebaseStorage(it1, treasureImagePath, it.id, dialog, successDialog, listener)
+                }
             }
     }
+
     fun getTreasure(tid: String, mutableLiveData: MutableLiveData<Treasure>) {
         val docRef = db.collection("treasures").document(tid)
         val source = Source.CACHE

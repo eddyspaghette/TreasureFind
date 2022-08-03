@@ -14,6 +14,7 @@ import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.Treasure
 import com.AERYZ.treasurefind.db.MyUser
+import com.AERYZ.treasurefind.main.ui.map.MapsActivity
 import com.AERYZ.treasurefind.main.ui.treasuredetails.TreasureDetailsActivity
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -90,6 +91,7 @@ class FeedAdapter(private var context: Context, private var feedList: ArrayList<
             val intent = Intent(context, TreasureDetailsActivity::class.java)
             val tid = feedList[position].tid
             intent.putExtra(FeedFragment.tid_KEY, tid)
+            intent.putExtra(MapsActivity.who_KEY, 1) // 0 is hider, 1 is seeker
             context.startActivity(intent)
         }
     }

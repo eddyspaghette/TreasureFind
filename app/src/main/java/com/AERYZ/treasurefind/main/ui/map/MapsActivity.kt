@@ -28,6 +28,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     companion object {
         var tid_KEY = "tid"
+        var who_KEY = "who" //0 is hider, 1 is seeker
     }
 
 
@@ -47,6 +48,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         //Service View Model
         mapsViewModel = ViewModelProvider(this)[MapsViewModel::class.java]
+
+        val who = intent.getIntExtra(who_KEY, 0)
+        val tid  = intent.getStringExtra(tid_KEY)
 
 
         serviceIntent = Intent(this, TrackingService::class.java)

@@ -48,10 +48,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".main.ui.treasureadding.TreasureAddingActivity"
-            android:exported="false"
-            android:theme="@style/Theme.TreasureFind.NoActionBar" />
-        <activity
             android:name=".main.ui.map.MapsActivity"
             android:exported="false"
             android:label="@string/title_activity_maps" />
