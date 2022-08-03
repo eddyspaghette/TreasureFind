@@ -11,4 +11,8 @@
         android:title="Search"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/menu_refresh"
+        android:title="@string/menu_refresh"
+        app:showAsAction="never" />
 </menu>
