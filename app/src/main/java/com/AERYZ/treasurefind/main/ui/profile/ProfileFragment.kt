@@ -28,6 +28,7 @@ import com.mikhaellopez.circularimageview.CircularImageView
 
 class ProfileFragment : Fragment() {
     private lateinit var viewModel: ProfileViewModel
+    private lateinit var modelFactory: ProfileFragmentViewModelFactory
     private var myFirebase = MyFirebase()
     private val tabNames = arrayOf("Own","Found")
     private lateinit var tabLayoutMediator : TabLayoutMediator
@@ -45,10 +46,11 @@ class ProfileFragment : Fragment() {
         val profileImageView: CircularImageView = view.findViewById(R.id.circularImageViewProfile)
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
-        val mutableLiveData = MutableLiveData<Bitmap>()
-        myFirebase.getProfileImage(requireActivity(), uid, mutableLiveData)
-        mutableLiveData.observe(requireActivity()) {
-            profileImageView.setImageBitmap(mutableLiveData.value)
+        modelFactory = ProfileFragmentViewModelFactory(requireActivity())
+        viewModel = ViewModelProvider(this, modelFactory)[ProfileViewModel::class.java]
+        viewModel.profilePicture.observe(requireActivity()) {
+            profileImageView.setImageBitmap(it)
+            myFirebase.updateProfileImage(uid, it)
         }
         activityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 it : ActivityResult ->
@@ -58,9 +60,7 @@ class ProfileFragment : Fragment() {
                 if (it.data != null && it.data!!.data != null)
                 {
                     var bitmap = getBitmap(requireActivity(), it.data!!.data!!)
-                    profileImageView.setImageBitmap(bitmap)
-                    myFirebase.updateProfileImage(uid, bitmap)
-
+                    viewModel.profilePicture.value = bitmap
                 }
             }
         }

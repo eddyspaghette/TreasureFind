@@ -3,57 +3,38 @@ package com.AERYZ.treasurefind.main.ui.feed
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.ktx.storage
-import com.google.firebase.storage.ktx.component1
-import com.google.firebase.storage.ktx.component2
-import com.google.firebase.storage.ktx.component3
+import com.AERYZ.treasurefind.db.MyFirebase
+import com.AERYZ.treasurefind.db.Treasure
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.toObject
 
-class FeedViewModel : ViewModel() {
-    var listImagesURI = MutableLiveData<List<StorageReference>>()
+import java.lang.Exception
 
-    companion object {
-        private const val MAX_ITEMS = 5
+class FeedViewModel : ViewModel(), MyFirebase.FirebaseFeedListener {
+    var feedList = MutableLiveData<ArrayList<Treasure>>()
+
+    // when treasure data transfer fails
+    override fun onFailure(exception: Exception) {
+        println("DEBUG error: $exception")
+        feedList.value = arrayListOf()
+    }
+
+    // this function is called when all treasure data is successfully loaded
+    override fun onSuccess(snapshot: QuerySnapshot) {
+        val list: ArrayList<Treasure> = arrayListOf()
+        for (treasure in snapshot) {
+            val retTreasure = treasure.toObject<Treasure>()
+            list.add(retTreasure)
+        }
+        feedList.value = list
     }
 
     init {
-        listImagesURI.value = listOf()
-        listAllPaginated(null)
+        // this retrieves all documents in the treasure collection
+        val myFirebase = MyFirebase()
+        myFirebase.getAllTreasures(this)
     }
 
-    private fun processResults(items: List<StorageReference>, prefixes: List<StorageReference>) {
-        if (listImagesURI.value!!.isEmpty()) {
-            listImagesURI.value = items
-        } else {
-            listImagesURI.value = listImagesURI.value!! + items
-        }
-        println("DEBUG $items")
-    }
 
-    private fun listAllPaginated(pageToken: String?) {
-        val storage = Firebase.storage
-        val listRef = storage.reference.child("images/")
-
-        // Fetch the next page of results, using the pageToken if we have one.
-        val listPageTask = if (pageToken != null) {
-            listRef.list(MAX_ITEMS, pageToken)
-        } else {
-            listRef.list(MAX_ITEMS)
-        }
-
-        listPageTask
-            .addOnSuccessListener { (items, prefixes, pageToken) ->
-                // Process page of results
-                processResults(items, prefixes)
-
-                // Recurse onto next page
-                pageToken?.let {
-                    listAllPaginated(it)
-                }
-            }.addOnFailureListener {
-                Log.d("DEBUG", "$it")
-            }
-    }
 
 }
