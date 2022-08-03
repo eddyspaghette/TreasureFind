@@ -40,7 +40,7 @@ class TestFragment : Fragment() {
             startActivity(intent)
         }
 
-        //Map Activity button
+        //Treasure adding button
         val btn_treasureAdding: Button = root.findViewById(R.id.btn_treasureadding)
         btn_treasureAdding.setOnClickListener() {
             val intent = Intent(requireContext(), TreasureAddingActivity::class.java)
@@ -52,6 +52,8 @@ class TestFragment : Fragment() {
         btn_SRAdding.setOnClickListener() {
             val intent = Intent(requireContext(), SRActivity::class.java)
             intent.putExtra(MapsActivity.tid_KEY, "Qqt7DNLsk12CWOtK26uE")
+            startActivity(intent)
+        }
             
 
         return root
