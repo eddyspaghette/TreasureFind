@@ -10,7 +10,8 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_feed">Feed</string>
+    <string name="menu_seeker_feed">Seeker\'s Feed</string>
+    <string name="menu_hider_place">Hider\'s Place</string>
     <string name="menu_profile">Profile</string>
     <string name="menu_test">Test</string>
 

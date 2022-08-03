@@ -12,8 +12,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.databinding.ActivityMainBinding
-import com.AERYZ.treasurefind.db.MyFirebase
-import com.AERYZ.treasurefind.db.User
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_feed, R.id.nav_treasure, R.id.nav_profile
+                R.id.nav_seeker, R.id.nav_hider, R.id.nav_profile, R.id.nav_test
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

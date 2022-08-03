@@ -1,5 +1,6 @@
 package com.AERYZ.treasurefind.db
 
+import android.app.Activity
 import android.app.Dialog
 import android.graphics.Bitmap
 import android.util.Log
@@ -7,8 +8,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.main.ui.feed.GlideApp
-import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.firestore.FieldValue
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -18,21 +19,37 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+import java.lang.Exception
 import java.util.*
 import kotlin.concurrent.schedule
-import kotlin.concurrent.timerTask
+
+data class MyUser(
+    var uid: String = "",
+    var userName: String = "",
+    var email: String = "",
+    @Exclude @set:Exclude @get:Exclude var profileImage: Bitmap? = null,
+    var profileImagePath: String = ""
+)
+
+data class Treasure(
+    var oid: String? = "",
+    var tid: String? = "",
+    var title: String? = "",
+    var desc: String? = "",
+    var latitude: Double? = 0.0,
+    var longitude: Double? = 0.0,
+    // this prevents firebase collections from saving the bitmap
+    @Exclude @set:Exclude @get:Exclude var treasureImage: Bitmap? = null,
+    var wid: String? = "",
+    var startTime: String? = "",
+    var seekers: ArrayList<String> = arrayListOf<String>(),
+    var sr: ArrayList<String> = arrayListOf<String>(),
+    var length: String? = "",
+    var treasureImagePath: String? = "treasureImagePath",
+)
 
 
-class User(var uid: String, var userName: String, var email: String, var profileImage: Bitmap) {
-}
-
-class Treasure(var oid: String, var title: String,
-               var desc: String, var location: LatLng,
-               var treasureImage: Bitmap, var wid: String = "",
-               var startTime: String? = null, var length: String? = null) {
-}
-
-class SR(var sid: String, var sRImage: Bitmap) {
+data class SR(var sid: String, var sRImage: Bitmap) {
 }
 
 class MyFirebase {
@@ -40,7 +57,29 @@ class MyFirebase {
     private var db = Firebase.firestore
     private var storageReference = storage.reference
 
-    private fun insertToFirebaseStorage(bitmap: Bitmap, path: String, dialog: Dialog? = null, successDialog: Dialog? = null) {
+    interface FirebaseFeedListener {
+        fun onSuccess(snapshot: QuerySnapshot)
+        fun onFailure(exception: Exception)
+    }
+
+    interface TreasureInsertionListener {
+        fun onSuccess(tid: String)
+        fun onFailure(exception: Exception)
+    }
+
+    fun getAllTreasures(listener: FirebaseFeedListener) {
+        db.collection("treasures")
+            .get()
+            .addOnSuccessListener { result ->
+                Log.d("DEBUG: result", "$result")
+                listener.onSuccess(result)
+            }.addOnFailureListener { exception ->
+                Log.d("DEBUG: failure", "$exception")
+                listener.onFailure(exception)
+            }
+    }
+
+    private fun insertToFirebaseStorage(bitmap: Bitmap, path: String, id: String? = null, dialog: Dialog? = null, successDialog: Dialog? = null, listener: TreasureInsertionListener?=null) {
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()
@@ -56,6 +95,9 @@ class MyFirebase {
                     successDialog.show()
                     Timer().schedule(2400) {
                         successDialog.dismiss()
+                        if (listener != null && id != null) {
+                            listener.onSuccess(id)
+                        }
                     }
                 }
                 Log.d("DEBUG: uploaded successfully", "$it")
@@ -71,37 +113,65 @@ class MyFirebase {
         }
     }
 
-    fun insert(user: User) {
-        var profileImagePath = "images/profile/${user.uid}.jpg"
-        val data = hashMapOf(
-            "username" to user.userName,
-            "email" to user.email,
-            "profile_image_path" to profileImagePath
-        )
-
-        db.collection("users").document(user.uid).set(data)
-        insertToFirebaseStorage(user.profileImage, profileImagePath)
+    // returns document reference, caller has to implement listeners
+    fun getUserDocument(uid: String): DocumentReference {
+        val docRef = db.collection("users").document(uid)
+        return docRef
     }
 
-    fun insert(treasure: Treasure, dialog: Dialog? = null, successDialog: Dialog? = null) {
-        val data = hashMapOf(
-            "title" to treasure.title,
-            "desc" to treasure.desc,
-            "oid" to treasure.oid,
-            "lat" to treasure.location.latitude.toString(),
-            "long" to treasure.location.longitude.toString(),
-            "wid" to treasure.wid,
-            "seekers" to arrayListOf<String>(),
-            "sr" to arrayListOf<String>(),
-            "treasure_image_path" to ""
-        )
+    fun insert(myUser: MyUser) {
+        val profileImagePath = "images/profile/${myUser.uid}.jpg"
+        myUser.profileImagePath = profileImagePath
+        db.collection("users").document(myUser.uid).set(myUser)
+        insertToFirebaseStorage(myUser.profileImage!!, profileImagePath)
+    }
+
+    fun insert(treasure: Treasure, dialog: Dialog? = null, successDialog: Dialog? = null, listener: TreasureInsertionListener? = null) {
         db.collection("treasures")
-            .add(data)
+            .add(treasure)
             .addOnSuccessListener {
                 val treasureImagePath = "images/treasures/${it.id}/image.jpg"
-                it.update("treasure_image_path", treasureImagePath)
-                insertToFirebaseStorage(treasure.treasureImage, treasureImagePath, dialog, successDialog)
+                it.update("treasureImagePath", treasureImagePath)
+                it.update("tid", it.id)
+                treasure.treasureImage?.let { it1 ->
+                    insertToFirebaseStorage(it1, treasureImagePath, it.id, dialog, successDialog, listener)
+                }
             }
+    }
+
+    fun getTreasure(tid: String, mutableLiveData: MutableLiveData<Treasure>) {
+        val docRef = db.collection("treasures").document(tid)
+        val source = Source.CACHE
+        docRef.get(source).addOnCompleteListener() {
+            if (it.isSuccessful) {
+                val treasure = Treasure(it.result.get("oid").toString(),
+                    it.result.get("title").toString(),
+                    it.result.get("desc").toString())
+                mutableLiveData.value = treasure
+                Log.d("Debug", "${treasure.title} ${treasure.desc}")
+            }
+
+        }.addOnFailureListener() {
+            Log.d("Debug", "Failed to achieve data")
+        }
+    }
+
+    fun getTreasureImage(activity: Activity, tid: String, mutableLiveData: MutableLiveData<Bitmap>) {
+        var treasureImagePath = "images/treasures/${tid}/image.jpg"
+        val reference = storageReference.child(treasureImagePath)
+        mutableLiveData.value = Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888)
+        CoroutineScope(IO).launch {
+            val bitmap = GlideApp.with(activity)
+                .asBitmap()
+                .error(R.drawable.tf_logo)
+                .load(reference)
+                .submit()
+                .get()
+            withContext(Main) {
+                mutableLiveData.value = bitmap
+                Log.d("Debug", "Got Loading treasure image")
+            }
+        }
     }
 
     fun updateSeeker(tid: String, sid: String) {
@@ -127,13 +197,13 @@ class MyFirebase {
         CoroutineScope(IO).launch {
             val bitmap = GlideApp.with(activity)
                 .asBitmap()
-                .error(R.drawable.tf_logo)
+                .error(com.google.android.material.R.drawable.ic_clock_black_24dp)
                 .load(reference)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .submit()
                 .get()
-            withContext(Main) {
-                mutableLiveData.value = bitmap
-            }
+                mutableLiveData.postValue(bitmap)
         }
     }
 
