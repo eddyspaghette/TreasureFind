@@ -9,11 +9,8 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.databinding.FragmentTestBinding
-import com.AERYZ.treasurefind.main.ui.feed.FeedFragment
 import com.AERYZ.treasurefind.main.ui.map.MapsActivity
 import com.AERYZ.treasurefind.main.ui.sr.SRActivity
-import com.AERYZ.treasurefind.main.ui.treasureadding.TreasureAddingActivity
-import com.AERYZ.treasurefind.main.ui.treasuredetails.TreasureDetailsActivity
 
 class TestFragment : Fragment() {
 
@@ -37,13 +34,6 @@ class TestFragment : Fragment() {
         val btn_mapsActivity: Button = root.findViewById(R.id.btn_map)
         btn_mapsActivity.setOnClickListener() {
             val intent = Intent(requireContext(), MapsActivity::class.java)
-            startActivity(intent)
-        }
-
-        //Treasure adding button
-        val btn_treasureAdding: Button = root.findViewById(R.id.btn_treasureadding)
-        btn_treasureAdding.setOnClickListener() {
-            val intent = Intent(requireContext(), TreasureAddingActivity::class.java)
             startActivity(intent)
         }
 
