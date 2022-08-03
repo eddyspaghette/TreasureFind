@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.databinding.ActivityMapsBinding
-import com.AERYZ.treasurefind.main.services.ServiceViewModel
 import com.AERYZ.treasurefind.main.services.TrackingService
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -24,7 +23,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     //service
     private lateinit var serviceIntent: Intent
     private var isBind = false
-    private lateinit var serviceViewModel: ServiceViewModel
+    private lateinit var mapsViewModel: MapsViewModel
     private val BINDING_STATUS_KEY = "BINDING_STATUS"
 
     companion object {
@@ -47,7 +46,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         //Service View Model
-        serviceViewModel = ViewModelProvider(this)[ServiceViewModel::class.java]
+        mapsViewModel = ViewModelProvider(this)[MapsViewModel::class.java]
 
 
         serviceIntent = Intent(this, TrackingService::class.java)
@@ -75,7 +74,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         catch (e: SecurityException)  {
             Log.e("Exception: %s", e.message.toString());
         }
-        serviceViewModel.location.observe(this) {
+        mapsViewModel.location.observe(this) {
             if (it != null)
             {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude,it.longitude),17f))
@@ -85,7 +84,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     fun bindService(){
         if(!isBind){
-            applicationContext.bindService(serviceIntent, serviceViewModel, Context.BIND_AUTO_CREATE)
+            applicationContext.bindService(serviceIntent, mapsViewModel, Context.BIND_AUTO_CREATE)
             isBind = true
             println("bind service!")
         }
@@ -93,7 +92,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun unBindService(){
         if (isBind) {
-            applicationContext.unbindService(serviceViewModel)
+            applicationContext.unbindService(mapsViewModel)
             isBind = false
             println("unbind service!!!!!")
         }
@@ -108,6 +107,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onDestroy() {
         super.onDestroy()
         unBindService()
+        stopService(serviceIntent)
     }
 
 }

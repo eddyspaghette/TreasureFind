@@ -1,16 +1,20 @@
 package com.AERYZ.treasurefind.main.ui.feed
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.Treasure
 import com.AERYZ.treasurefind.db.MyUser
+import com.AERYZ.treasurefind.main.ui.treasuredetails.TreasureDetailsActivity
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -82,9 +86,12 @@ class FeedAdapter(private var context: Context, private var feedList: ArrayList<
                     holder.postedTextView.text = "N/A"
                 }
         }
-//        holder.imageView.setOnClickListener {
-//            println("DEBUG: image clicked")
-//        }
+        holder.itemView.setOnClickListener {
+            val intent = Intent(context, TreasureDetailsActivity::class.java)
+            val tid = feedList[position].tid
+            intent.putExtra(FeedFragment.tid_KEY, tid)
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {

@@ -46,6 +46,10 @@ class TreasureAddingActivity : AppCompatActivity() {
         titleEditText = findViewById(R.id.treasureTitle)
         descEditText = findViewById(R.id.treasureDescription)
 
+        treasureAddingViewModel.location.observe(this) {
+            Log.d("Debug", "${it.latitude} ${it.longitude}")
+        }
+
         setButtonListeners()
 
         startService(serviceIntent)
@@ -84,7 +88,7 @@ class TreasureAddingActivity : AppCompatActivity() {
         val btn: Button = findViewById(R.id.addButton)
         btn.setOnClickListener {
             if (treasureAddingViewModel.location.value == null) {
-                Log.d("Error", "Failed to locate")
+                Log.d("Debug", "Failed to locate")
             }
             val location = treasureAddingViewModel.location.value
             val uid = FirebaseAuth.getInstance().currentUser?.uid
@@ -92,6 +96,7 @@ class TreasureAddingActivity : AppCompatActivity() {
                 val myFirebase = MyFirebase()
                 val myTreasure = Treasure(
                     it,
+                    "",
                     titleEditText.text.toString(),
                     descEditText.text.toString(),
                     location!!.latitude,

@@ -9,9 +9,11 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.databinding.FragmentTestBinding
+import com.AERYZ.treasurefind.main.ui.feed.FeedFragment
 import com.AERYZ.treasurefind.main.ui.map.MapsActivity
 import com.AERYZ.treasurefind.main.ui.sr.SRActivity
 import com.AERYZ.treasurefind.main.ui.treasureadding.TreasureAddingActivity
+import com.AERYZ.treasurefind.main.ui.treasuredetails.TreasureDetailsActivity
 
 class TestFragment : Fragment() {
 
@@ -50,8 +52,7 @@ class TestFragment : Fragment() {
         btn_SRAdding.setOnClickListener() {
             val intent = Intent(requireContext(), SRActivity::class.java)
             intent.putExtra(MapsActivity.tid_KEY, "Qqt7DNLsk12CWOtK26uE")
-            startActivity(intent)
-        }
+            
 
         return root
     }
