@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
@@ -17,6 +20,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.w3c.dom.Text
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -51,6 +55,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         if (savedInstanceState != null) {
             isBind = savedInstanceState.getBoolean(BINDING_STATUS_KEY, false)
         }
+
 
         val who = intent.getIntExtra(who_KEY, 0)
         val tid  = intent.getStringExtra(tid_KEY)
