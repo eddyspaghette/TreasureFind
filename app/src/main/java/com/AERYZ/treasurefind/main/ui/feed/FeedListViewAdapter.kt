@@ -17,6 +17,7 @@ import com.AERYZ.treasurefind.db.MyUser
 import com.AERYZ.treasurefind.main.ui.map.MapsActivity
 import com.AERYZ.treasurefind.main.ui.treasuredetails.TreasureDetailsActivity
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.signature.ObjectKey
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -81,11 +82,14 @@ class FeedAdapter(private var context: Context, private var feedList: ArrayList<
                     myUser?.let { user ->
                         println("DEBUG: feedUser $user")
                         holder.postedTextView.text = "Posted by: ${user.userName}"
-                        GlideApp.with(context)
-                            .load(storageRef.child(user.profileImagePath))
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .skipMemoryCache(true)
-                            .into(holder.profileImageView)
+                        val profileImageRef = storageRef.child(user.profileImagePath)
+                        profileImageRef.metadata.addOnSuccessListener { profileMeta ->
+                            val updatedTime = profileMeta.updatedTimeMillis
+                            GlideApp.with(context)
+                                .load(storageRef.child(user.profileImagePath))
+                                .signature(ObjectKey(updatedTime))
+                                .into(holder.profileImageView)
+                        }
                     }
                 }
                 .addOnFailureListener{

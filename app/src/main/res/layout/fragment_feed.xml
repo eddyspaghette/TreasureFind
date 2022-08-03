@@ -37,7 +37,7 @@
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="60dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline4"
