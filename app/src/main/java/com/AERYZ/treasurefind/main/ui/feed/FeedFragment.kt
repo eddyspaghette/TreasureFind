@@ -38,9 +38,9 @@ class FeedFragment : Fragment() {
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         val listRecyclerView: RecyclerView = root.findViewById(R.id.feed_recyclerview)
         listRecyclerView.layoutManager = layoutManager
-        val feedAdapter = FeedAdapter(requireActivity(), listOf())
-        // observe changes in view model
-        feedViewModel.listImagesURI.observe(requireActivity()) {
+        val feedAdapter = FeedAdapter(requireActivity(), arrayListOf())
+
+        feedViewModel.feedList.observe(requireActivity()) {
             feedAdapter.updateList(it)
             feedAdapter.notifyDataSetChanged()
         }

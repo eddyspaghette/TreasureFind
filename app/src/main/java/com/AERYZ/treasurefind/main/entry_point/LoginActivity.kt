@@ -7,14 +7,13 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.db.MyFirebase
-import com.AERYZ.treasurefind.db.User
+import com.AERYZ.treasurefind.db.MyUser
 import com.AERYZ.treasurefind.main.util.Util
 import com.AERYZ.treasurefind.main.entry_point.onboarding.OnboardingActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 
 
 class LoginActivity : AppCompatActivity() {
@@ -39,7 +38,8 @@ class LoginActivity : AppCompatActivity() {
         // Create and launch sign-in intent
         val signInIntent = AuthUI.getInstance()
             .createSignInIntentBuilder()
-            .setLogo(R.drawable.tf_logo)
+            .setLogo(R.drawable.tf)
+            .setTheme(R.style.LoginTheme)
             .setIsSmartLockEnabled(false)
             .setAvailableProviders(providers)
             .build()
@@ -56,10 +56,16 @@ class LoginActivity : AppCompatActivity() {
 
             // Show onboarding activity if new user
             if (response != null && response.isNewUser) {
-                val u = User(user!!.uid, "blue", user.email!!,
-                    BitmapFactory.decodeResource(resources,
-                        R.drawable.tf_logo))
-                myFirebase.insert(u)
+                user?.let {
+                    val u = MyUser(
+                        it.uid,
+                        it.displayName ?: "N/A",
+                        it.email ?: "N/A",
+                        BitmapFactory.decodeResource(resources, R.drawable.tf_logo)
+                    )
+                    myFirebase.insert(u)
+                    println("DEBUG: u $u")
+                }
                 intent = Intent(applicationContext, OnboardingActivity::class.java)
             }
             startActivity(intent)
