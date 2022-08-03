@@ -1,5 +1,6 @@
 package com.AERYZ.treasurefind.db
 
+import android.app.Activity
 import android.app.Dialog
 import android.graphics.Bitmap
 import android.util.Log
@@ -32,6 +33,7 @@ data class MyUser(
 
 data class Treasure(
     var oid: String? = "",
+    var tid: String? = "",
     var title: String? = "",
     var desc: String? = "",
     var latitude: Double? = 0.0,
@@ -123,9 +125,44 @@ class MyFirebase {
             .add(treasure)
             .addOnSuccessListener {
                 val treasureImagePath = "images/treasures/${it.id}/image.jpg"
-                it.update("${treasure.treasureImagePath}", treasureImagePath)
+                it.update("treasureImagePath", treasureImagePath)
+                it.update("tid", it.id)
                 treasure.treasureImage?.let { it1 -> insertToFirebaseStorage(it1, treasureImagePath, dialog, successDialog) }
             }
+    }
+    fun getTreasure(tid: String, mutableLiveData: MutableLiveData<Treasure>) {
+        val docRef = db.collection("treasures").document(tid)
+        val source = Source.CACHE
+        docRef.get(source).addOnCompleteListener() {
+            if (it.isSuccessful) {
+                val treasure = Treasure(it.result.get("oid").toString(),
+                    it.result.get("title").toString(),
+                    it.result.get("desc").toString())
+                mutableLiveData.value = treasure
+                Log.d("Debug", "${treasure.title} ${treasure.desc}")
+            }
+
+        }.addOnFailureListener() {
+            Log.d("Debug", "Failed to achieve data")
+        }
+    }
+
+    fun getTreasureImage(activity: Activity, tid: String, mutableLiveData: MutableLiveData<Bitmap>) {
+        var treasureImagePath = "images/treasures/${tid}/image.jpg"
+        val reference = storageReference.child(treasureImagePath)
+        mutableLiveData.value = Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888)
+        CoroutineScope(IO).launch {
+            val bitmap = GlideApp.with(activity)
+                .asBitmap()
+                .error(R.drawable.tf_logo)
+                .load(reference)
+                .submit()
+                .get()
+            withContext(Main) {
+                mutableLiveData.value = bitmap
+                Log.d("Debug", "Got Loading treasure image")
+            }
+        }
     }
 
     fun updateSeeker(tid: String, sid: String) {
