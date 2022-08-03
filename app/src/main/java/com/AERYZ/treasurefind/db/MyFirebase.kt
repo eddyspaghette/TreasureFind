@@ -33,6 +33,7 @@ data class MyUser(
 
 data class Treasure(
     var oid: String? = "",
+    var tid: String? = "",
     var title: String? = "",
     var desc: String? = "",
     var latitude: Double? = 0.0,
@@ -124,7 +125,8 @@ class MyFirebase {
             .add(treasure)
             .addOnSuccessListener {
                 val treasureImagePath = "images/treasures/${it.id}/image.jpg"
-                it.update("${treasure.treasureImagePath}", treasureImagePath)
+                it.update("treasureImagePath", treasureImagePath)
+                it.update("tid", it.id)
                 treasure.treasureImage?.let { it1 -> insertToFirebaseStorage(it1, treasureImagePath, dialog, successDialog) }
             }
     }

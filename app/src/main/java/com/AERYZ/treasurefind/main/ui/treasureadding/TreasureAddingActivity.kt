@@ -96,6 +96,7 @@ class TreasureAddingActivity : AppCompatActivity() {
                 val myFirebase = MyFirebase()
                 val myTreasure = Treasure(
                     it,
+                    "",
                     titleEditText.text.toString(),
                     descEditText.text.toString(),
                     location!!.latitude,
