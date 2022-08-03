@@ -16,6 +16,9 @@ TreasureFind is a 21st century style of hide and seek revamped.
 [Show and Tell 1](https://www.youtube.com/watch?v=jzxiTeOsli0)
 
 
+[Show and Tell 2](https://www.youtube.com/watch?v=ZVXECAWutzU)
+
+
 # System Architecture
 ## App Flow
 ![Flow](flow.png)
