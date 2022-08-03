@@ -4,16 +4,20 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.databinding.ActivityMapsBinding
+import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.main.services.TrackingService
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import org.w3c.dom.Text
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -24,7 +28,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var serviceIntent: Intent
     private var isBind = false
     private lateinit var mapsViewModel: MapsViewModel
+    private lateinit var mapsViewModelFactory: MapsViewModelFactory
     private val BINDING_STATUS_KEY = "BINDING_STATUS"
+    private val myFirebase = MyFirebase()
 
     companion object {
         var tid_KEY = "tid"
@@ -46,16 +52,30 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             isBind = savedInstanceState.getBoolean(BINDING_STATUS_KEY, false)
         }
 
-        //Service View Model
-        mapsViewModel = ViewModelProvider(this)[MapsViewModel::class.java]
-
         val who = intent.getIntExtra(who_KEY, 0)
         val tid  = intent.getStringExtra(tid_KEY)
+        val tid_TextView: TextView = findViewById(R.id.Text_tid)
+        val temp = "tid: ${tid}"
+        tid_TextView.setText(temp)
+
+        //Service View Model
+        mapsViewModelFactory = MapsViewModelFactory(tid!!)
+        mapsViewModel = ViewModelProvider(this, mapsViewModelFactory)[MapsViewModel::class.java]
 
 
         serviceIntent = Intent(this, TrackingService::class.java)
         startService(serviceIntent)
         bindService()
+
+        //Getting number of seekers
+        val numSeekers_TextView: TextView = findViewById(R.id.Text_numPlayers)
+        myFirebase.getTreasure(tid!!, mapsViewModel.treasure)
+        mapsViewModel.treasure.observe(this) {
+            val text = "Joined: ${it.seekers.size} Seekers"
+            numSeekers_TextView.setText(text)
+        }
+
+
     }
 
     /**
