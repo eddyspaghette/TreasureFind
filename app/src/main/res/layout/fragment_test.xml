@@ -4,20 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.ui.test.TestFragment">
+    tools:context=".main.ui.test.TestFragment"
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/btn_map"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Map Activity"
-        android:layout_margin="5dp"/>
-
-    <Button
-        android:id="@+id/btn_treasureadding"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Treasure Adding"
         android:layout_margin="5dp"/>
 
     <Button
@@ -28,10 +22,10 @@
         android:layout_margin="5dp"/>
 
     <Button
-        android:id="@+id/btn_treasureprofile"
+        android:id="@+id/btn_bottomsheet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Treasure Profile"
+        android:text="Bottom Sheet"
         android:layout_margin="5dp"/>
 
 </LinearLayout>
