@@ -33,8 +33,9 @@ class LiveCameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableList
 
         val btn_capture: Button = findViewById(R.id.btn_capture)
         imageView = findViewById(R.id.livecamimageview)
-        btn_capture.setOnClickListener() {
+        btn_capture.setOnLongClickListener() {
             isCapture = 1
+            true
         }
 
     }
