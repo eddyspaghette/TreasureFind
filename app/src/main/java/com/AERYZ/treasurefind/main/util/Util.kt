@@ -35,6 +35,7 @@ object Util {
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 
+    //https://stackoverflow.com/questions/9015372/how-to-rotate-a-bitmap-90-degrees
     fun rotateBitmap(bitmap: Bitmap, angle: Float): Bitmap? {
         val matrix = Matrix()
         matrix.postRotate(angle)
