@@ -31,4 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
+    <include
+        android:id="@+id/bottom_sheet_view"
+        layout="@layout/persistent_bottom_sheet" />
 </RelativeLayout>
