@@ -4,13 +4,16 @@
     package="com.AERYZ.treasurefind">
 
     <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
+    <uses-permission
+        android:name="com.google.android.gms.permission.AD_ID"
+        tools:node="remove" />
 
     <application
         android:allowBackup="true"
@@ -22,6 +25,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TreasureFind"
         tools:targetApi="31">
+        <activity
+            android:name=".main.ui.livecamera.LiveCameraActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id" />
@@ -58,7 +65,7 @@
             android:theme="@style/Theme.TreasureFind.NoActionBar" />
         <activity android:name=".main.entry_point.onboarding.OnboardingActivity" />
         <activity
-            android:name="com.AERYZ.treasurefind.main.ui.treasuredetails.TreasureDetailsActivity"
+            android:name=".main.ui.treasuredetails.TreasureDetailsActivity"
             android:exported="false" />
 
         <provider
