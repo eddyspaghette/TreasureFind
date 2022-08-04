@@ -14,13 +14,6 @@
         android:layout_margin="5dp"/>
 
     <Button
-        android:id="@+id/btn_treasureadding"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Treasure Adding"
-        android:layout_margin="5dp"/>
-
-    <Button
         android:id="@+id/btn_sradding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,10 +21,10 @@
         android:layout_margin="5dp"/>
 
     <Button
-        android:id="@+id/btn_treasureprofile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Treasure Profile"
-        android:layout_margin="5dp"/>
+        android:text="Fragment Animation"
+        android:layout_margin="5dp"
+        android:id="@+id/btn_fragmentanimation"/>
 
 </LinearLayout>

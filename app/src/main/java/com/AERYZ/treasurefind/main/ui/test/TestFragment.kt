@@ -9,6 +9,7 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.databinding.FragmentTestBinding
+import com.AERYZ.treasurefind.main.ui.fragmentanimation.FragmentAnimationActivity
 import com.AERYZ.treasurefind.main.ui.map.MapsActivity
 import com.AERYZ.treasurefind.main.ui.sr.SRActivity
 
@@ -45,7 +46,12 @@ class TestFragment : Fragment() {
             startActivity(intent)
         }
             
-
+        //FragmentAnimation button
+        val btn_fragmentanimation: Button = root.findViewById(R.id.btn_fragmentanimation)
+        btn_SRAdding.setOnClickListener() {
+            val intent = Intent(requireContext(), FragmentAnimationActivity::class.java)
+            startActivity(intent)
+        }
         return root
     }
 
