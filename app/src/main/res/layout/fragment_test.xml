@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.ui.test.TestFragment">
+    tools:context=".main.ui.test.TestFragment"
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/btn_map"

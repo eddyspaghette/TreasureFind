@@ -48,7 +48,7 @@ class TestFragment : Fragment() {
             
         //FragmentAnimation button
         val btn_fragmentanimation: Button = root.findViewById(R.id.btn_fragmentanimation)
-        btn_SRAdding.setOnClickListener() {
+        btn_fragmentanimation.setOnClickListener() {
             val intent = Intent(requireContext(), FragmentAnimationActivity::class.java)
             startActivity(intent)
         }
