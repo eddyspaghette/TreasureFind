@@ -25,7 +25,7 @@
         android:theme="@style/Theme.TreasureFind"
         tools:targetApi="31">
         <activity
-            android:name=".BottomSheetActivity"
+            android:name=".main.ui.bottomsheet.BottomSheetActivity"
             android:exported="false" />
 
         <meta-data
