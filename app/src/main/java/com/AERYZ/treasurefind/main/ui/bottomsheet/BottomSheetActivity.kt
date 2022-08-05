@@ -8,6 +8,7 @@ class BottomSheetActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bottom_sheet)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
     }
 }
