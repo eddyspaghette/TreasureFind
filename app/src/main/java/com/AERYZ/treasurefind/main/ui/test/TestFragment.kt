@@ -52,6 +52,8 @@ class TestFragment : Fragment() {
         val btn_LiveCamera: Button = root.findViewById(R.id.btn_LiveCamera)
         btn_LiveCamera.setOnClickListener() {
             val intent = Intent(requireContext(), LiveCameraActivity::class.java)
+            startActivity(intent)
+        }
 
         //Bottomsheet button
         val btn_bottomsheet: Button = root.findViewById(R.id.btn_bottomsheet)
