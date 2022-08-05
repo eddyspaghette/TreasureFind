@@ -110,6 +110,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun calculateDirections(fromlocation: LatLng, tolocation: LatLng){
         val directionUrl = getDirectionURL(fromlocation, tolocation, "${MAPS_API_KEY}")
+        val direction = GetDirection(directionUrl)
+        println("debug: ")
     }
 
     private fun getDirectionURL(origin:LatLng, dest:LatLng, secret: String) : String{
