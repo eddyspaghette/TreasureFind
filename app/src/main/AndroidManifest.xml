@@ -76,12 +76,7 @@
             android:name=".main.entry_point.MainActivity"
             android:exported="false"
             android:theme="@style/Theme.TreasureFind.NoActionBar" />
-        <activity android:name=".main.entry_point.onboarding.OnboardingActivity" />
-        
-        <activity
-            android:name=".main.ui.treasuredetails.TreasureDetailsActivity"
-            android:exported="false" />
-            
+        <activity android:name=".main.entry_point.onboarding.OnboardingActivity" />            
         <activity
             android:name="com.AERYZ.treasurefind.main.ui.treasuredetails.TreasureDetailsActivity"
             android:exported="false"
