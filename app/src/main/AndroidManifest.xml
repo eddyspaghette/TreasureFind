@@ -4,6 +4,7 @@
     package="com.AERYZ.treasurefind">
 
     <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -42,6 +43,9 @@
             android:exported="true"
             android:parentActivityName=".main.entry_point.MainActivity"
             />
+        <activity
+            android:name=".main.ui.livecamera.LiveCameraActivity"
+            android:exported="false" />
 
         <activity
             android:name=".main.ui.sr.SRActivity"
@@ -67,7 +71,7 @@
             android:name=".main.entry_point.MainActivity"
             android:exported="false"
             android:theme="@style/Theme.TreasureFind.NoActionBar" />
-        <activity android:name=".main.entry_point.onboarding.OnboardingActivity" />
+        <activity android:name=".main.entry_point.onboarding.OnboardingActivity" />            
         <activity
             android:name="com.AERYZ.treasurefind.main.ui.treasuredetails.TreasureDetailsActivity"
             android:exported="false"

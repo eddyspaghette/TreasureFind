@@ -9,6 +9,7 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.databinding.FragmentTestBinding
+import com.AERYZ.treasurefind.main.ui.livecamera.LiveCameraActivity
 import com.AERYZ.treasurefind.main.ui.bottomsheet.BottomSheetActivity
 import com.AERYZ.treasurefind.main.ui.map.MapsActivity
 import com.AERYZ.treasurefind.main.ui.sr.SRActivity
@@ -46,10 +47,19 @@ class TestFragment : Fragment() {
             startActivity(intent)
         }
 
+
+        //LiveCamera button
+        val btn_LiveCamera: Button = root.findViewById(R.id.btn_LiveCamera)
+        btn_LiveCamera.setOnClickListener() {
+            val intent = Intent(requireContext(), LiveCameraActivity::class.java)
+            startActivity(intent)
+        }
+
         //Bottomsheet button
         val btn_bottomsheet: Button = root.findViewById(R.id.btn_bottomsheet)
         btn_bottomsheet.setOnClickListener() {
             val intent = Intent(requireContext(), BottomSheetActivity::class.java)
+
             startActivity(intent)
         }
             
