@@ -28,7 +28,9 @@ class SRActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sractivity)
         srViewModel = ViewModelProvider(this)[SRViewModel::class.java]
-
+        // back button
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        //
         val argument = intent
         val tid = argument.getStringExtra(MapsActivity.tid_KEY).toString()
 

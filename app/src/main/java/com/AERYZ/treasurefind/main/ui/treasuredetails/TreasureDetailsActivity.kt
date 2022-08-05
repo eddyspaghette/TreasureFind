@@ -22,6 +22,9 @@ class TreasureDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_treasure_details)
+        //back button
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        //
 
         treasureDetailsViewModel = ViewModelProvider(this)[TreasureDetailsViewModel::class.java]
 

@@ -38,6 +38,11 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+        <activity
+            android:name=".main.ui.bottomsheet.BottomSheetActivity"
+            android:exported="true"
+            android:parentActivityName=".main.entry_point.MainActivity"
+            />
 
         <activity
             android:name=".main.ui.bottomsheet.BottomSheetActivity"
@@ -49,7 +54,8 @@
 
         <activity
             android:name=".main.ui.sr.SRActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".main.entry_point.MainActivity"/>
         <activity
             android:name=".main.entry_point.LoginActivity"
             android:exported="true"
@@ -63,15 +69,23 @@
         <activity
             android:name=".main.ui.map.MapsActivity"
             android:exported="false"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps"
+            android:parentActivityName=".main.entry_point.MainActivity"
+            />
         <activity
             android:name=".main.entry_point.MainActivity"
             android:exported="false"
             android:theme="@style/Theme.TreasureFind.NoActionBar" />
         <activity android:name=".main.entry_point.onboarding.OnboardingActivity" />
+        
         <activity
             android:name=".main.ui.treasuredetails.TreasureDetailsActivity"
             android:exported="false" />
+            
+        <activity
+            android:name="com.AERYZ.treasurefind.main.ui.treasuredetails.TreasureDetailsActivity"
+            android:exported="false"
+            android:parentActivityName=".main.entry_point.MainActivity"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
