@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.provider.MediaStore
@@ -17,6 +18,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.MutableLiveData
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.Treasure
@@ -45,6 +47,10 @@ class HiderPlaceFragment : Fragment(), MyFirebase.TreasureInsertionListener {
 
         val treasureImageView: ImageView = view.findViewById(R.id.treasurePhoto)
         viewModel = ViewModelProvider(requireActivity())[HiderPlaceViewModel::class.java]
+
+        viewModel.treasurePhoto.value = BitmapFactory.decodeResource(
+                                        requireActivity().getResources(),
+                                        R.drawable.tf_logo)
         viewModel.treasurePhoto.observe(requireActivity()) {
             // everytime the bitmap changes, set the imageview
             treasureImageView.setImageBitmap(it)
