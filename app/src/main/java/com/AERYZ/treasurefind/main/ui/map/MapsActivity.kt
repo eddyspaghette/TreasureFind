@@ -7,13 +7,13 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
+import android.location.LocationListener
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.AERYZ.treasurefind.BuildConfig.MAPS_API_KEY
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.databinding.ActivityMapsBinding
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -24,27 +24,25 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.libraries.places.api.Places
-import com.google.firebase.firestore.Query
 import com.google.gson.Gson
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
 
-    private var originLatitude: Double = 28.5021359
-    private var originLongitude: Double = 77.4054901
-    private var destinationLatitude: Double = 28.5151087
-    private var destinationLongitude: Double = 77.3932163
+    private var originLatitude: Double = 49.28315664185265
+    private var originLongitude: Double = -123.12043931527647
+    private var destinationLatitude: Double = 49.28088845186918
+    private var destinationLongitude: Double = -123.1031638882934
 
     //service
     private lateinit var serviceIntent: Intent
     private var isBind = false
     private lateinit var serviceViewModel: ServiceViewModel
     private val BINDING_STATUS_KEY = "BINDING_STATUS"
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,12 +54,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-
-
         /*
-        // temp test locations: from Vancouver Art Gallery (49.2830° N, 123.1205° W) to Rennie Museum (49.2807° N, 123.1031° W)
-        val fromLocation = LatLng(49.283, 123.121)
-        val toLocation = LatLng(49.281, 123.103)
+        // temp test locations: from Vancouver Art Gallery (49.28315664185265, -123.12043931527647) to Rennie Museum (49.28088845186918, -123.1031638882934)
+        val fromLocation = LatLng(49.28315664185265, -123.12043931527647)
+        val toLocation = LatLng(49.28088845186918, -123.1031638882934)
         calculateDirections(fromLocation, toLocation)
         */
         calculateDirections()
@@ -287,4 +283,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         unBindService()
     }
 
+    override fun onLocationChanged(location: android.location.Location) {
+        println("debug: ${location}")
+    }
+
+    override fun onProviderEnabled(provider: String) {}
+
+    override fun onProviderDisabled(provider: String) {}
+
+    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
 }
