@@ -44,6 +44,16 @@ class LiveCameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableList
     var previewWidth = 0
     var sensorOrientation = 0;
     var isCapture = 0
+
+    //TODO getting frames of live camera footage and passing them to model
+    private var isProcessingFrame = false
+    private val yuvBytes = arrayOfNulls<ByteArray>(3)
+    private var rgbBytes: IntArray? = null
+    private var yRowStride = 0
+    private var postInferenceCallback: Runnable? = null
+    private var imageConverter: Runnable? = null
+    private var rgbFrameBitmap: Bitmap? = null
+
     //TODO fragment which show llive footage from camera
     protected fun setFragment() {
         val manager =
@@ -82,15 +92,7 @@ class LiveCameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableList
         }
     }
 
-    //TODO getting frames of live camera footage and passing them to model
-    private var isProcessingFrame = false
-    private val yuvBytes = arrayOfNulls<ByteArray>(3)
-    private var rgbBytes: IntArray? = null
-    private var yRowStride = 0
-    private var postInferenceCallback: Runnable? = null
-    private var imageConverter: Runnable? = null
-    private var rgbFrameBitmap: Bitmap? = null
-    private lateinit var rd: ImageReader
+
 
     //TODO getting frames of live camera footage and passing them to model
     override fun onImageAvailable(reader: ImageReader) {

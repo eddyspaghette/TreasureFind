@@ -7,10 +7,8 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/map_relative_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="false">
+        android:layout_height="match_parent">
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
