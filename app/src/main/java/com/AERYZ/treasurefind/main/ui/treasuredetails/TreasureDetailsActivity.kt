@@ -10,9 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.main.ui.feed.FeedFragment
-import com.AERYZ.treasurefind.main.ui.map.MapsActivity
+import com.AERYZ.treasurefind.main.ui.seeker_map.SeekerMapActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 
 class TreasureDetailsActivity : AppCompatActivity() {
 
@@ -55,9 +54,9 @@ class TreasureDetailsActivity : AppCompatActivity() {
 
 
         TDAccept_btn.setOnClickListener() {
-            val intent = Intent(this, MapsActivity::class.java)
-            intent.putExtra(MapsActivity.tid_KEY, tid)
-            intent.putExtra(MapsActivity.who_KEY, 1) // 0 is hider, 1 is seeker
+            val intent = Intent(this, SeekerMapActivity::class.java)
+            intent.putExtra(SeekerMapActivity.tid_KEY, tid)
+            intent.putExtra(SeekerMapActivity.who_KEY, 1) // 0 is hider, 1 is seeker
             myFirebase.updateSeeker(tid!!, FirebaseAuth.getInstance().uid!!)
             startActivity(intent)
         }

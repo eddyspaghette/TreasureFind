@@ -18,14 +18,13 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.MutableLiveData
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.Treasure
-import com.AERYZ.treasurefind.main.CameraModule
 import com.AERYZ.treasurefind.main.services.TrackingService
 import com.AERYZ.treasurefind.main.ui.dialogs.ProgressDialog
-import com.AERYZ.treasurefind.main.ui.map.MapsActivity
+import com.AERYZ.treasurefind.main.ui.hider_map.HiderMapActivity
+import com.AERYZ.treasurefind.main.ui.seeker_map.SeekerMapActivity
 import com.google.firebase.auth.FirebaseAuth
 import java.lang.Exception
 
@@ -112,25 +111,26 @@ class HiderPlaceFragment : Fragment(), MyFirebase.TreasureInsertionListener {
     private fun addTreasureBtnListener(view: View) {
         val btn: Button = view.findViewById(R.id.addButton)
         btn.setOnClickListener {
-            if (viewModel.location.value == null) {
+            if (viewModel.location.value != null) {
                 Log.d("Debug", "Failed to locate")
-            }
-            val location = viewModel.location.value
-            val uid = FirebaseAuth.getInstance().currentUser?.uid
-            uid?.let {
-                val myFirebase = MyFirebase()
-                val myTreasure = Treasure(
-                    it,
-                    "",
-                    titleEditText.text.toString(),
-                    descEditText.text.toString(),
-                    location!!.latitude,
-                    location.longitude,
-                    viewModel.treasurePhoto.value!!
-                )
-                val dialog = ProgressDialog.progressDialog(requireActivity())
-                val successDialog = ProgressDialog.successDialog(requireActivity())
-                myFirebase.insert(myTreasure, dialog, successDialog, this)
+
+                val location = viewModel.location.value
+                val uid = FirebaseAuth.getInstance().currentUser?.uid
+                uid?.let {
+                    val myFirebase = MyFirebase()
+                    val myTreasure = Treasure(
+                        it,
+                        "",
+                        titleEditText.text.toString(),
+                        descEditText.text.toString(),
+                        location!!.latitude,
+                        location.longitude,
+                        viewModel.treasurePhoto.value!!
+                    )
+                    val dialog = ProgressDialog.progressDialog(requireActivity())
+                    val successDialog = ProgressDialog.successDialog(requireActivity())
+                    myFirebase.insert(myTreasure, dialog, successDialog, this)
+                }
             }
         }
     }
@@ -148,14 +148,13 @@ class HiderPlaceFragment : Fragment(), MyFirebase.TreasureInsertionListener {
     override fun onSuccess(tid: String) {
         //start Map activity
 
-        val intent = Intent(requireActivity(), MapsActivity::class.java)
-        intent.putExtra(MapsActivity.tid_KEY, tid)
-        intent.putExtra(MapsActivity.who_KEY, 0) //0 is hider, 1 is seeker
+        val intent = Intent(requireActivity(), HiderMapActivity::class.java)
+        intent.putExtra(SeekerMapActivity.tid_KEY, tid)
+        intent.putExtra(SeekerMapActivity.who_KEY, 0) //0 is hider, 1 is seeker
         startActivity(intent)
     }
 
     override fun onFailure(exception: Exception) {
         Log.d("Debug", "Insert failed")
     }
-
 }
