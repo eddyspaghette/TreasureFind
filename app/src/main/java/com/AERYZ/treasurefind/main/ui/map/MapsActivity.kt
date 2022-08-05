@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
@@ -20,6 +22,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.w3c.dom.Text
 
@@ -27,6 +30,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
+    private lateinit var relativeLayout: RelativeLayout
 
     //service
     private lateinit var serviceIntent: Intent
@@ -34,7 +38,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mapsViewModel: MapsViewModel
     private lateinit var mapsViewModelFactory: MapsViewModelFactory
     private val BINDING_STATUS_KEY = "BINDING_STATUS"
+    private var isFirstTimeCenter = false
     private val myFirebase = MyFirebase()
+
+
 
     companion object {
         var tid_KEY = "tid"
@@ -46,6 +53,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        relativeLayout = findViewById(R.id.map_relative_layout)
+
         //back button
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
@@ -82,7 +92,32 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             numSeekers_TextView.setText(text)
         }
 
+        //bottom sheet
+        val bottomSheet: View = findViewById(R.id.bottom_sheet_view)
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
 
+        //https://stackoverflow.com/questions/55485481/how-i-can-set-half-expanded-state-for-my-bottomsheet
+        bottomSheetBehavior.addBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback()
+        {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (bottomSheetBehavior .state == BottomSheetBehavior.STATE_EXPANDED) {
+                    mapsViewModel.isInteract.value = false
+                } else if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
+                    mapsViewModel.isInteract.value = true
+                }
+            }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+            }
+
+        })
+
+
+    }
+
+    private fun setMapInteraction(mMap: GoogleMap, value: Boolean) {
+        mMap.uiSettings.isMyLocationButtonEnabled = value
+        mMap.uiSettings.isCompassEnabled = value
     }
 
     /**
@@ -99,18 +134,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         try {
             mMap.isMyLocationEnabled = true
             mMap.uiSettings.isMyLocationButtonEnabled = true
+            mMap.uiSettings.isCompassEnabled = true
 
         }
-
         catch (e: SecurityException)  {
             Log.e("Exception: %s", e.message.toString());
         }
+
+
         mapsViewModel.location.observe(this) {
-            if (it != null)
-            {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude,it.longitude),17f))
+            if (!isFirstTimeCenter) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it!!.latitude,it.longitude),17f))
+                isFirstTimeCenter = true
             }
         }
+
+        mapsViewModel.isInteract.observe(this) {
+            setMapInteraction(mMap, it)
+        }
+
     }
 
     fun bindService(){

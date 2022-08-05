@@ -15,6 +15,7 @@ import com.google.firebase.ktx.Firebase
 
 class MapsViewModel(private val tid: String): ServiceViewModel() {
     var treasure = MutableLiveData<Treasure>()
+    var isInteract = MutableLiveData(true)
     val db = Firebase.firestore
     val myFirebase = MyFirebase()
 
