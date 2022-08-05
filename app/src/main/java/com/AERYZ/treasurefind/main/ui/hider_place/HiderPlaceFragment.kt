@@ -111,25 +111,26 @@ class HiderPlaceFragment : Fragment(), MyFirebase.TreasureInsertionListener {
     private fun addTreasureBtnListener(view: View) {
         val btn: Button = view.findViewById(R.id.addButton)
         btn.setOnClickListener {
-            if (viewModel.location.value == null) {
+            if (viewModel.location.value != null) {
                 Log.d("Debug", "Failed to locate")
-            }
-            val location = viewModel.location.value
-            val uid = FirebaseAuth.getInstance().currentUser?.uid
-            uid?.let {
-                val myFirebase = MyFirebase()
-                val myTreasure = Treasure(
-                    it,
-                    "",
-                    titleEditText.text.toString(),
-                    descEditText.text.toString(),
-                    location!!.latitude,
-                    location.longitude,
-                    viewModel.treasurePhoto.value!!
-                )
-                val dialog = ProgressDialog.progressDialog(requireActivity())
-                val successDialog = ProgressDialog.successDialog(requireActivity())
-                myFirebase.insert(myTreasure, dialog, successDialog, this)
+
+                val location = viewModel.location.value
+                val uid = FirebaseAuth.getInstance().currentUser?.uid
+                uid?.let {
+                    val myFirebase = MyFirebase()
+                    val myTreasure = Treasure(
+                        it,
+                        "",
+                        titleEditText.text.toString(),
+                        descEditText.text.toString(),
+                        location!!.latitude,
+                        location.longitude,
+                        viewModel.treasurePhoto.value!!
+                    )
+                    val dialog = ProgressDialog.progressDialog(requireActivity())
+                    val successDialog = ProgressDialog.successDialog(requireActivity())
+                    myFirebase.insert(myTreasure, dialog, successDialog, this)
+                }
             }
         }
     }

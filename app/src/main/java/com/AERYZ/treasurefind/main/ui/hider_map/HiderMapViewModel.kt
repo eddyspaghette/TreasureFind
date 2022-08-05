@@ -30,6 +30,7 @@ class HiderMapViewModel(private val tid: String): ServiceViewModel() {
 
             if (snapshot != null && snapshot.exists()) {
                 myFirebase.getTreasure(tid, treasure)
+
                 Log.d("Debug", "Current data: ${snapshot.data}")
             } else {
                 Log.d("Debug", "Current data: null")

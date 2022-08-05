@@ -38,6 +38,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
+import java.util.*
 
 class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -49,6 +50,8 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private var isFirstTimeCenter = false
     private val myFirebase = MyFirebase()
     private var tid: String = ""
+    private var isFirstTimeSR = false
+    private lateinit var fragment: SrFragment
 
 
     companion object {
@@ -83,14 +86,6 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
         mapViewModel = ViewModelProvider(this, mapViewModelFactory)[HiderMapViewModel::class.java]
 
 
-        //Getting number of seekers
-        val numSeekers_TextView: TextView = findViewById(R.id.Text_numPlayers)
-        myFirebase.getTreasure(tid!!, mapViewModel.treasure)
-        mapViewModel.treasure.observe(this) {
-            val text = "Joined: ${it.seekers.size} Seekers"
-            numSeekers_TextView.setText(text)
-        }
-
         //bottom sheet
         val bottomSheet: View = findViewById(R.id.hider_bottom_sheet_view)
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
@@ -108,9 +103,50 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
 
             }
-
         })
 
+        val accept_btn: Button = findViewById(R.id.hider_map_accept_btn)
+        val skip_btn: Button = findViewById(R.id.hider_map_skip_btn)
+
+        //Getting number of seekers
+        val numSeekers_TextView: TextView = findViewById(R.id.Text_numPlayers)
+        myFirebase.getTreasure(tid!!, mapViewModel.treasure)
+        mapViewModel.treasure.observe(this) {
+            val text = "Joined: ${it.seekers.size} Seekers"
+            numSeekers_TextView.setText(text)
+
+            if (it != null)
+            {
+                if (it.sr.size > 0)
+                {
+                    Log.d("Debug", "in creating fragment ${it.sr.size}")
+                    fragment = SrFragment()
+                    val bundle = Bundle()
+                    bundle.putString(SrFragment.sid_KEY, it.sr[0])
+                    fragment.arguments = bundle
+                    supportFragmentManager.beginTransaction().replace(R.id.sr_fragment_container_view, fragment).commit()
+                }
+            }
+        }
+
+        accept_btn.setOnClickListener() {
+            Toast.makeText(this, "Ok!", Toast.LENGTH_SHORT).show()
+        }
+
+        skip_btn.setOnClickListener() {
+            Log.d("Debug", "size ${mapViewModel.treasure.value!!.sr.size}")
+            if (mapViewModel.treasure.value!=null && mapViewModel.treasure.value!!.sr.size > 0)
+            {
+                mapViewModel.treasure.value!!.sr.removeFirst()
+                fragment = SrFragment()
+                if (mapViewModel.treasure.value!!.sr.size > 0) {
+                    val bundle = Bundle()
+                    bundle.putString(SrFragment.sid_KEY, mapViewModel.treasure.value!!.sr[0])
+                    fragment.arguments = bundle
+                }
+                supportFragmentManager.beginTransaction().replace(R.id.sr_fragment_container_view, fragment).commit()
+            }
+        }
     }
 
     private fun setMapInteraction(mMap: GoogleMap, value: Boolean) {
