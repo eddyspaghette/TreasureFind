@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/hider_map_bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="40dp"
+    android:orientation="vertical"
+    android:background="@color/white"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/divider"
+        app:srcCompat="@android:drawable/arrow_up_float" />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Hello Hider"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

@@ -40,8 +40,8 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, ImageReader.O
     //service
     private lateinit var serviceIntent: Intent
     private var isBind = false
-    private lateinit var mapsViewModel: MapsViewModel
-    private lateinit var mapsViewModelFactory: MapsViewModelFactory
+    private lateinit var mapViewModel: SeekerMapViewModel
+    private lateinit var mapViewModelFactory: SeekerMapViewModelFactory
     private val BINDING_STATUS_KEY = "BINDING_STATUS"
     private var isFirstTimeCenter = false
     private val myFirebase = MyFirebase()
@@ -65,7 +65,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, ImageReader.O
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
+            .findFragmentById(R.id.seeker_map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         if (savedInstanceState != null) {
@@ -80,8 +80,8 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, ImageReader.O
         tid_TextView.setText(temp)
 
         //Service View Model
-        mapsViewModelFactory = MapsViewModelFactory(tid!!)
-        mapsViewModel = ViewModelProvider(this, mapsViewModelFactory)[MapsViewModel::class.java]
+        mapViewModelFactory = SeekerMapViewModelFactory(tid!!)
+        mapViewModel = ViewModelProvider(this, mapViewModelFactory)[SeekerMapViewModel::class.java]
 
 
         serviceIntent = Intent(this, TrackingService::class.java)
@@ -90,14 +90,14 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, ImageReader.O
 
         //Getting number of seekers
         val numSeekers_TextView: TextView = findViewById(R.id.Text_numPlayers)
-        myFirebase.getTreasure(tid!!, mapsViewModel.treasure)
-        mapsViewModel.treasure.observe(this) {
+        myFirebase.getTreasure(tid!!, mapViewModel.treasure)
+        mapViewModel.treasure.observe(this) {
             val text = "Joined: ${it.seekers.size} Seekers"
             numSeekers_TextView.setText(text)
         }
 
         //bottom sheet
-        val bottomSheet: View = findViewById(R.id.bottom_sheet_view)
+        val bottomSheet: View = findViewById(R.id.seeker_bottom_sheet_view)
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
 
         //https://stackoverflow.com/questions/55485481/how-i-can-set-half-expanded-state-for-my-bottomsheet
@@ -105,9 +105,9 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, ImageReader.O
         {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (bottomSheetBehavior .state == BottomSheetBehavior.STATE_EXPANDED) {
-                    mapsViewModel.isInteract.value = false
+                    mapViewModel.isInteract.value = false
                 } else if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
-                    mapsViewModel.isInteract.value = true
+                    mapViewModel.isInteract.value = true
                 }
             }
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -155,14 +155,14 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, ImageReader.O
         }
 
 
-        mapsViewModel.location.observe(this) {
+        mapViewModel.location.observe(this) {
             if (!isFirstTimeCenter) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it!!.latitude,it.longitude),17f))
                 isFirstTimeCenter = true
             }
         }
 
-        mapsViewModel.isInteract.observe(this) {
+        mapViewModel.isInteract.observe(this) {
             setMapInteraction(mMap, it)
         }
 
@@ -170,7 +170,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, ImageReader.O
 
     fun bindService(){
         if(!isBind){
-            applicationContext.bindService(serviceIntent, mapsViewModel, Context.BIND_AUTO_CREATE)
+            applicationContext.bindService(serviceIntent, mapViewModel, Context.BIND_AUTO_CREATE)
             isBind = true
             println("bind service!")
         }
@@ -178,7 +178,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, ImageReader.O
 
     private fun unBindService(){
         if (isBind) {
-            applicationContext.unbindService(mapsViewModel)
+            applicationContext.unbindService(mapViewModel)
             isBind = false
             println("unbind service!!!!!")
         }

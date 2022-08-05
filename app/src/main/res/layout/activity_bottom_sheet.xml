@@ -24,6 +24,6 @@ xmlns:android="http://schemas.android.com/apk/res/android"
             android:text="testview"/>
     </LinearLayout>
     <include
-        android:id="@+id/bottom_sheet_view"
-        layout="@layout/persistent_bottom_sheet" />
+        android:id="@+id/seeker_bottom_sheet_view"
+        layout="@layout/seeker_map_bottom_sheet" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

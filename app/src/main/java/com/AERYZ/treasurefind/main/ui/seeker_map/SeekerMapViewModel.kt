@@ -10,7 +10,7 @@ import com.AERYZ.treasurefind.main.services.ServiceViewModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class MapsViewModel(private val tid: String): ServiceViewModel() {
+class SeekerMapViewModel(private val tid: String): ServiceViewModel() {
     var treasure = MutableLiveData<Treasure>()
     var isInteract = MutableLiveData(true)
     val db = Firebase.firestore
@@ -38,10 +38,10 @@ class MapsViewModel(private val tid: String): ServiceViewModel() {
     }
 
 }
-class MapsViewModelFactory(private val tid: String) : ViewModelProvider.Factory {
+class SeekerMapViewModelFactory(private val tid: String) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MapsViewModel::class.java))
-            return MapsViewModel(tid) as T
+        if (modelClass.isAssignableFrom(SeekerMapViewModel::class.java))
+            return SeekerMapViewModel(tid) as T
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
