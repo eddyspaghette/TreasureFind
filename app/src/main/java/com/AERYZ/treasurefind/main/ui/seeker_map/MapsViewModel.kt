@@ -1,15 +1,12 @@
-package com.AERYZ.treasurefind.main.ui.map
+package com.AERYZ.treasurefind.main.ui.seeker_map
 
 import android.util.Log
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.Treasure
 import com.AERYZ.treasurefind.main.services.ServiceViewModel
-import com.AERYZ.treasurefind.main.ui.profile.ProfileViewModel
-import com.google.common.collect.Maps
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 

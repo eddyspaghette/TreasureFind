@@ -14,7 +14,7 @@ import android.os.*
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.AERYZ.treasurefind.R
-import com.AERYZ.treasurefind.main.ui.map.MapsActivity
+import com.AERYZ.treasurefind.main.ui.seeker_map.SeekerMapActivity
 
 class TrackingService : Service(), LocationListener {
     private lateinit var notificationManager: NotificationManager
@@ -91,7 +91,7 @@ class TrackingService : Service(), LocationListener {
 
 
     private fun showNotification() {
-        val intent = Intent(this, MapsActivity::class.java)
+        val intent = Intent(this, SeekerMapActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         val pendingIntent = PendingIntent.getActivity(
             this, 0, intent,

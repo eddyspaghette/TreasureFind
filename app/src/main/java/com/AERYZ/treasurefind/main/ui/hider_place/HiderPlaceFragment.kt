@@ -18,14 +18,12 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.MutableLiveData
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.Treasure
-import com.AERYZ.treasurefind.main.CameraModule
 import com.AERYZ.treasurefind.main.services.TrackingService
 import com.AERYZ.treasurefind.main.ui.dialogs.ProgressDialog
-import com.AERYZ.treasurefind.main.ui.map.MapsActivity
+import com.AERYZ.treasurefind.main.ui.seeker_map.SeekerMapActivity
 import com.google.firebase.auth.FirebaseAuth
 import java.lang.Exception
 
@@ -148,9 +146,9 @@ class HiderPlaceFragment : Fragment(), MyFirebase.TreasureInsertionListener {
     override fun onSuccess(tid: String) {
         //start Map activity
 
-        val intent = Intent(requireActivity(), MapsActivity::class.java)
-        intent.putExtra(MapsActivity.tid_KEY, tid)
-        intent.putExtra(MapsActivity.who_KEY, 0) //0 is hider, 1 is seeker
+        val intent = Intent(requireActivity(), SeekerMapActivity::class.java)
+        intent.putExtra(SeekerMapActivity.tid_KEY, tid)
+        intent.putExtra(SeekerMapActivity.who_KEY, 0) //0 is hider, 1 is seeker
         startActivity(intent)
     }
 

@@ -1,4 +1,4 @@
-package com.AERYZ.treasurefind.main.ui.map
+package com.AERYZ.treasurefind.main.ui.seeker_map
 
 import android.app.Fragment
 import android.content.Context
@@ -11,16 +11,13 @@ import android.media.ImageReader
 import android.os.Bundle
 import android.util.Log
 import android.util.Size
-import android.view.LayoutInflater
 import android.view.Surface
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
-import com.AERYZ.treasurefind.databinding.ActivityMapsBinding
+import com.AERYZ.treasurefind.databinding.ActivitySeekermapBinding
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.SR
 import com.AERYZ.treasurefind.main.services.TrackingService
@@ -33,18 +30,12 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.w3c.dom.Text
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ImageReader.OnImageAvailableListener {
+class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, ImageReader.OnImageAvailableListener {
 
     private lateinit var mMap: GoogleMap
-    private lateinit var binding: ActivityMapsBinding
+    private lateinit var binding: ActivitySeekermapBinding
 
     //service
     private lateinit var serviceIntent: Intent
@@ -65,7 +56,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ImageReader.OnImag
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMapsBinding.inflate(layoutInflater)
+        binding = ActivitySeekermapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
 
@@ -138,6 +129,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ImageReader.OnImag
 
     private fun setMapInteraction(mMap: GoogleMap, value: Boolean) {
         mMap.uiSettings.isMyLocationButtonEnabled = value
+        mMap.uiSettings.setAllGesturesEnabled(value)
         mMap.uiSettings.isCompassEnabled = value
     }
 

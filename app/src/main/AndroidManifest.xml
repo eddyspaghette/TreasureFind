@@ -62,7 +62,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".main.ui.map.MapsActivity"
+            android:name=".main.ui.seeker_map.SeekerMapActivity"
             android:exported="false"
             android:label="@string/title_activity_maps"
             android:parentActivityName=".main.entry_point.MainActivity"
