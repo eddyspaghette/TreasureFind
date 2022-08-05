@@ -3,11 +3,14 @@ package com.AERYZ.treasurefind.main.ui.map
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.BuildConfig.MAPS_API_KEY
@@ -18,7 +21,9 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.libraries.places.api.Places
 import com.google.firebase.firestore.Query
 import com.google.gson.Gson
 import com.squareup.okhttp.OkHttpClient
@@ -28,6 +33,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
+
+    private var originLatitude: Double = 28.5021359
+    private var originLongitude: Double = 77.4054901
+    private var destinationLatitude: Double = 28.5151087
+    private var destinationLongitude: Double = 77.3932163
 
     //service
     private lateinit var serviceIntent: Intent
@@ -46,13 +56,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+
+
+        /*
+        // temp test locations: from Vancouver Art Gallery (49.2830° N, 123.1205° W) to Rennie Museum (49.2807° N, 123.1031° W)
+        val fromLocation = LatLng(49.283, 123.121)
+        val toLocation = LatLng(49.281, 123.103)
+        calculateDirections(fromLocation, toLocation)
+        */
+        calculateDirections()
+
         if (savedInstanceState != null) {
             isBind = savedInstanceState.getBoolean(BINDING_STATUS_KEY, false)
         }
 
         //Service View Model
         serviceViewModel = ViewModelProvider(this)[ServiceViewModel::class.java]
-
 
         serviceIntent = Intent(this, TrackingService::class.java)
         startService(serviceIntent)
@@ -74,22 +93,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             mMap.isMyLocationEnabled = true
             mMap.uiSettings.isMyLocationButtonEnabled = true
 
-        }
-
-        catch (e: SecurityException)  {
+        } catch (e: SecurityException)  {
             Log.e("Exception: %s", e.message.toString());
         }
+
+        val originLocation = LatLng(originLatitude, originLongitude)
+        mMap.clear()
+        mMap.addMarker(MarkerOptions().position(originLocation))
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(originLocation, 18F))
+
         serviceViewModel.location.observe(this) {
             if (it != null)
             {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude,it.longitude),17f))
             }
         }
-
-        // temp test locations: from Vancouver Art Gallery (49.2830° N, 123.1205° W) to Rennie Museum (49.2807° N, 123.1031° W)
-        val fromLocation = LatLng(49.283, 123.121)
-        val toLocation = LatLng(49.281, 123.103)
-        calculateDirections(fromLocation, toLocation)
     }
 
     fun bindService(){
@@ -108,10 +126,32 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun calculateDirections(fromlocation: LatLng, tolocation: LatLng){
-        val directionUrl = getDirectionURL(fromlocation, tolocation, "${MAPS_API_KEY}")
-        val direction = GetDirection(directionUrl)
-        println("debug: ")
+//    private fun calculateDirections(fromlocation: LatLng, tolocation: LatLng){
+    private fun calculateDirections(){
+        val ai: ApplicationInfo = applicationContext.packageManager
+            .getApplicationInfo(applicationContext.packageName, PackageManager.GET_META_DATA)
+        val value = ai.metaData["com.google.android.geo.API_KEY"]
+        val apiKey = value.toString()
+
+        // Initializing the Places API with the help of our API_KEY
+        if (!Places.isInitialized()) {
+            Places.initialize(applicationContext, apiKey)
+        }
+        val gd = findViewById<Button>(R.id.directions)
+        gd.setOnClickListener{
+            val mapFragment = supportFragmentManager
+                .findFragmentById(R.id.map) as SupportMapFragment
+            mapFragment.getMapAsync {
+                mMap = it
+                val originLocation = LatLng(originLatitude, originLongitude)
+                mMap.addMarker(MarkerOptions().position(originLocation))
+                val destinationLocation = LatLng(destinationLatitude, destinationLongitude)
+                mMap.addMarker(MarkerOptions().position(destinationLocation))
+                val urll = getDirectionURL(originLocation, destinationLocation, apiKey)
+                GetDirection(urll).execute()
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(originLocation, 14F))
+            }
+        }
     }
 
     private fun getDirectionURL(origin:LatLng, dest:LatLng, secret: String) : String{
