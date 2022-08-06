@@ -67,10 +67,6 @@
             android:name=".main.ui.livecamera.LiveCameraActivity"
             android:exported="false" />
         <activity
-            android:name=".main.ui.sr.SRActivity"
-            android:exported="false"
-            android:parentActivityName=".main.entry_point.MainActivity" />
-        <activity
             android:name=".main.entry_point.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.TreasureFind.NoActionBar">

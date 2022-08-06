@@ -16,6 +16,7 @@ import com.google.firebase.ktx.Firebase
 class SeekerMapViewModel(private val tid: String): ServiceViewModel() {
     var treasure = MutableLiveData<Treasure>()
     var isInteract = MutableLiveData(true)
+    var curLocation = LatLng(0.0, 0.0)
     val db = Firebase.firestore
     val myFirebase = MyFirebase()
 

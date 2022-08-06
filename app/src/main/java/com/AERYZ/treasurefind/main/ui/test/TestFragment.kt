@@ -12,7 +12,6 @@ import com.AERYZ.treasurefind.databinding.FragmentTestBinding
 import com.AERYZ.treasurefind.main.ui.livecamera.LiveCameraActivity
 import com.AERYZ.treasurefind.main.ui.bottomsheet.BottomSheetActivity
 import com.AERYZ.treasurefind.main.ui.seeker_map.SeekerMapActivity
-import com.AERYZ.treasurefind.main.ui.sr.SRActivity
 
 class TestFragment : Fragment() {
 
@@ -38,15 +37,6 @@ class TestFragment : Fragment() {
             val intent = Intent(requireContext(), SeekerMapActivity::class.java)
             startActivity(intent)
         }
-
-        //SR button
-        val btn_SRAdding: Button = root.findViewById(R.id.btn_sradding)
-        btn_SRAdding.setOnClickListener() {
-            val intent = Intent(requireContext(), SRActivity::class.java)
-            intent.putExtra(SeekerMapActivity.tid_KEY, "Qqt7DNLsk12CWOtK26uE")
-            startActivity(intent)
-        }
-
 
         //LiveCamera button
         val btn_LiveCamera: Button = root.findViewById(R.id.btn_LiveCamera)

@@ -15,12 +15,15 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.SR
 import com.AERYZ.treasurefind.main.ui.livecamera.CameraConnectionFragment
 import com.AERYZ.treasurefind.main.ui.livecamera.ImageUtils
 import com.AERYZ.treasurefind.main.util.Util
+import com.AERYZ.treasurefind.main.util.Util.calculateDistance
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -28,19 +31,24 @@ class SeekerSubmitFragment : Fragment(), ImageReader.OnImageAvailableListener {
 
     private var myFirebase = MyFirebase()
     private var tid = ""
+    private lateinit var mapViewModel: SeekerMapViewModel
+    private lateinit var mapViewModelFactory: SeekerMapViewModelFactory
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        tid = arguments?.getString(SeekerMapActivity.tid_KEY).toString()
-
-        Log.d("Debug Seeker Submit", tid)
-
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_seeker_submit, container, false)
+
+        //getting tid argument from previous
+        tid = arguments?.getString(SeekerMapActivity.tid_KEY).toString()
+        Log.d("Debug Seeker Submit", tid)
+
+        //init view model
+        mapViewModelFactory = SeekerMapViewModelFactory(tid)
+        mapViewModel = ViewModelProvider(this, mapViewModelFactory)[SeekerMapViewModel::class.java]
 
         //live camera
         setFragment()
@@ -117,16 +125,22 @@ class SeekerSubmitFragment : Fragment(), ImageReader.OnImageAvailableListener {
             if (rgbFrameBitmap != null) {
                 val bitmap = Util.rotateBitmap(rgbFrameBitmap!!, 90f)
                 val uid = FirebaseAuth.getInstance().uid
-                val sR = SR(uid!!, bitmap!!)
-                myFirebase.addSR(tid, sR)
-                Toast.makeText(activity, "Uploaded!", Toast.LENGTH_SHORT).show()
+                val location = Util.getCurrentLocation(requireActivity())
+                val treasureLocation = LatLng(mapViewModel.treasure.value!!.latitude!!, mapViewModel.treasure.value!!.longitude!!)
+                val threshold = 100.0 //change this for how far to accept the submit
+                if (calculateDistance(location, treasureLocation) <= threshold) {
+                    val sR = SR(tid, uid!!, location.latitude, location.longitude, bitmap!!)
+                    myFirebase.addSR(resources, sR)
+                    Toast.makeText(activity, "Uploaded!", Toast.LENGTH_SHORT).show()
+                }
+                else {
+                    //TODO: Dialog of failed submit (Too far from the treasure)
+                    Toast.makeText(activity, "Too far from the treasure", Toast.LENGTH_SHORT).show()
+                }
             }
         }
         val temp = reader.acquireLatestImage()
-        if (temp!= null)
-        {
-            temp.close()
-        }
+        temp?.close()
     }
 
 

@@ -2,6 +2,7 @@ package com.AERYZ.treasurefind.db
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
@@ -49,15 +50,14 @@ data class Treasure(
     var seekers: ArrayList<String> = arrayListOf<String>(),
     var sr: ArrayList<String> = arrayListOf<String>(),
     var length: String? = "",
-    var treasureImagePath: String? = "treasureImagePath",
-)
+    var treasureImagePath: String? = "treasureImagePath")
 
 
 data class SR(var tid:String = "",
               var sid:String = "",
               var latitude: Double = 0.0,
               var longitude: Double = 0.0,
-              var sRImage: Bitmap) {
+              @Exclude @set:Exclude @get:Exclude var sRImage: Bitmap? = null) {
 }
 
 class MyFirebase {
@@ -216,14 +216,16 @@ class MyFirebase {
         db.collection("treasures").document(tid).update("seekers", FieldValue.arrayRemove(sid))
     }
 
-    fun addSR(tid: String, sR: SR) {
-        db.collection("treasures").document(tid).update("sr", FieldValue.arrayUnion(sR.sid))
+    fun addSR(resources: Resources, sR: SR) {
+        db.collection("treasures").document(sR.tid).update("sr", FieldValue.arrayUnion(sR.sid))
 
-        db.collection("submit_requests").document(sR.sid).update("latitude", sR.latitude)
-        db.collection("submit_requests").document(sR.sid).update("longitude", sR.longitude)
+        db.collection("submit_requests").document(sR.sid).set(sR)
 
-        val sRImagePath =  "images/treasures/${tid}/${sR.sid}.jpg"
-        insertToFirebaseStorage(sR.sRImage, sRImagePath)
+        val sRImagePath =  "images/treasures/${sR.tid}/${sR.sid}.jpg"
+        if (sR.sRImage == null) {
+            sR.sRImage = BitmapFactory.decodeResource(resources, R.drawable.tf_logo)
+        }
+        insertToFirebaseStorage(sR.sRImage!!, sRImagePath)
     }
     fun removeSR(tid: String, sid: String, listener: DeletionImageListener?= null) {
         db.collection("treasures").document(tid).update("sr", FieldValue.arrayRemove(sid))
