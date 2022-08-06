@@ -139,8 +139,6 @@ class HiderPlaceFragment : Fragment(), MyFirebase.TreasureInsertionListener {
 
     private fun setTakePhotoBtnListener(view: View) {
         val btn: Button = view.findViewById(R.id.changeImgButton)
-        // cameraModule is responsible for adding bitmap to viewmodel
-        //val cameraModule = CameraModule(requireActivity(), viewModel.treasurePhoto)
         btn.setOnClickListener {
             val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             cameraResultListener.launch(cameraIntent)

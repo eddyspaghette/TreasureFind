@@ -111,6 +111,13 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+        //update location to database
+        mapViewModel.location.observe(this) {
+            if (it != null) {
+                mapViewModel.updateSeekerLocation(LatLng(it.latitude, it.longitude))
+            }
+        }
+
         //bottom sheet
         val bottomSheet: View = findViewById(R.id.seeker_bottom_sheet_view)
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
