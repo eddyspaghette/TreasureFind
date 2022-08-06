@@ -15,7 +15,7 @@ class ProgressDialog {
             val view = LayoutInflater.from(context).inflate(R.layout.dialog_progress, null)
             dialog.setContentView(view)
             dialog.setCancelable(false)
-            dialog.window!!.setBackgroundDrawableResource(R.drawable.dialog_rounded_background)
+            dialog.window!!.setBackgroundDrawableResource(R.drawable.clock_timer)
             return dialog
         }
 
@@ -24,7 +24,7 @@ class ProgressDialog {
             val view = LayoutInflater.from(context).inflate(R.layout.dialog_success, null)
             dialog.setContentView(view)
             dialog.setCancelable(false)
-            dialog.window!!.setBackgroundDrawableResource(R.drawable.dialog_rounded_background)
+            dialog.window!!.setBackgroundDrawableResource(R.drawable.clock_timer)
             val successView: ImageView = view.findViewById(R.id.successVector)
             val drawable = successView.drawable
             val animation = drawable as AnimatedVectorDrawable

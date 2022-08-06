@@ -51,30 +51,30 @@ class MainActivity : AppCompatActivity() {
 
         val uid = FirebaseAuth.getInstance().uid!!
 
-        myFirebase.getUserDocument(uid)
-            .get()
-            .addOnCompleteListener { u ->
-                val user = u.result.toObject<MyUser>()
-                if(user!!.in_session!=""){
-                    myFirebase.getTreasureDocument(user.in_session)
-                        .get()
-                        .addOnCompleteListener { t ->
-                            val treasure = t.result.toObject<Treasure>()
-                            var intent:Intent
-                            if(user.uid == treasure!!.oid){
-                                intent=Intent(this,HiderMapActivity::class.java)
-                                intent.putExtra(HiderMapActivity.tid_KEY, treasure.tid)
-                            }
-                            else{
-                                intent=Intent(this,SeekerMapActivity::class.java)
-                                intent.putExtra(SeekerMapActivity.tid_KEY, treasure.tid)
-                            }
-                            startActivity(intent)
-                        }
-                }
-            }
-            .addOnCanceledListener {
-            }
+//        myFirebase.getUserDocument(uid)
+//            .get()
+//            .addOnCompleteListener { u ->
+//                val user = u.result.toObject<MyUser>()
+//                if(user!!.in_session!=""){
+//                    myFirebase.getTreasureDocument(user.in_session)
+//                        .get()
+//                        .addOnCompleteListener { t ->
+//                            val treasure = t.result.toObject<Treasure>()
+//                            var intent:Intent
+//                            if(user.uid == treasure!!.oid){
+//                                intent=Intent(this,HiderMapActivity::class.java)
+//                                intent.putExtra(HiderMapActivity.tid_KEY, treasure.tid)
+//                            }
+//                            else{
+//                                intent=Intent(this,SeekerMapActivity::class.java)
+//                                intent.putExtra(SeekerMapActivity.tid_KEY, treasure.tid)
+//                            }
+//                            startActivity(intent)
+//                        }
+//                }
+//            }
+//            .addOnCanceledListener {
+//            }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
