@@ -29,7 +29,6 @@ class FeedFragment : Fragment(), MenuProvider {
     private val myFirebase = MyFirebase()
     private lateinit var feedViewModel: FeedViewModel
     private lateinit var feedAdapter: FeedAdapter
-    private lateinit var searchView: SearchView
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -57,23 +56,6 @@ class FeedFragment : Fragment(), MenuProvider {
         feedAdapter = FeedAdapter(requireActivity(), arrayListOf())
 
         feedViewModel.feedList.observe(requireActivity()) {
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-//                    feedAdapter.filter.filter(query)
-//                    println("Query: $query")
-                    return false
-                }
-
-                override fun onQueryTextChange(newQuery: String?): Boolean {
-                    //feedAdapter.filter.filter(newQuery)
-                    println("Query: new $newQuery")
-                    val filteredList = ArrayList<Treasure>()
-                    it.filter { (it.tid!!.contains(newQuery!!)) }.forEach{filteredList.add(it)}
-                    feedAdapter.updateList(filteredList)
-                    feedAdapter.notifyDataSetChanged()
-                    return false
-                }
-            })
             feedAdapter.updateList(it)
             feedAdapter.notifyDataSetChanged()
         }
@@ -97,11 +79,33 @@ class FeedFragment : Fragment(), MenuProvider {
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.feed_toolbar, menu)
         val menuItem : MenuItem = menu.findItem(R.id.appSearchBar)
-        searchView = menuItem.actionView as SearchView
-
+        val searchView = menuItem.actionView as SearchView
+        search(searchView)
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         return false
+    }
+
+    private fun search(searchView: SearchView) {
+        feedViewModel.feedList.observe(requireActivity()) {
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    val filteredList = ArrayList<Treasure>()
+                    it.filter { (it.tid!!.contains(query!!)) }.forEach{filteredList.add(it)}
+                    feedAdapter.updateList(filteredList)
+                    feedAdapter.notifyDataSetChanged()
+                    return false
+                }
+
+                override fun onQueryTextChange(newQuery: String?): Boolean {
+                    val filteredList = ArrayList<Treasure>()
+                    it.filter { (it.tid!!.contains(newQuery!!) or it.title!!.contains(newQuery))}.forEach{filteredList.add(it)}
+                    feedAdapter.updateList(filteredList)
+                    feedAdapter.notifyDataSetChanged()
+                    return false
+                }
+            })
+        }
     }
 }
