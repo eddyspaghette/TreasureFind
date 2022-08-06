@@ -27,6 +27,7 @@ allprojects {
 
     repositories {
         // Check that you have the following line (if not, add it):
+        mavenCentral()
         google()  // Google's Maven repository
         // ...
     }
