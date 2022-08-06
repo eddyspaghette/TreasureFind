@@ -73,6 +73,11 @@ class MyFirebase {
         fun onFailure(exception: Exception)
     }
 
+    interface DeletionImageListener {
+        fun onSuccess()
+        fun onFailure(exception: Exception)
+    }
+
     fun getAllTreasures(listener: FirebaseFeedListener) {
         db.collection("treasures")
             .get()
@@ -223,6 +228,17 @@ class MyFirebase {
                 .submit()
                 .get()
                 mutableLiveData.postValue(bitmap)
+        }
+    }
+
+    fun deleteImage(path: String, listener: DeletionImageListener? = null) {
+        val deleteRef = storageReference.child(path)
+        deleteRef.delete().addOnSuccessListener {
+            listener.let{
+                it?.onSuccess()
+            }
+        }.addOnFailureListener {
+            // TODO: implement failure
         }
     }
 
