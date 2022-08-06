@@ -63,7 +63,6 @@ class LoginActivity : AppCompatActivity(), MyFirebase.UserInsertionListener {
                         "",
                         BitmapFactory.decodeResource(resources, R.drawable.tf_logo)
                     )
-                    println("DEBUG: u ${u.uid}")
                     myFirebase.insert(u,this)
                 }
             } else {
@@ -74,7 +73,6 @@ class LoginActivity : AppCompatActivity(), MyFirebase.UserInsertionListener {
 
         } else {
             finish()
-            Log.d("Debug", "not ok")
         }
     }
 

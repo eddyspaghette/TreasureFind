@@ -93,7 +93,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
             //fragment replace
             if (it != null) {
-                Log.d("Debug: sr size", it.sr.size.toString())
                 if (it.sr.indexOf(uid) == -1) {
                     supportFragmentManager.beginTransaction().replace(R.id.seeker_map_fragmentcontainerview, submitFragment).commit()
                 }
@@ -103,7 +102,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 //if winner is determined
                 if (it.wid != "") {
-                    Log.d("Debug", "printing something")
                     myFirebase.updateUser(uid, "in_session", "")
                     val intent = Intent(this, VictoryActivity::class.java)
                     intent.putExtra(wid_KEY, it.wid)
