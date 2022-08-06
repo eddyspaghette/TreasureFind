@@ -12,11 +12,15 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.databinding.ActivityMainBinding
+import com.AERYZ.treasurefind.db.MyFirebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private lateinit var myFirebase = MyFirebase()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +44,16 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        val uid = FirebaseAuth.getInstance().uid!!
+
+        val user = myFirebase.getUserDocument(uid)
+            .get()
+            .addOnCompleteListener {
+
+            }
+            .addOnCanceledListener {
+
+            }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

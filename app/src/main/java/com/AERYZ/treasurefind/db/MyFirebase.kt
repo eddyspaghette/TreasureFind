@@ -120,6 +120,12 @@ class MyFirebase {
         return docRef
     }
 
+    // returns document reference, caller has to implement listeners
+    fun getTreasureDocument(tid: String): DocumentReference {
+        val docRef = db.collection("treasures").document(tid)
+        return docRef
+    }
+
     fun insert(myUser: MyUser) {
         val profileImagePath = "images/profile/${myUser.uid}.jpg"
         myUser.profileImagePath = profileImagePath
