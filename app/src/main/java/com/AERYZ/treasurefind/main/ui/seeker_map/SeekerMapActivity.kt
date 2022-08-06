@@ -36,7 +36,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private val BINDING_STATUS_KEY = "BINDING_STATUS"
     private var isFirstTimeCenter = false
     private val myFirebase = MyFirebase()
-    private val uid = FirebaseAuth.getInstance().uid
+    private val uid = FirebaseAuth.getInstance().uid!!
     private var tid: String = ""
 
 
@@ -103,6 +103,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 //if winner is determined
                 if (it.wid != "") {
+                    myFirebase.updateUser(uid, "in_session", "")
                     val intent = Intent(this, VictoryActivity::class.java)
                     intent.putExtra(wid_KEY, it.wid)
                     startActivity(intent)

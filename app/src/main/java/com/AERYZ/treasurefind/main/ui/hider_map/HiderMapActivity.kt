@@ -51,6 +51,7 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mapViewModelFactory: HiderMapViewModelFactory
     private var isFirstTimeCenter = false
     private val myFirebase = MyFirebase()
+    private val uid = FirebaseAuth.getInstance().uid!!
     private var tid: String = ""
 
     private lateinit var hiderDoneFragment: HiderDoneFragment
@@ -127,6 +128,7 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 //if winner is determined
                 if (it.wid != "") {
+                    myFirebase.updateUser(uid, "in_session", "")
                     val intent = Intent(this, VictoryActivity::class.java)
                     intent.putExtra(wid_KEY, it.wid)
                     startActivity(intent)
