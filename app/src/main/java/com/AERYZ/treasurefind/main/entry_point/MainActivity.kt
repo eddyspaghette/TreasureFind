@@ -1,5 +1,6 @@
 package com.AERYZ.treasurefind.main.entry_point
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import com.google.android.material.navigation.NavigationView
@@ -15,6 +16,10 @@ import com.AERYZ.treasurefind.databinding.ActivityMainBinding
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
+import com.AERYZ.treasurefind.db.MyUser
+import com.AERYZ.treasurefind.db.Treasure
+import com.AERYZ.treasurefind.main.ui.hider_map.HiderMapActivity
+import com.AERYZ.treasurefind.main.ui.seeker_map.SeekerMapActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,6 +59,20 @@ class MainActivity : AppCompatActivity() {
             .addOnCanceledListener {
 
             }
+    }
+    fun checkInSession(user:MyUser,treasure:Treasure){
+        if(user.in_session!=""){
+            if(user.uid==treasure.oid){
+                val intent:Intent=Intent(this,HiderMapActivity::class.java)
+                startActivity(intent)
+            }
+            else{
+                val intent:Intent=Intent(this,SeekerMapActivity::class.java)
+                startActivity(intent)
+            }
+
+        }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
