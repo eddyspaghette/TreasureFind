@@ -17,36 +17,10 @@
         android:background="@color/divider"
         app:srcCompat="@android:drawable/arrow_up_float" />
 
-
-    <RelativeLayout
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/hider_map_fragmentcontainerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/sr_fragment_container_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_alignParentBottom="true">
-            <Button
-                android:id="@+id/hider_map_accept_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="accept"
-                android:layout_margin="20dp"/>
-            <Button
-                android:id="@+id/hider_map_skip_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="skip"
-                android:layout_margin="20dp"/>
-        </LinearLayout>
-
-    </RelativeLayout>
+        android:layout_height="match_parent"/>
 
 
 </LinearLayout>

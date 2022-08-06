@@ -25,7 +25,6 @@ class SRActivity : AppCompatActivity() {
         srViewModel = ViewModelProvider(this)[SRViewModel::class.java]
         // back button
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        //
         val argument = intent
         val tid = argument.getStringExtra(SeekerMapActivity.tid_KEY).toString()
 
@@ -46,8 +45,7 @@ class SRActivity : AppCompatActivity() {
             if (srViewModel.image.value != null && uid != null)
             {
                 val sR = SR(uid!!, srViewModel.image.value!!)
-                myFirebase.updateSR(tid, sR)
-                //may need visualization here
+                myFirebase.addSR(tid, sR)
             }
         }
     }

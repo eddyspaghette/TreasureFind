@@ -28,6 +28,7 @@ data class MyUser(
     var uid: String = "",
     var userName: String = "",
     var email: String = "",
+    var in_session: String = "",
     @Exclude @set:Exclude @get:Exclude var profileImage: Bitmap? = null,
     var profileImagePath: String = ""
 )
@@ -65,6 +66,15 @@ class MyFirebase {
 
     interface TreasureInsertionListener {
         fun onSuccess(tid: String)
+        fun onFailure(exception: Exception)
+    }
+    interface UserInsertionListener {
+        fun onSuccess()
+        fun onFailure(exception: Exception)
+    }
+
+    interface DeletionImageListener {
+        fun onSuccess()
         fun onFailure(exception: Exception)
     }
 
@@ -120,10 +130,23 @@ class MyFirebase {
         return docRef
     }
 
-    fun insert(myUser: MyUser) {
+    // returns document reference, caller has to implement listeners
+    fun getTreasureDocument(tid: String): DocumentReference {
+        val docRef = db.collection("treasures").document(tid)
+        return docRef
+    }
+
+    fun insert(myUser: MyUser, listener: UserInsertionListener?= null) {
         val profileImagePath = "images/profile/${myUser.uid}.jpg"
         myUser.profileImagePath = profileImagePath
         db.collection("users").document(myUser.uid).set(myUser)
+            .addOnCompleteListener {
+                Log.d("Debug", "Inserting user sucess!")
+                listener?.onSuccess()
+            }
+            .addOnCanceledListener {
+                Log.d("Debug", "Inserting user failed!")
+            }
         insertToFirebaseStorage(myUser.profileImage!!, profileImagePath)
     }
 
@@ -171,20 +194,36 @@ class MyFirebase {
         }
     }
 
-    fun updateSeeker(tid: String, sid: String) {
+    fun updateUser(uid: String, field: String, value: String) {
+        db.collection("users").document(uid).update(field, value)
+    }
+
+    fun updateTreasure(tid: String, field: String, value: String) {
+        db.collection("treasures").document(tid).update(field, value)
+    }
+
+    fun addSeeker(tid: String, sid: String) {
         db.collection("treasures").document(tid).update("seekers", FieldValue.arrayUnion(sid))
     }
 
-    fun updateSR(tid: String, sR: SR) {
+    fun removeSeeker(tid: String, sid: String) {
+        db.collection("treasures").document(tid).update("seekers", FieldValue.arrayRemove(sid))
+    }
+
+    fun addSR(tid: String, sR: SR) {
         db.collection("treasures").document(tid).update("sr", FieldValue.arrayUnion(sR.sid))
         val sRImagePath =  "images/treasures/${tid}/${sR.sid}.jpg"
         insertToFirebaseStorage(sR.sRImage, sRImagePath)
+    }
+    fun removeSR(tid: String, sid: String, listener: DeletionImageListener?= null) {
+        db.collection("treasures").document(tid).update("sr", FieldValue.arrayRemove(sid))
+        val sRImagePath =  "images/treasures/${tid}/${sid}.jpg"
+        deleteImage(sRImagePath, listener)
     }
 
     fun updateProfileImage(uid: String, image: Bitmap) {
         var profileImagePath = "images/profile/${uid}.jpg"
         insertToFirebaseStorage(image, profileImagePath)
-
     }
 
     fun getProfileImage(activity: FragmentActivity, uid: String, mutableLiveData: MutableLiveData<Bitmap>) {
@@ -201,6 +240,17 @@ class MyFirebase {
                 .submit()
                 .get()
                 mutableLiveData.postValue(bitmap)
+        }
+    }
+
+    fun deleteImage(path: String, listener: DeletionImageListener? = null) {
+        val deleteRef = storageReference.child(path)
+        deleteRef.delete().addOnSuccessListener {
+            listener.let{
+                it?.onSuccess()
+            }
+        }.addOnFailureListener {
+            // TODO: implement failure
         }
     }
 

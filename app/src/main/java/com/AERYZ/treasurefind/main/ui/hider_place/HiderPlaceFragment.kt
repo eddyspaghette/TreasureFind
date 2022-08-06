@@ -36,6 +36,8 @@ class HiderPlaceFragment : Fragment(), MyFirebase.TreasureInsertionListener {
 
     private var isBind = false
     private lateinit var serviceIntent: Intent
+    private var myFirebase = MyFirebase()
+    private var uid = FirebaseAuth.getInstance().uid!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -146,11 +148,12 @@ class HiderPlaceFragment : Fragment(), MyFirebase.TreasureInsertionListener {
     }
 
     override fun onSuccess(tid: String) {
-        //start Map activity
+        //update database
+        myFirebase.updateUser(uid, "in_session", tid)
 
+        //start Map activity
         val intent = Intent(requireActivity(), HiderMapActivity::class.java)
         intent.putExtra(SeekerMapActivity.tid_KEY, tid)
-        intent.putExtra(SeekerMapActivity.who_KEY, 0) //0 is hider, 1 is seeker
         startActivity(intent)
     }
 

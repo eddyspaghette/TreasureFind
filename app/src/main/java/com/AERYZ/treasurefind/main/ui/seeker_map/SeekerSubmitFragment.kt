@@ -1,43 +1,59 @@
-//https://hamzaasif-mobileml.medium.com/getting-frames-of-live-camera-footage-as-bitmaps-in-android-using-camera2-api-kotlin-40ba8d3afc76
-package com.AERYZ.treasurefind.main.ui.livecamera
+package com.AERYZ.treasurefind.main.ui.seeker_map
 
-import android.content.Context
+import android.content.Context.CAMERA_SERVICE
+import android.content.Context.WINDOW_SERVICE
 import android.graphics.Bitmap
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraManager
 import android.media.Image
 import android.media.ImageReader
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.util.Size
-import android.view.Surface
+import android.view.*
 import android.widget.Button
-import android.widget.ImageView
+import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import com.AERYZ.treasurefind.R
+import com.AERYZ.treasurefind.db.MyFirebase
+import com.AERYZ.treasurefind.db.SR
+import com.AERYZ.treasurefind.main.ui.livecamera.CameraConnectionFragment
+import com.AERYZ.treasurefind.main.ui.livecamera.ImageUtils
 import com.AERYZ.treasurefind.main.util.Util
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
+import com.google.firebase.auth.FirebaseAuth
 
-class LiveCameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
 
-    private lateinit var imageView: ImageView
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_live_camera)
+class SeekerSubmitFragment : Fragment(), ImageReader.OnImageAvailableListener {
+
+    private var myFirebase = MyFirebase()
+    private var tid = ""
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        tid = arguments?.getString(SeekerMapActivity.tid_KEY).toString()
+
+        Log.d("Debug Seeker Submit", tid)
+
+        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_seeker_submit, container, false)
+
+        //live camera
         setFragment()
-
-        val btn_capture: Button = findViewById(R.id.btn_capture)
-        imageView = findViewById(R.id.livecamimageview)
+        val btn_capture: Button = view.findViewById(R.id.btn_capture)
         btn_capture.setOnLongClickListener() {
             isCapture = 1
             true
         }
 
+        return view
     }
 
+    //live camera
     var previewHeight = 0;
     var previewWidth = 0
     var sensorOrientation = 0;
@@ -54,8 +70,7 @@ class LiveCameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableList
 
     //TODO fragment which show llive footage from camera
     protected fun setFragment() {
-        val manager =
-            getSystemService(Context.CAMERA_SERVICE) as CameraManager
+        val manager = requireActivity().getSystemService(CAMERA_SERVICE) as CameraManager
         var cameraId: String? = null
         try {
             cameraId = manager.cameraIdList[0]
@@ -77,11 +92,12 @@ class LiveCameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableList
             Size(480, 480)
         )
         camera2Fragment.setCamera(cameraId)
-        fragment = camera2Fragment
-        supportFragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
+        fragment = camera2Fragment as Fragment
+        requireActivity().supportFragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
     }
 
     protected fun getScreenOrientation(): Int {
+        val windowManager = requireActivity().getSystemService(WINDOW_SERVICE) as WindowManager
         return when (windowManager.defaultDisplay.rotation) {
             Surface.ROTATION_270 -> 270
             Surface.ROTATION_180 -> 180
@@ -95,16 +111,16 @@ class LiveCameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableList
     //TODO getting frames of live camera footage and passing them to model
     override fun onImageAvailable(reader: ImageReader) {
         if (isCapture == 1) {
-            isCapture = 0
             cameraprocess(reader)
-            CoroutineScope(Main).launch {
-                if (rgbFrameBitmap != null) {
-                    val bitmap = Util.rotateBitmap(rgbFrameBitmap!!, 90f)
-                    Log.d("Debug", "${bitmap!!.width} ${bitmap!!.height}")
-                    imageView.setImageBitmap(bitmap)
-                }
+            //action with output image here
+            isCapture = 0
+            if (rgbFrameBitmap != null) {
+                val bitmap = Util.rotateBitmap(rgbFrameBitmap!!, 90f)
+                val uid = FirebaseAuth.getInstance().uid
+                val sR = SR(uid!!, bitmap!!)
+                myFirebase.addSR(tid, sR)
+                Toast.makeText(activity, "Uploaded!", Toast.LENGTH_SHORT).show()
             }
-
         }
         val temp = reader.acquireLatestImage()
         if (temp!= null)
