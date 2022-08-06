@@ -68,7 +68,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         tid_TextView.setText(temp)
 
         //Service View Model
-        mapViewModelFactory = SeekerMapViewModelFactory(tid!!)
+        mapViewModelFactory = SeekerMapViewModelFactory(tid)
         mapViewModel = ViewModelProvider(this, mapViewModelFactory)[SeekerMapViewModel::class.java]
 
 
@@ -108,6 +108,13 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     startActivity(intent)
                     finish()
                 }
+            }
+        }
+
+        //update location to database
+        mapViewModel.location.observe(this) {
+            if (it != null) {
+                mapViewModel.updateSeekerLocation(LatLng(it.latitude, it.longitude))
             }
         }
 

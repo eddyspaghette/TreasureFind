@@ -30,8 +30,9 @@ data class MyUser(
     var email: String = "",
     var in_session: String = "",
     @Exclude @set:Exclude @get:Exclude var profileImage: Bitmap? = null,
-    var profileImagePath: String = ""
-)
+    var profileImagePath: String = "",
+    var latitude: Double = 0.0,
+    var longitude: Double = 0.0)
 
 data class Treasure(
     var oid: String? = "",
@@ -194,7 +195,7 @@ class MyFirebase {
         }
     }
 
-    fun updateUser(uid: String, field: String, value: String) {
+    fun updateUser(uid: String, field: String, value: Any?) {
         db.collection("users").document(uid).update(field, value)
     }
 
