@@ -12,11 +12,13 @@ import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.main.ui.feed.FeedFragment
 import com.AERYZ.treasurefind.main.ui.seeker_map.SeekerMapActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 
 class TreasureDetailsActivity : AppCompatActivity() {
 
     private var myFirebase = MyFirebase()
     private lateinit var treasureDetailsViewModel: TreasureDetailsViewModel
+    private var uid = FirebaseAuth.getInstance().uid!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,9 +56,10 @@ class TreasureDetailsActivity : AppCompatActivity() {
 
 
         TDAccept_btn.setOnClickListener() {
+            myFirebase.updateUser(uid, "in_session", tid!!)
             val intent = Intent(this, SeekerMapActivity::class.java)
             intent.putExtra(SeekerMapActivity.tid_KEY, tid)
-            myFirebase.updateSeeker(tid!!, FirebaseAuth.getInstance().uid!!)
+            myFirebase.updateSeeker(tid, FirebaseAuth.getInstance().uid!!)
             startActivity(intent)
         }
     }
