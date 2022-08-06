@@ -20,6 +20,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.databinding.FragmentFeedBinding
 import com.AERYZ.treasurefind.db.MyFirebase
+import com.AERYZ.treasurefind.db.Treasure
 import com.AERYZ.treasurefind.main.entry_point.MainActivity
 
 class FeedFragment : Fragment(), MenuProvider {
@@ -28,6 +29,7 @@ class FeedFragment : Fragment(), MenuProvider {
     private val myFirebase = MyFirebase()
     private lateinit var feedViewModel: FeedViewModel
     private lateinit var feedAdapter: FeedAdapter
+    private lateinit var searchView: SearchView
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -55,6 +57,23 @@ class FeedFragment : Fragment(), MenuProvider {
         feedAdapter = FeedAdapter(requireActivity(), arrayListOf())
 
         feedViewModel.feedList.observe(requireActivity()) {
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+//                    feedAdapter.filter.filter(query)
+//                    println("Query: $query")
+                    return false
+                }
+
+                override fun onQueryTextChange(newQuery: String?): Boolean {
+                    //feedAdapter.filter.filter(newQuery)
+                    println("Query: new $newQuery")
+                    val filteredList = ArrayList<Treasure>()
+                    it.filter { (it.tid!!.contains(newQuery!!)) }.forEach{filteredList.add(it)}
+                    feedAdapter.updateList(filteredList)
+                    feedAdapter.notifyDataSetChanged()
+                    return false
+                }
+            })
             feedAdapter.updateList(it)
             feedAdapter.notifyDataSetChanged()
         }
@@ -78,20 +97,8 @@ class FeedFragment : Fragment(), MenuProvider {
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.feed_toolbar, menu)
         val menuItem : MenuItem = menu.findItem(R.id.appSearchBar)
-        val searchView: SearchView = menuItem.actionView as SearchView
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                feedAdapter.filter.filter(query)
-                println("Query: $query")
-                return false
-            }
+        searchView = menuItem.actionView as SearchView
 
-            override fun onQueryTextChange(newQuery: String?): Boolean {
-                feedAdapter.filter.filter(newQuery)
-                println("Query: new $newQuery")
-                return false
-            }
-        })
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {

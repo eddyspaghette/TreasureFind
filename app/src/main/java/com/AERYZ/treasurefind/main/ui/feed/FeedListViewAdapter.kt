@@ -21,7 +21,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import java.text.DateFormat
 
-class FeedAdapter(private var context: Context, private var feedList: ArrayList<Treasure>) : RecyclerView.Adapter<FeedAdapter.ViewHolder>(), Filterable {
+class FeedAdapter(private var context: Context, private var feedList: ArrayList<Treasure>) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
     private val storage = Firebase.storage
     private val storageRef = storage.reference
     var feedListFiltered: ArrayList<Treasure> = ArrayList()
@@ -111,33 +111,33 @@ class FeedAdapter(private var context: Context, private var feedList: ArrayList<
     fun updateList(newList: ArrayList<Treasure>) {
         feedList = newList
     }
-
-    override fun getFilter(): Filter {
-        return object : Filter() {
-            override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val charString = constraint?.toString() ?: ""
-                println("Query: in getFilter: $constraint")
-                if (charString.isEmpty()) {
-                    println("Query: empty")
-                    feedListFiltered = feedList
-                }
-                else {
-                    println("Query: not empty")
-                    val filteredList = ArrayList<Treasure>()
-                    feedList.filter { (it.tid!!.contains(constraint!!)) }.forEach{filteredList.add(it)}
-                    feedListFiltered = filteredList
-                }
-                return FilterResults().apply { values = feedListFiltered }
-            }
-
-            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                feedListFiltered =
-                if (results?.values == null)
-                    ArrayList()
-                else
-                    results.values as ArrayList<Treasure>
-                notifyDataSetChanged()
-            }
-        }
-    }
+//
+//    override fun getFilter(): Filter {
+//        return object : Filter() {
+//            override fun performFiltering(constraint: CharSequence?): FilterResults {
+//                val charString = constraint?.toString() ?: ""
+//                println("Query: in getFilter: $constraint")
+//                if (charString.isEmpty()) {
+//                    println("Query: empty")
+//                    feedListFiltered = feedList
+//                }
+//
+//                else {
+//                    val filteredList = ArrayList<Treasure>()
+//                    feedList.filter { (it.tid!!.contains(constraint!!)) }.forEach{filteredList.add(it)}
+//                    feedListFiltered = filteredList
+//                }
+//                return FilterResults().apply { values = feedListFiltered }
+//            }
+//
+//            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+//                feedListFiltered =
+//                if (results?.values == null)
+//                    ArrayList()
+//                else
+//                    results.values as ArrayList<Treasure>
+//                notifyDataSetChanged()
+//            }
+//        }
+//    }
 }
