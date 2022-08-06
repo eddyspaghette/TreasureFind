@@ -3,6 +3,7 @@ package com.AERYZ.treasurefind.db
 import android.app.Activity
 import android.app.Dialog
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
@@ -52,7 +53,11 @@ data class Treasure(
 )
 
 
-data class SR(var sid: String, var sRImage: Bitmap) {
+data class SR(var tid:String = "",
+              var sid:String = "",
+              var latitude: Double = 0.0,
+              var longitude: Double = 0.0,
+              var sRImage: Bitmap) {
 }
 
 class MyFirebase {
@@ -213,11 +218,18 @@ class MyFirebase {
 
     fun addSR(tid: String, sR: SR) {
         db.collection("treasures").document(tid).update("sr", FieldValue.arrayUnion(sR.sid))
+
+        db.collection("submit_requests").document(sR.sid).update("latitude", sR.latitude)
+        db.collection("submit_requests").document(sR.sid).update("longitude", sR.longitude)
+
         val sRImagePath =  "images/treasures/${tid}/${sR.sid}.jpg"
         insertToFirebaseStorage(sR.sRImage, sRImagePath)
     }
     fun removeSR(tid: String, sid: String, listener: DeletionImageListener?= null) {
         db.collection("treasures").document(tid).update("sr", FieldValue.arrayRemove(sid))
+
+        db.collection("submit_requests").document(sid).delete()
+
         val sRImagePath =  "images/treasures/${tid}/${sid}.jpg"
         deleteImage(sRImagePath, listener)
     }
