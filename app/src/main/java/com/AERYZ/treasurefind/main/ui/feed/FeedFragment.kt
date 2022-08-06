@@ -80,6 +80,7 @@ class FeedFragment : Fragment(), MenuProvider {
         menuInflater.inflate(R.menu.feed_toolbar, menu)
         val menuItem : MenuItem = menu.findItem(R.id.appSearchBar)
         val searchView = menuItem.actionView as SearchView
+        searchView.queryHint = "Treasure Id or Title"
         search(searchView)
     }
 
