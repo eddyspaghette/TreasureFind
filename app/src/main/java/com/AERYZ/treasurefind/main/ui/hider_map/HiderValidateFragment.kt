@@ -40,7 +40,6 @@ class HiderValidateFragment : Fragment() {
             {
                 if (it.sr.size > 0)
                 {
-                    Log.d("Debug", "in creating fragment ${it.sr.size}")
                     fragment = SrFragment()
                     val bundle = Bundle()
                     bundle.putString(SrFragment.sid_KEY, it.sr[0])
@@ -61,7 +60,6 @@ class HiderValidateFragment : Fragment() {
         }
 
         skip_btn.setOnClickListener() {
-            Log.d("Debug: size of sr", viewModel.treasure.value!!.sr.size.toString())
             if (viewModel.treasure.value != null && viewModel.treasure.value!!.sr.size > 0) {
                 val sid = viewModel.treasure.value!!.sr[0]
                 myFirebase.removeSR(tid, sid)
