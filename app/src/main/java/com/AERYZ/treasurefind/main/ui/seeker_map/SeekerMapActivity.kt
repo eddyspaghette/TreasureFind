@@ -86,7 +86,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         //Getting number of seekers
         val numSeekers_TextView: TextView = findViewById(R.id.Text_numPlayers)
-        myFirebase.getTreasure(tid!!, mapViewModel.treasure)
+
         mapViewModel.treasure.observe(this) {
             val text = "Joined: ${it.seekers.size} Seekers"
             numSeekers_TextView.setText(text)
@@ -103,6 +103,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 //if winner is determined
                 if (it.wid != "") {
+                    Log.d("Debug", "printing something")
                     myFirebase.updateUser(uid, "in_session", "")
                     val intent = Intent(this, VictoryActivity::class.java)
                     intent.putExtra(wid_KEY, it.wid)
