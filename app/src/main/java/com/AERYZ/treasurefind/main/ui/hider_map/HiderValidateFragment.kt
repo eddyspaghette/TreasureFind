@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
+import com.AERYZ.treasurefind.db.MyFirebase
 
 
 class HiderValidateFragment : Fragment() {
@@ -19,6 +20,7 @@ class HiderValidateFragment : Fragment() {
     private var tid: String = ""
     private var isFirstTimeSR = false
     private lateinit var fragment: SrFragment
+    private var myFirebase = MyFirebase()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,7 +40,6 @@ class HiderValidateFragment : Fragment() {
             {
                 if (it.sr.size > 0)
                 {
-                    Log.d("Debug", "in creating fragment ${it.sr.size}")
                     fragment = SrFragment()
                     val bundle = Bundle()
                     bundle.putString(SrFragment.sid_KEY, it.sr[0])
@@ -54,16 +55,14 @@ class HiderValidateFragment : Fragment() {
         accept_btn.setOnClickListener() {
             Toast.makeText(requireActivity(), "Ok!", Toast.LENGTH_SHORT).show()
             if (viewModel.treasure.value != null && viewModel.treasure.value!!.sr.size > 0) {
-                viewModel.treasure.value!!.wid = viewModel.treasure.value!!.sr[0]
-                //need update database here
+                myFirebase.updateTreasure(tid, "wid", viewModel.treasure.value!!.sr[0])
             }
         }
 
         skip_btn.setOnClickListener() {
-            Log.d("Debug: size of sr", viewModel.treasure.value!!.sr.size.toString())
             if (viewModel.treasure.value != null && viewModel.treasure.value!!.sr.size > 0) {
-                viewModel.treasure.value!!.sr.removeFirst()
-                //need update database here
+                val sid = viewModel.treasure.value!!.sr[0]
+                myFirebase.removeSR(tid, sid)
             }
         }
         return view
