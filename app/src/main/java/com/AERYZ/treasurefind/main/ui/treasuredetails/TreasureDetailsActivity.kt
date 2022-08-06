@@ -56,7 +56,6 @@ class TreasureDetailsActivity : AppCompatActivity() {
         TDAccept_btn.setOnClickListener() {
             val intent = Intent(this, SeekerMapActivity::class.java)
             intent.putExtra(SeekerMapActivity.tid_KEY, tid)
-            intent.putExtra(SeekerMapActivity.who_KEY, 1) // 0 is hider, 1 is seeker
             myFirebase.updateSeeker(tid!!, FirebaseAuth.getInstance().uid!!)
             startActivity(intent)
         }

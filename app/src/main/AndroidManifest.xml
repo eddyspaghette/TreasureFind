@@ -25,7 +25,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TreasureFind"
         tools:targetApi="31">
-
+        <activity
+            android:name=".VictoryActivity"
+            android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -39,7 +41,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY" />
+            android:value="${MAPS_API_KEY}" />
 
         <activity
             android:name=".main.ui.hider_map.HiderMapActivity"
@@ -88,7 +90,7 @@
             android:theme="@style/Theme.TreasureFind.NoActionBar" />
         <activity android:name=".main.entry_point.onboarding.OnboardingActivity" />
         <activity
-            android:name="com.AERYZ.treasurefind.main.ui.treasuredetails.TreasureDetailsActivity"
+            android:name=".main.ui.treasuredetails.TreasureDetailsActivity"
             android:exported="false"
             android:parentActivityName=".main.entry_point.MainActivity" />
 

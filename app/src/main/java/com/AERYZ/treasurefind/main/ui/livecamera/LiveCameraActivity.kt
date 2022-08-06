@@ -1,7 +1,6 @@
 //https://hamzaasif-mobileml.medium.com/getting-frames-of-live-camera-footage-as-bitmaps-in-android-using-camera2-api-kotlin-40ba8d3afc76
 package com.AERYZ.treasurefind.main.ui.livecamera
 
-import android.app.Fragment
 import android.content.Context
 import android.graphics.Bitmap
 import android.hardware.camera2.CameraAccessException
@@ -15,13 +14,12 @@ import android.util.Size
 import android.view.Surface
 import android.widget.Button
 import android.widget.ImageView
+import androidx.fragment.app.Fragment
 import com.AERYZ.treasurefind.R
-import com.AERYZ.treasurefind.main.ui.livecamera.CameraConnectionFragment
 import com.AERYZ.treasurefind.main.util.Util
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class LiveCameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
 
@@ -80,7 +78,7 @@ class LiveCameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableList
         )
         camera2Fragment.setCamera(cameraId)
         fragment = camera2Fragment
-        fragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
     }
 
     protected fun getScreenOrientation(): Int {

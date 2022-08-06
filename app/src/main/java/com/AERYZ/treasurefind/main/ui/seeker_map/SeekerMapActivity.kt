@@ -1,29 +1,20 @@
 package com.AERYZ.treasurefind.main.ui.seeker_map
 
-import android.app.Fragment
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.hardware.camera2.CameraAccessException
-import android.hardware.camera2.CameraManager
-import android.media.Image
-import android.media.ImageReader
 import android.os.Bundle
 import android.util.Log
-import android.util.Size
-import android.view.Surface
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
+import com.AERYZ.treasurefind.VictoryActivity
 import com.AERYZ.treasurefind.databinding.ActivitySeekermapBinding
 import com.AERYZ.treasurefind.db.MyFirebase
-import com.AERYZ.treasurefind.db.SR
 import com.AERYZ.treasurefind.main.services.TrackingService
-import com.AERYZ.treasurefind.main.ui.livecamera.CameraConnectionFragment
-import com.AERYZ.treasurefind.main.ui.livecamera.ImageUtils
-import com.AERYZ.treasurefind.main.util.Util
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -36,6 +27,8 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivitySeekermapBinding
+    private lateinit var submitFragment: SeekerSubmitFragment
+    private lateinit var waitFragment: SeekerWaitFragment
 
     //service
     private lateinit var serviceIntent: Intent
@@ -45,12 +38,13 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private val BINDING_STATUS_KEY = "BINDING_STATUS"
     private var isFirstTimeCenter = false
     private val myFirebase = MyFirebase()
+    private val uid = FirebaseAuth.getInstance().uid
     private var tid: String = ""
 
 
     companion object {
         var tid_KEY = "tid"
-        var who_KEY = "who" //0 is hider, 1 is seeker
+        var wid_KEY = "wid"
     }
 
 
@@ -72,8 +66,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
             isBind = savedInstanceState.getBoolean(BINDING_STATUS_KEY, false)
         }
 
-
-        val who = intent.getIntExtra(who_KEY, 0)
         tid  = intent.getStringExtra(tid_KEY)!!
         val tid_TextView: TextView = findViewById(R.id.Text_tid)
         val temp = "tid: ${tid}"
@@ -88,12 +80,38 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         startService(serviceIntent)
         bindService()
 
+        val bundle = Bundle()
+        bundle.putString(tid_KEY, tid)
+        submitFragment = SeekerSubmitFragment()
+        submitFragment.arguments = bundle
+
+        waitFragment = SeekerWaitFragment()
+        waitFragment.arguments = bundle
+
         //Getting number of seekers
         val numSeekers_TextView: TextView = findViewById(R.id.Text_numPlayers)
         myFirebase.getTreasure(tid!!, mapViewModel.treasure)
         mapViewModel.treasure.observe(this) {
             val text = "Joined: ${it.seekers.size} Seekers"
             numSeekers_TextView.setText(text)
+
+            //fragment replace
+            if (it != null) {
+                Log.d("Debug: sr size", it.sr.size.toString())
+                if (it.sr.indexOf(uid) == -1) {
+                    supportFragmentManager.beginTransaction().replace(R.id.seeker_map_fragmentcontainerview, submitFragment).commit()
+                }
+                else {
+                    supportFragmentManager.beginTransaction().replace(R.id.seeker_map_fragmentcontainerview, waitFragment).commit()
+                }
+
+                //if winner is determined
+                if (it.wid != "") {
+                    val intent = Intent(this, VictoryActivity::class.java)
+                    intent.putExtra(wid_KEY, it.wid)
+                    startActivity(intent)
+                }
+            }
         }
 
         //bottom sheet
@@ -115,6 +133,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         })
+
 
 
 

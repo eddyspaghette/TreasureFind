@@ -19,6 +19,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
+import com.AERYZ.treasurefind.VictoryActivity
 import com.AERYZ.treasurefind.databinding.ActivityHidermapBinding
 import com.AERYZ.treasurefind.databinding.ActivitySeekermapBinding
 import com.AERYZ.treasurefind.db.MyFirebase
@@ -26,6 +27,7 @@ import com.AERYZ.treasurefind.db.SR
 import com.AERYZ.treasurefind.main.services.TrackingService
 import com.AERYZ.treasurefind.main.ui.livecamera.CameraConnectionFragment
 import com.AERYZ.treasurefind.main.ui.livecamera.ImageUtils
+import com.AERYZ.treasurefind.main.ui.seeker_map.SeekerMapActivity
 import com.AERYZ.treasurefind.main.ui.seeker_map.SeekerMapViewModel
 import com.AERYZ.treasurefind.main.ui.seeker_map.SeekerMapViewModelFactory
 import com.AERYZ.treasurefind.main.util.Util
@@ -50,13 +52,13 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private var isFirstTimeCenter = false
     private val myFirebase = MyFirebase()
     private var tid: String = ""
-    private var isFirstTimeSR = false
-    private lateinit var fragment: SrFragment
 
+    private lateinit var hiderDoneFragment: HiderDoneFragment
+    private lateinit var hiderValidateFragment: HiderValidateFragment
 
     companion object {
         var tid_KEY = "tid"
-        var who_KEY = "who" //0 is hider, 1 is seeker
+        var wid_KEY = "wid"
     }
 
 
@@ -75,7 +77,6 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
 
-        val who = intent.getIntExtra(who_KEY, 0)
         tid  = intent.getStringExtra(tid_KEY)!!
         val tid_TextView: TextView = findViewById(R.id.Text_tid)
         val temp = "tid: ${tid}"
@@ -105,8 +106,13 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         })
 
-        val accept_btn: Button = findViewById(R.id.hider_map_accept_btn)
-        val skip_btn: Button = findViewById(R.id.hider_map_skip_btn)
+        val bundle = Bundle()
+        bundle.putString(tid_KEY, tid)
+
+        hiderDoneFragment = HiderDoneFragment()
+        hiderDoneFragment.arguments = bundle
+        hiderValidateFragment = HiderValidateFragment()
+        hiderValidateFragment.arguments = bundle
 
         //Getting number of seekers
         val numSeekers_TextView: TextView = findViewById(R.id.Text_numPlayers)
@@ -115,38 +121,23 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
             val text = "Joined: ${it.seekers.size} Seekers"
             numSeekers_TextView.setText(text)
 
-            if (it != null)
-            {
-                if (it.sr.size > 0)
-                {
-                    Log.d("Debug", "in creating fragment ${it.sr.size}")
-                    fragment = SrFragment()
-                    val bundle = Bundle()
-                    bundle.putString(SrFragment.sid_KEY, it.sr[0])
-                    fragment.arguments = bundle
-                    supportFragmentManager.beginTransaction().replace(R.id.sr_fragment_container_view, fragment).commit()
+            if (it != null) {
+                if (it.sr.size == 0) {
+                    supportFragmentManager.beginTransaction().replace(R.id.hider_map_fragmentcontainerview, hiderDoneFragment).commit()
+                } else {
+                    supportFragmentManager.beginTransaction().replace(R.id.hider_map_fragmentcontainerview, hiderValidateFragment).commit()
+                }
+
+                //if winner is determined
+                if (it.wid != "") {
+                    val intent = Intent(this, VictoryActivity::class.java)
+                    intent.putExtra(wid_KEY, it.wid)
+                    startActivity(intent)
                 }
             }
         }
 
-        accept_btn.setOnClickListener() {
-            Toast.makeText(this, "Ok!", Toast.LENGTH_SHORT).show()
-        }
 
-        skip_btn.setOnClickListener() {
-            Log.d("Debug", "size ${mapViewModel.treasure.value!!.sr.size}")
-            if (mapViewModel.treasure.value!=null && mapViewModel.treasure.value!!.sr.size > 0)
-            {
-                mapViewModel.treasure.value!!.sr.removeFirst()
-                fragment = SrFragment()
-                if (mapViewModel.treasure.value!!.sr.size > 0) {
-                    val bundle = Bundle()
-                    bundle.putString(SrFragment.sid_KEY, mapViewModel.treasure.value!!.sr[0])
-                    fragment.arguments = bundle
-                }
-                supportFragmentManager.beginTransaction().replace(R.id.sr_fragment_container_view, fragment).commit()
-            }
-        }
     }
 
     private fun setMapInteraction(mMap: GoogleMap, value: Boolean) {
