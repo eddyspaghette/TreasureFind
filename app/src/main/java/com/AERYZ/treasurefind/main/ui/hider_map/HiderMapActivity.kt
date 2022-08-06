@@ -68,9 +68,6 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
 
 
-        //back button
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.hider_map) as SupportMapFragment
@@ -162,6 +159,9 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
             setMapInteraction(mMap, it)
         }
 
+    }
+    override fun onBackPressed() {
+        return
     }
 
 }

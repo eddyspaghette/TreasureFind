@@ -45,6 +45,7 @@
 
         <activity
             android:name=".main.ui.hider_map.HiderMapActivity"
+            android:theme="@style/Theme.TreasureFind.NoActionBar"
             android:exported="false"
             android:label="@string/title_activity_hider_map" />
 
@@ -81,9 +82,9 @@
         </activity>
         <activity
             android:name=".main.ui.seeker_map.SeekerMapActivity"
+            android:theme="@style/Theme.TreasureFind.NoActionBar"
             android:exported="false"
-            android:label="@string/title_activity_maps"
-            android:parentActivityName=".main.entry_point.MainActivity" />
+            android:label="@string/title_activity_maps" />
         <activity
             android:name=".main.entry_point.MainActivity"
             android:exported="false"
