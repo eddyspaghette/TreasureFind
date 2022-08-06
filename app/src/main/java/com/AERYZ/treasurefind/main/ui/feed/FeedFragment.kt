@@ -92,7 +92,7 @@ class FeedFragment : Fragment(), MenuProvider {
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     val filteredList = ArrayList<Treasure>()
-                    it.filter { (it.tid!!.contains(query!!)) }.forEach{filteredList.add(it)}
+                    it.filter { (it.tid!!.contains(query!!) or it.title!!.contains(query)) }.forEach{filteredList.add(it)}
                     feedAdapter.updateList(filteredList)
                     feedAdapter.notifyDataSetChanged()
                     return false
