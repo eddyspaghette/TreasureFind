@@ -5,6 +5,8 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -19,9 +21,10 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import java.text.DateFormat
 
-class FeedAdapter(private var context: Context, private var feedList: ArrayList<Treasure>) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
+class FeedAdapter(private var context: Context, private var feedList: ArrayList<Treasure>) : RecyclerView.Adapter<FeedAdapter.ViewHolder>(), Filterable {
     private val storage = Firebase.storage
     private val storageRef = storage.reference
+    var feedListFiltered: ArrayList<Treasure> = ArrayList()
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -107,5 +110,34 @@ class FeedAdapter(private var context: Context, private var feedList: ArrayList<
 
     fun updateList(newList: ArrayList<Treasure>) {
         feedList = newList
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charString = constraint?.toString() ?: ""
+                println("Query: in getFilter: $constraint")
+                if (charString.isEmpty()) {
+                    println("Query: empty")
+                    feedListFiltered = feedList
+                }
+                else {
+                    println("Query: not empty")
+                    val filteredList = ArrayList<Treasure>()
+                    feedList.filter { (it.tid!!.contains(constraint!!)) }.forEach{filteredList.add(it)}
+                    feedListFiltered = filteredList
+                }
+                return FilterResults().apply { values = feedListFiltered }
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                feedListFiltered =
+                if (results?.values == null)
+                    ArrayList()
+                else
+                    results.values as ArrayList<Treasure>
+                notifyDataSetChanged()
+            }
+        }
     }
 }
