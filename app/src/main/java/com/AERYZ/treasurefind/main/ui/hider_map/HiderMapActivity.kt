@@ -169,7 +169,9 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
             mMap.isMyLocationEnabled = true
             mMap.uiSettings.isMyLocationButtonEnabled = true
             mMap.uiSettings.isCompassEnabled = true
-        } catch (e: Exception) {}
+        } catch (e: SecurityException)  {
+            Log.e("Exception: %s", e.message.toString());
+        }
 
         mMap.setOnMyLocationButtonClickListener() {
             if (mapViewModel.treasure.value != null) {
