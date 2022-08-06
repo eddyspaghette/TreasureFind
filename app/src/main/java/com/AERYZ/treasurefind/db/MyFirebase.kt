@@ -28,6 +28,7 @@ data class MyUser(
     var uid: String = "",
     var userName: String = "",
     var email: String = "",
+    var in_session: String = "",
     @Exclude @set:Exclude @get:Exclude var profileImage: Bitmap? = null,
     var profileImagePath: String = ""
 )
@@ -175,6 +176,10 @@ class MyFirebase {
                 Log.d("Debug", "Got Loading treasure image")
             }
         }
+    }
+
+    fun updateUser(uid: String, field: String, value: String) {
+        db.collection("users").document(uid).update(field, value)
     }
 
     fun updateSeeker(tid: String, sid: String) {

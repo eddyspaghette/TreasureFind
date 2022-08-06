@@ -15,17 +15,17 @@ import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.databinding.ActivityMainBinding
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 import com.AERYZ.treasurefind.db.MyUser
 import com.AERYZ.treasurefind.db.Treasure
 import com.AERYZ.treasurefind.main.ui.hider_map.HiderMapActivity
 import com.AERYZ.treasurefind.main.ui.seeker_map.SeekerMapActivity
+import com.google.firebase.firestore.ktx.toObject
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-    private lateinit var myFirebase = MyFirebase()
+    private var myFirebase = MyFirebase()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,28 +51,30 @@ class MainActivity : AppCompatActivity() {
 
         val uid = FirebaseAuth.getInstance().uid!!
 
-        val user = myFirebase.getUserDocument(uid)
+        myFirebase.getUserDocument(uid)
             .get()
-            .addOnCompleteListener {
-
+            .addOnCompleteListener { u ->
+                val user = u.result.toObject<MyUser>()
+                if(user!!.in_session!=""){
+                    myFirebase.getTreasureDocument(user.in_session)
+                        .get()
+                        .addOnCompleteListener { t ->
+                            val treasure = t.result.toObject<Treasure>()
+                            var intent:Intent
+                            if(user.uid == treasure!!.oid){
+                                intent=Intent(this,HiderMapActivity::class.java)
+                                intent.putExtra(HiderMapActivity.tid_KEY, treasure.tid)
+                            }
+                            else{
+                                intent=Intent(this,SeekerMapActivity::class.java)
+                                intent.putExtra(SeekerMapActivity.tid_KEY, treasure.tid)
+                            }
+                            startActivity(intent)
+                        }
+                }
             }
             .addOnCanceledListener {
-
             }
-    }
-    fun checkInSession(user:MyUser,treasure:Treasure){
-        if(user.in_session!=""){
-            if(user.uid==treasure.oid){
-                val intent:Intent=Intent(this,HiderMapActivity::class.java)
-                startActivity(intent)
-            }
-            else{
-                val intent:Intent=Intent(this,SeekerMapActivity::class.java)
-                startActivity(intent)
-            }
-
-        }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
