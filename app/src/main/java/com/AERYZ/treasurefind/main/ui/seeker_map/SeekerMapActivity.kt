@@ -68,7 +68,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         tid_TextView.setText(temp)
 
         //Service View Model
-        mapViewModelFactory = SeekerMapViewModelFactory(tid!!)
+        mapViewModelFactory = SeekerMapViewModelFactory(tid)
         mapViewModel = ViewModelProvider(this, mapViewModelFactory)[SeekerMapViewModel::class.java]
 
 

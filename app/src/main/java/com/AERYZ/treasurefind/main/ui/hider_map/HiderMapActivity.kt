@@ -123,7 +123,20 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
                 //update seeker list
                 for (seekerID in it.seekers) {
                     if (!mapViewModel.seekers.containsKey(seekerID)) {
-                        mapViewModel.seekers[seekerID] = MutableLiveData(myFirebase.getUserDocument(seekerID).get().result.toObject<MyUser>())
+                        myFirebase.getUserDocument(seekerID).get()
+                            .addOnCompleteListener {
+                                mapViewModel.seekers[seekerID] = MutableLiveData(it.result.toObject<MyUser>())
+                                mapViewModel.seekers[seekerID]!!.observe(this) {
+                                    markerOptions.position(LatLng(it.latitude, it.longitude))
+                                    if (mapViewModel.markers[seekerID] != null) {
+                                        mapViewModel.markers[seekerID]!!.remove()
+                                    }
+                                    //change this line for issue #110
+                                    mapViewModel.markers[seekerID] = mMap.addMarker(markerOptions)!!
+                                }
+                            }
+                        Log.d("Debug Seeker location changed", seekerID)
+                        mapViewModel.SeekerUpdateListener(seekerID)
                     }
                 }
             }
@@ -177,7 +190,6 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude!!,it.longitude!!),17f))
             }
         }
-
     }
     override fun onBackPressed() {
         return

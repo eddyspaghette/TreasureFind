@@ -8,14 +8,16 @@ import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.MyUser
 import com.AERYZ.treasurefind.db.Treasure
 import com.AERYZ.treasurefind.main.services.ServiceViewModel
+import com.google.android.gms.maps.model.Marker
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 
 class HiderMapViewModel(private val tid: String): ServiceViewModel() {
     var treasure = MutableLiveData<Treasure>()
-    var seekers = hashMapOf<String, MutableLiveData<MyUser>>()
 
+    var seekers = hashMapOf<String, MutableLiveData<MyUser>>()
+    var markers = hashMapOf<String, Marker>()
     var isInteract = MutableLiveData(true)
     val db = Firebase.firestore
     val myFirebase = MyFirebase()
@@ -42,6 +44,7 @@ class HiderMapViewModel(private val tid: String): ServiceViewModel() {
             }
         }
     }
+
     fun SeekerUpdateListener(sid: String) {
         var docRef = db.collection("users").document(sid)
         docRef.addSnapshotListener { snapshot, e ->
