@@ -5,6 +5,8 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +24,7 @@ import java.text.DateFormat
 class FeedAdapter(private var context: Context, private var feedList: ArrayList<Treasure>) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
     private val storage = Firebase.storage
     private val storageRef = storage.reference
+
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -65,8 +68,6 @@ class FeedAdapter(private var context: Context, private var feedList: ArrayList<
         }?.addOnFailureListener {
             holder.feedDateTextView.text = "Date posted: N/A"
         }
-
-
         val ownerId = feedList[position].oid
         val myFirebase = MyFirebase()
         if (ownerId != null && ownerId != "") {

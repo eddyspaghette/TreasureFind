@@ -2,25 +2,33 @@ package com.AERYZ.treasurefind.main.ui.feed
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.LinearLayout
+import android.widget.SearchView
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.databinding.FragmentFeedBinding
 import com.AERYZ.treasurefind.db.MyFirebase
+import com.AERYZ.treasurefind.db.Treasure
+import com.AERYZ.treasurefind.main.entry_point.MainActivity
 
-class FeedFragment : Fragment() {
+class FeedFragment : Fragment(), MenuProvider {
 
     private var _binding: FragmentFeedBinding? = null
     private val myFirebase = MyFirebase()
     private lateinit var feedViewModel: FeedViewModel
+    private lateinit var feedAdapter: FeedAdapter
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -45,7 +53,7 @@ class FeedFragment : Fragment() {
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         val listRecyclerView: RecyclerView = root.findViewById(R.id.feed_recyclerview)
         listRecyclerView.layoutManager = layoutManager
-        val feedAdapter = FeedAdapter(requireActivity(), arrayListOf())
+        feedAdapter = FeedAdapter(requireActivity(), arrayListOf())
 
         feedViewModel.feedList.observe(requireActivity()) {
             feedAdapter.updateList(it)
@@ -58,12 +66,46 @@ class FeedFragment : Fragment() {
             listRecyclerView.adapter!!.notifyDataSetChanged()
             swipeRefreshLayout.isRefreshing = false
         }
-
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
         return root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.feed_toolbar, menu)
+        val menuItem : MenuItem = menu.findItem(R.id.appSearchBar)
+        val searchView = menuItem.actionView as SearchView
+        search(searchView)
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        return false
+    }
+
+    private fun search(searchView: SearchView) {
+        feedViewModel.feedList.observe(requireActivity()) {
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    val filteredList = ArrayList<Treasure>()
+                    it.filter { (it.tid!!.contains(query!!) or it.title!!.contains(query)) }.forEach{filteredList.add(it)}
+                    feedAdapter.updateList(filteredList)
+                    feedAdapter.notifyDataSetChanged()
+                    return false
+                }
+
+                override fun onQueryTextChange(newQuery: String?): Boolean {
+                    val filteredList = ArrayList<Treasure>()
+                    it.filter { (it.tid!!.contains(newQuery!!) or it.title!!.contains(newQuery))}.forEach{filteredList.add(it)}
+                    feedAdapter.updateList(filteredList)
+                    feedAdapter.notifyDataSetChanged()
+                    return false
+                }
+            })
+        }
     }
 }

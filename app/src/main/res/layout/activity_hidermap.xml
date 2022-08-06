@@ -9,12 +9,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/hider_map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".main.ui.hider_map.HiderMapActivity"/>
+            tools:context=".main.ui.hider_map.HiderMapActivity" />
 
         <LinearLayout
             android:layout_width="wrap_content"
