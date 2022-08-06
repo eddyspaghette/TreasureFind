@@ -198,12 +198,22 @@ class MyFirebase {
         db.collection("users").document(uid).update(field, value)
     }
 
-    fun updateSeeker(tid: String, sid: String) {
+
+    fun addSeeker(tid: String, sid: String) {
         db.collection("treasures").document(tid).update("seekers", FieldValue.arrayUnion(sid))
     }
 
-    fun updateSR(tid: String, sR: SR) {
+    fun removeSeeker(tid: String, sid: String) {
+        db.collection("treasures").document(tid).update("seekers", FieldValue.arrayRemove(sid))
+    }
+
+    fun addSR(tid: String, sR: SR) {
         db.collection("treasures").document(tid).update("sr", FieldValue.arrayUnion(sR.sid))
+        val sRImagePath =  "images/treasures/${tid}/${sR.sid}.jpg"
+        insertToFirebaseStorage(sR.sRImage, sRImagePath)
+    }
+    fun removeSR(tid: String, sR: SR) {
+        db.collection("treasures").document(tid).update("sr", FieldValue.arrayRemove(sR.sid))
         val sRImagePath =  "images/treasures/${tid}/${sR.sid}.jpg"
         insertToFirebaseStorage(sR.sRImage, sRImagePath)
     }
@@ -211,7 +221,6 @@ class MyFirebase {
     fun updateProfileImage(uid: String, image: Bitmap) {
         var profileImagePath = "images/profile/${uid}.jpg"
         insertToFirebaseStorage(image, profileImagePath)
-
     }
 
     fun getProfileImage(activity: FragmentActivity, uid: String, mutableLiveData: MutableLiveData<Bitmap>) {
