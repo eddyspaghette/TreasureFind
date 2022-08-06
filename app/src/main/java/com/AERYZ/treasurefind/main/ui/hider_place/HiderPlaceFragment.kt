@@ -150,7 +150,6 @@ class HiderPlaceFragment : Fragment(), MyFirebase.TreasureInsertionListener {
 
         val intent = Intent(requireActivity(), HiderMapActivity::class.java)
         intent.putExtra(SeekerMapActivity.tid_KEY, tid)
-        intent.putExtra(SeekerMapActivity.who_KEY, 0) //0 is hider, 1 is seeker
         startActivity(intent)
     }
 
