@@ -7,8 +7,6 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.VictoryActivity
@@ -54,8 +52,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
 
 
-        //back button
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -207,6 +203,9 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onDestroy()
         unBindService()
         stopService(serviceIntent)
+    }
+    override fun onBackPressed() {
+        return
     }
 
 
