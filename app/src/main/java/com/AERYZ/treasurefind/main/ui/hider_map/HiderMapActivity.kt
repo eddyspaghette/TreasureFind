@@ -1,12 +1,15 @@
 package com.AERYZ.treasurefind.main.ui.hider_map
 
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
@@ -164,7 +167,7 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
         try {
             mMap.isMyLocationEnabled = true
-            mMap.uiSettings.isMyLocationButtonEnabled = false
+            mMap.uiSettings.isMyLocationButtonEnabled = true
             mMap.uiSettings.isCompassEnabled = true
         } catch (e: Exception) {}
 
