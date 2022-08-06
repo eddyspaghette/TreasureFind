@@ -198,6 +198,9 @@ class MyFirebase {
         db.collection("users").document(uid).update(field, value)
     }
 
+    fun updateTreasure(tid: String, field: String, value: String) {
+        db.collection("treasures").document(tid).update(field, value)
+    }
 
     fun addSeeker(tid: String, sid: String) {
         db.collection("treasures").document(tid).update("seekers", FieldValue.arrayUnion(sid))
@@ -212,10 +215,10 @@ class MyFirebase {
         val sRImagePath =  "images/treasures/${tid}/${sR.sid}.jpg"
         insertToFirebaseStorage(sR.sRImage, sRImagePath)
     }
-    fun removeSR(tid: String, sR: SR) {
-        db.collection("treasures").document(tid).update("sr", FieldValue.arrayRemove(sR.sid))
-        val sRImagePath =  "images/treasures/${tid}/${sR.sid}.jpg"
-        insertToFirebaseStorage(sR.sRImage, sRImagePath)
+    fun removeSR(tid: String, sid: String, listener: DeletionImageListener?= null) {
+        db.collection("treasures").document(tid).update("sr", FieldValue.arrayRemove(sid))
+        val sRImagePath =  "images/treasures/${tid}/${sid}.jpg"
+        deleteImage(sRImagePath, listener)
     }
 
     fun updateProfileImage(uid: String, image: Bitmap) {

@@ -59,7 +59,7 @@ class TreasureDetailsActivity : AppCompatActivity() {
             myFirebase.updateUser(uid, "in_session", tid!!)
             val intent = Intent(this, SeekerMapActivity::class.java)
             intent.putExtra(SeekerMapActivity.tid_KEY, tid)
-            myFirebase.updateSeeker(tid, FirebaseAuth.getInstance().uid!!)
+            myFirebase.addSeeker(tid, FirebaseAuth.getInstance().uid!!)
             startActivity(intent)
         }
     }

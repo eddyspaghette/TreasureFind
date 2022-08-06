@@ -46,7 +46,7 @@ class SRActivity : AppCompatActivity() {
             if (srViewModel.image.value != null && uid != null)
             {
                 val sR = SR(uid!!, srViewModel.image.value!!)
-                myFirebase.updateSR(tid, sR)
+                myFirebase.addSR(tid, sR)
                 //may need visualization here
             }
         }

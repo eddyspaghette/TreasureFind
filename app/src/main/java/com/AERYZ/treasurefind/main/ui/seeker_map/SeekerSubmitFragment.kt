@@ -118,7 +118,7 @@ class SeekerSubmitFragment : Fragment(), ImageReader.OnImageAvailableListener {
                 val bitmap = Util.rotateBitmap(rgbFrameBitmap!!, 90f)
                 val uid = FirebaseAuth.getInstance().uid
                 val sR = SR(uid!!, bitmap!!)
-                myFirebase.updateSR(tid, sR)
+                myFirebase.addSR(tid, sR)
                 Toast.makeText(activity, "Uploaded!", Toast.LENGTH_SHORT).show()
             }
         }
