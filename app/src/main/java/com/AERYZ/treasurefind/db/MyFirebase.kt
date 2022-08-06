@@ -68,6 +68,10 @@ class MyFirebase {
         fun onSuccess(tid: String)
         fun onFailure(exception: Exception)
     }
+    interface UserInsertionListener {
+        fun onSuccess()
+        fun onFailure(exception: Exception)
+    }
 
     fun getAllTreasures(listener: FirebaseFeedListener) {
         db.collection("treasures")
@@ -127,10 +131,17 @@ class MyFirebase {
         return docRef
     }
 
-    fun insert(myUser: MyUser) {
+    fun insert(myUser: MyUser, listener: UserInsertionListener?= null) {
         val profileImagePath = "images/profile/${myUser.uid}.jpg"
         myUser.profileImagePath = profileImagePath
         db.collection("users").document(myUser.uid).set(myUser)
+            .addOnCompleteListener {
+                Log.d("Debug", "Inserting user sucess!")
+                listener?.onSuccess()
+            }
+            .addOnCanceledListener {
+                Log.d("Debug", "Inserting user failed!")
+            }
         insertToFirebaseStorage(myUser.profileImage!!, profileImagePath)
     }
 

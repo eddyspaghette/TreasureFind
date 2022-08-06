@@ -14,9 +14,10 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
+import java.lang.Exception
 
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), MyFirebase.UserInsertionListener {
     var myFirebase = MyFirebase()
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract()
@@ -52,8 +53,6 @@ class LoginActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK) {
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
-            var intent = Intent(applicationContext, MainActivity::class.java)
-
             // Show onboarding activity if new user
             if (response != null && response.isNewUser) {
                 user?.let {
@@ -64,16 +63,28 @@ class LoginActivity : AppCompatActivity() {
                         "",
                         BitmapFactory.decodeResource(resources, R.drawable.tf_logo)
                     )
-                    myFirebase.insert(u)
-                    println("DEBUG: u $u")
+                    println("DEBUG: u ${u.uid}")
+                    myFirebase.insert(u,this)
                 }
-                intent = Intent(applicationContext, OnboardingActivity::class.java)
+            } else {
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                startActivity(intent)
+                finish()
             }
-            startActivity(intent)
-            finish()
+
         } else {
             finish()
             Log.d("Debug", "not ok")
         }
+    }
+
+    override fun onSuccess() {
+        val intent = Intent(applicationContext, OnboardingActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    override fun onFailure(exception: Exception) {
+
     }
 }
