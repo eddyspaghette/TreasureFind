@@ -107,6 +107,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     val intent = Intent(this, VictoryActivity::class.java)
                     intent.putExtra(wid_KEY, it.wid)
                     startActivity(intent)
+                    finish()
                 }
             }
         }
@@ -130,11 +131,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         })
-
-
-
-
-
     }
 
     private fun setMapInteraction(mMap: GoogleMap, value: Boolean) {
