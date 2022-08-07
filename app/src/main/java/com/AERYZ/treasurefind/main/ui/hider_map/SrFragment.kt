@@ -14,6 +14,7 @@ import androidx.lifecycle.MutableLiveData
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.MyUser
+import com.AERYZ.treasurefind.main.ui.hider_map.HiderMapActivity.Companion.tid_KEY
 import com.google.firebase.firestore.ktx.toObject
 import com.mikhaellopez.circularimageview.CircularImageView
 
@@ -24,7 +25,7 @@ class SrFragment : Fragment() {
     private lateinit var avatarSRView: CircularImageView
     companion object {
         val sid_KEY = "sid"
-        val bitmap_KEY = "bitmap"
+        val tid_KEY = "tid"
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +48,9 @@ class SrFragment : Fragment() {
             avatarSRView.setImageBitmap(it)
         }
         if (arguments != null) {
-            val sid = arguments?.getString(sid_KEY)
-            myFirebase.getUserDocument(sid!!).get()
+            val sid = arguments?.getString(sid_KEY)!!
+            val tid = arguments?.getString(tid_KEY)!!
+            myFirebase.getUserDocument(sid).get()
                 .addOnCompleteListener {
                     val seeker = it.result.toObject<MyUser>()
                     if (seeker != null) {
@@ -57,8 +59,11 @@ class SrFragment : Fragment() {
                         myFirebase.getProfileImage(requireActivity(), seeker.uid, avatar_image)
                     }
                 }
-            val bitmap: Bitmap? = arguments?.getParcelable(bitmap_KEY)
-            imageView.setImageBitmap(bitmap)
+            var bitmap = MutableLiveData(BitmapFactory.decodeResource(resources, R.drawable.tf_logo))
+            myFirebase.getSRImage(requireActivity(), tid, sid, bitmap)
+            bitmap.observe(requireActivity()) {
+                imageView.setImageBitmap(it)
+            }
         }
         return view
     }

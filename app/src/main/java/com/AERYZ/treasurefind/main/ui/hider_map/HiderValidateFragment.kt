@@ -21,7 +21,6 @@ class HiderValidateFragment : Fragment() {
     private lateinit var viewModel: HiderMapViewModel
     private lateinit var viewModelFactory: HiderMapViewModelFactory
     private var tid: String = ""
-    private var isFirstTimeSR = false
     private lateinit var fragment: SrFragment
     private var myFirebase = MyFirebase()
 
@@ -47,6 +46,7 @@ class HiderValidateFragment : Fragment() {
                     fragment = SrFragment()
                     val bundle = Bundle()
                     bundle.putString(SrFragment.sid_KEY, it.sr[0])
+                    bundle.putString(SrFragment.tid_KEY, tid)
                     fragment.arguments = bundle
                     requireActivity().supportFragmentManager.beginTransaction().replace(R.id.hider_validate_fragment, fragment).commit()
                 }

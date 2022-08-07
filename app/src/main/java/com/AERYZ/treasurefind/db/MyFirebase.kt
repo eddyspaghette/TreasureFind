@@ -182,10 +182,9 @@ class MyFirebase {
         }
     }
 
-    fun getTreasureImage(activity: Activity, tid: String, mutableLiveData: MutableLiveData<Bitmap>) {
-        var treasureImagePath = "images/treasures/${tid}/image.jpg"
-        val reference = storageReference.child(treasureImagePath)
-        mutableLiveData.value = Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888)
+    fun getImage(activity: Activity, imagePath: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+        val reference = storageReference.child(imagePath)
+        imageMutableLiveData.value = BitmapFactory.decodeResource(activity.resources, R.drawable.tf_logo)
         CoroutineScope(IO).launch {
             val bitmap = GlideApp.with(activity)
                 .asBitmap()
@@ -193,11 +192,22 @@ class MyFirebase {
                 .load(reference)
                 .submit()
                 .get()
-            withContext(Main) {
-                mutableLiveData.value = bitmap
-                Log.d("Debug", "Got Loading treasure image")
-            }
+            imageMutableLiveData.postValue(bitmap)
         }
+    }
+
+    fun getProfileImage(activity: FragmentActivity, uid: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+        var profileImagePath = "images/profile/${uid}.jpg"
+        getImage(activity, profileImagePath, imageMutableLiveData)
+    }
+
+    fun getTreasureImage(activity: Activity, tid: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+        var treasureImagePath = "images/treasures/${tid}/image.jpg"
+        getImage(activity, treasureImagePath, imageMutableLiveData)
+    }
+    fun getSRImage(activity: Activity, tid: String, sid: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+        var treasureImagePath = "images/treasures/${tid}/${sid}.jpg"
+        getImage(activity, treasureImagePath, imageMutableLiveData)
     }
 
     fun updateUser(uid: String, field: String, value: Any?) {
@@ -239,23 +249,6 @@ class MyFirebase {
     fun updateProfileImage(uid: String, image: Bitmap) {
         var profileImagePath = "images/profile/${uid}.jpg"
         insertToFirebaseStorage(image, profileImagePath)
-    }
-
-    fun getProfileImage(activity: FragmentActivity, uid: String, mutableLiveData: MutableLiveData<Bitmap>) {
-        var profileImagePath = "images/profile/${uid}.jpg"
-        val reference = storageReference.child(profileImagePath)
-        mutableLiveData.value = Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888)
-        CoroutineScope(IO).launch {
-            val bitmap = GlideApp.with(activity)
-                .asBitmap()
-                .error(com.google.android.material.R.drawable.ic_clock_black_24dp)
-                .load(reference)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .submit()
-                .get()
-                mutableLiveData.postValue(bitmap)
-        }
     }
 
     fun deleteImage(path: String, listener: DeletionImageListener? = null) {
