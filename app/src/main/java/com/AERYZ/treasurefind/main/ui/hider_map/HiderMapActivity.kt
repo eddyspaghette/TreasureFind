@@ -122,6 +122,7 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     val intent = Intent(this, VictoryActivity::class.java)
                     intent.putExtra(wid_KEY, it.wid)
                     startActivity(intent)
+                    finish()
                 }
 
                 //update seeker list
