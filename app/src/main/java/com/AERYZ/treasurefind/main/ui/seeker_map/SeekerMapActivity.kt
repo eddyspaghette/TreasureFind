@@ -7,19 +7,23 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.VictoryActivity
 import com.AERYZ.treasurefind.databinding.ActivitySeekermapBinding
 import com.AERYZ.treasurefind.db.MyFirebase
+import com.AERYZ.treasurefind.db.MyUser
 import com.AERYZ.treasurefind.main.services.TrackingService
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.toObject
 
 class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -27,6 +31,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivitySeekermapBinding
     private lateinit var submitFragment: SeekerSubmitFragment
     private lateinit var waitFragment: SeekerWaitFragment
+    private var markerOptions = MarkerOptions()
 
     //service
     private lateinit var serviceIntent: Intent
@@ -89,10 +94,11 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mapViewModel.treasure.observe(this) {
             val text = "Joined: ${it.seekers.size} Seekers"
-            numSeekers_TextView.setText(text)
+            numSeekers_TextView.text = text
 
-            //fragment replace
+
             if (it != null) {
+                //fragment replace
                 if (it.sr.indexOf(uid) == -1) {
                     supportFragmentManager.beginTransaction().replace(R.id.seeker_map_fragmentcontainerview, submitFragment).commit()
                 }
@@ -107,6 +113,26 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     intent.putExtra(wid_KEY, it.wid)
                     startActivity(intent)
                     finish()
+                }
+
+                //update seeker list
+                for (seekerID in it.seekers) {
+                    if (!mapViewModel.seekers.containsKey(seekerID) && seekerID!=uid) {
+                        myFirebase.getUserDocument(seekerID).get()
+                            .addOnCompleteListener { task ->
+                                mapViewModel.seekers[seekerID] = MutableLiveData(task.result.toObject<MyUser>())
+                                mapViewModel.seekers[seekerID]!!.observe(this) { myUser ->
+                                    markerOptions.position(LatLng(myUser.latitude, myUser.longitude))
+                                    if (mapViewModel.markers[seekerID] != null) {
+                                        mapViewModel.markers[seekerID]!!.remove()
+                                    }
+                                    //change this line for issue #110
+                                    mapViewModel.markers[seekerID] = mMap.addMarker(markerOptions)!!
+                                }
+                            }
+                        Log.d("Debug Seeker location changed", seekerID)
+                        mapViewModel.SeekerUpdateListener(seekerID)
+                    }
                 }
             }
         }
