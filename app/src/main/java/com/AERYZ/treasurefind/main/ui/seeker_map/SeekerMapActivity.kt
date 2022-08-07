@@ -54,7 +54,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private val uid = FirebaseAuth.getInstance().uid!!
     private var tid: String = ""
 
-
     companion object {
         var tid_KEY = "tid"
         var wid_KEY = "wid"
@@ -208,6 +207,26 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
             if (!isFirstTimeCenter) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,18f))
                 isFirstTimeCenter = true
+
+
+            }
+        }
+
+        mapViewModel.treasure.observe(this) {
+            if (!isLocateTreasureFirstTime) {
+                isLocateTreasureFirstTime = true
+
+                val noise_lat = (Random.nextFloat()*2.0-1.0)*0.0002 //change this for more or less noise
+                val noise_lng = (Random.nextFloat()*2.0-1.0)*0.0002 //change this for more or less noise
+
+                treasureLocation = LatLng(it!!.latitude!! + noise_lat, it.longitude!! + noise_lng)
+
+                //treasure approximate location
+                circleOptions.center(treasureLocation)
+                circleOptions.radius(50.0)
+                circleOptions.fillColor(0x220000FF)
+                circleOptions.strokeColor(0x330000FF)
+                mMap.addCircle(circleOptions)
             }
 
             if (!Util.checkInsideRadius(mapViewModel.treasureFakeLocation, 50.0, currentLocation))
