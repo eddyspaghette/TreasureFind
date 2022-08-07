@@ -66,6 +66,8 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivitySeekermapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        myFirebase.updateUser(uid, "status", 1)
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.seeker_map) as SupportMapFragment
@@ -279,6 +281,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onDestroy() {
         super.onDestroy()
+        myFirebase.updateUser(uid, "status", 0)
         unBindService()
         stopService(serviceIntent)
     }
