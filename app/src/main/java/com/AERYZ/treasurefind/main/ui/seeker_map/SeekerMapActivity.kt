@@ -19,11 +19,14 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.toObject
+import java.util.*
+import kotlin.random.Random
 
 class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -32,6 +35,9 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var submitFragment: SeekerSubmitFragment
     private lateinit var waitFragment: SeekerWaitFragment
     private var markerOptions = MarkerOptions()
+    private var circleOptions = CircleOptions()
+    private lateinit var locatetreasure_btn: ImageView
+    private var treasureLocation = LatLng(0.0,0.0)
 
     //service
     private lateinit var serviceIntent: Intent
@@ -40,10 +46,10 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mapViewModelFactory: SeekerMapViewModelFactory
     private val BINDING_STATUS_KEY = "BINDING_STATUS"
     private var isFirstTimeCenter = false
+    private var isLocateTreasureFirstTime = false
     private val myFirebase = MyFirebase()
     private val uid = FirebaseAuth.getInstance().uid!!
     private var tid: String = ""
-
 
     companion object {
         var tid_KEY = "tid"
@@ -70,7 +76,9 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         tid  = intent.getStringExtra(tid_KEY)!!
         val tid_TextView: TextView = findViewById(R.id.Text_tid)
         val temp = "tid: ${tid}"
-        tid_TextView.setText(temp)
+        tid_TextView.text = temp
+
+        locatetreasure_btn = findViewById(R.id.locatetreasure_btn)
 
         //Service View Model
         mapViewModelFactory = SeekerMapViewModelFactory(tid)
@@ -195,13 +203,38 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mapViewModel.location.observe(this) {
             if (!isFirstTimeCenter) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it!!.latitude,it.longitude),17f))
+                val location = LatLng(it!!.latitude, it.longitude)
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location,18f))
                 isFirstTimeCenter = true
+
+
+            }
+        }
+
+        mapViewModel.treasure.observe(this) {
+            if (!isLocateTreasureFirstTime) {
+                isLocateTreasureFirstTime = true
+
+                val noise_lat = (Random.nextFloat()*2.0-1.0)*0.0002 //change this for more or less noise
+                val noise_lng = (Random.nextFloat()*2.0-1.0)*0.0002 //change this for more or less noise
+
+                treasureLocation = LatLng(it!!.latitude!! + noise_lat, it.longitude!! + noise_lng)
+
+                //treasure approximate location
+                circleOptions.center(treasureLocation)
+                circleOptions.radius(50.0)
+                circleOptions.fillColor(0x220000FF)
+                circleOptions.strokeColor(0x330000FF)
+                mMap.addCircle(circleOptions)
             }
         }
 
         mapViewModel.isInteract.observe(this) {
             setMapInteraction(mMap, it)
+        }
+
+        locatetreasure_btn.setOnClickListener() {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(treasureLocation,18f))
         }
 
     }

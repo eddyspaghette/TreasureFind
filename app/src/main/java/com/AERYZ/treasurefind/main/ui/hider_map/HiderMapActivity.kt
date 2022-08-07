@@ -4,6 +4,7 @@ package com.AERYZ.treasurefind.main.ui.hider_map
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -21,6 +22,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -42,6 +44,7 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var hiderDoneFragment: HiderDoneFragment
     private lateinit var hiderValidateFragment: HiderValidateFragment
     private var markerOptions = MarkerOptions()
+    private var circleOptions = CircleOptions()
 
     companion object {
         var tid_KEY = "tid"
@@ -189,10 +192,17 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
         mapViewModel.treasure.observe(this) {
             if (!isFirstTimeCenter) {
                 isFirstTimeCenter = true
-                markerOptions.position(LatLng(it.latitude!!, it.longitude!!))
+                val treasureLocation = LatLng(it.latitude!!, it.longitude!!)
+                markerOptions.position(treasureLocation)
                 //change this line to treasure icon issue #103
                 mMap.addMarker(markerOptions)
+
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude!!,it.longitude!!),17f))
+                circleOptions.center(treasureLocation)
+                circleOptions.radius(50.0)
+                circleOptions.fillColor(0x220000FF)
+                circleOptions.strokeColor(0x330000FF)
+                mMap.addCircle(circleOptions)
             }
         }
     }
