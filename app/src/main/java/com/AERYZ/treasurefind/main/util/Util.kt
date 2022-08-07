@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.location.Criteria
+import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
@@ -69,7 +70,15 @@ object Util {
         return res
     }
 
-    fun calculateDistance(a: LatLng, b: LatLng): Double {
-        return kotlin.math.sqrt((a.latitude - b.latitude).pow(2.0) + (a.longitude - b.longitude).pow(2.0))
+
+    //return distance in meters
+    fun calculateDistance(a: LatLng, b: LatLng): Float {
+        val aLocation = Location("GPS")
+        aLocation.latitude = a.latitude
+        aLocation.longitude = a.longitude
+        val bLocation = Location("GPS")
+        bLocation.latitude = b.latitude
+        bLocation.longitude = b.longitude
+        return aLocation.distanceTo(bLocation)
     }
 }

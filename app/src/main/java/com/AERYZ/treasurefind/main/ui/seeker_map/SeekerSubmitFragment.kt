@@ -127,7 +127,7 @@ class SeekerSubmitFragment : Fragment(), ImageReader.OnImageAvailableListener {
                 val uid = FirebaseAuth.getInstance().uid
                 val location = Util.getCurrentLocation(requireActivity())
                 val treasureLocation = LatLng(mapViewModel.treasure.value!!.latitude!!, mapViewModel.treasure.value!!.longitude!!)
-                val threshold = 100.0 //change this for how far to accept the submit
+                val threshold = 100.0 //in meters, change this for how far to accept the submit
                 if (calculateDistance(location, treasureLocation) <= threshold) {
                     val sR = SR(tid, uid!!, location.latitude, location.longitude, bitmap!!)
                     myFirebase.addSR(resources, sR)
