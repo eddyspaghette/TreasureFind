@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.app.Service
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.PolyUtil
 import org.json.JSONObject
@@ -91,13 +93,22 @@ object Util {
         bLocation.longitude = b.longitude
         return aLocation.distanceTo(bLocation)
     }
-    fun showRouteOnMap(googleMap: GoogleMap, latlngStart: LatLng, latlngEnd: LatLng, apikey:String, context: Context): Int {
+
+    fun showRouteOnMap(googleMap: GoogleMap, oldPolyLineArray: ArrayList<Polyline>, latlngStart: LatLng, latlngEnd: LatLng, context: Context): ArrayList<Polyline> {
+
+        val ai: ApplicationInfo = context.applicationContext.packageManager
+            .getApplicationInfo(context.applicationContext.packageName, PackageManager.GET_META_DATA)
+        val MapsAPI_Key = ai.metaData["com.google.android.geo.API_KEY"].toString()
+
+        while (oldPolyLineArray.size > 0) {
+            oldPolyLineArray[0].remove()
+            oldPolyLineArray.removeFirst()
+        }
+
         val latLngOrigin = latlngStart
         val latLngDestination = latlngEnd
-        val mapkey=apikey
-        var distance:Int=0
         val path: MutableList<List<LatLng>> = ArrayList()
-        val urlDirections = "https://maps.googleapis.com/maps/api/directions/json?origin=$%7BlatLngOrigin.latitude%7D,$%7BlatLngOrigin.longitude%7D&destination=$%7BlatLngDestination.latitude%7D,$%7BlatLngDestination.longitude%7D&key=$%7Bmapkey%7D"
+        val urlDirections = "https://maps.googleapis.com/maps/api/directions/json?origin=${latLngOrigin.latitude},${latLngOrigin.longitude}&destination=${latLngDestination.latitude},${latLngDestination.longitude}&mode=walking&key=${MapsAPI_Key}"
         try {
             val directionsRequest = object : StringRequest(Method.GET, urlDirections, Response.Listener<String> {
                     response ->
@@ -106,13 +117,12 @@ object Util {
                 val routes = jsonResponse.getJSONArray("routes")
                 val legs = routes.getJSONObject(0).getJSONArray("legs")
                 val steps = legs.getJSONObject(0).getJSONArray("steps")
-                distance = legs.getJSONObject(0).getJSONObject("distance").getInt("value")
                 for (i in 0 until steps.length()) {
                     val points = steps.getJSONObject(i).getJSONObject("polyline").getString("points")
                     path.add(PolyUtil.decode(points))
                 }
                 for (i in 0 until path.size) {
-                    googleMap!!.addPolyline(PolylineOptions().addAll(path[i]).color(Color.RED))
+                    oldPolyLineArray.add(googleMap.addPolyline(PolylineOptions().addAll(path[i]).color(0xFF19336D.toInt())))
                 }
             }, Response.ErrorListener {
                     _ ->
@@ -122,6 +132,41 @@ object Util {
         }catch (e:Exception){
             Log.e("Exception: %s",e.message.toString())
         }
+        return oldPolyLineArray
+    }
+
+    fun calculateDistance(googleMap: GoogleMap, latlngStart: LatLng, latlngEnd: LatLng, context: Context): Int {
+        val ai: ApplicationInfo = context.applicationContext.packageManager
+            .getApplicationInfo(context.applicationContext.packageName, PackageManager.GET_META_DATA)
+        val MapsAPI_Key = ai.metaData["com.google.android.geo.API_KEY"].toString()
+
+        val latLngOrigin = latlngStart
+        val latLngDestination = latlngEnd
+        var distance:Int=0
+        val urlDirections = "https://maps.googleapis.com/maps/api/directions/json?origin=${latLngOrigin.latitude},${latLngOrigin.longitude}&destination=${latLngDestination.latitude},${latLngDestination.longitude}&mode=walking&key=${MapsAPI_Key}"
+        try {
+            val directionsRequest = object : StringRequest(Method.GET, urlDirections, Response.Listener<String> {
+                    response ->
+                val jsonResponse = JSONObject(response)
+                // Get routes
+                val routes = jsonResponse.getJSONArray("routes")
+                val legs = routes.getJSONObject(0).getJSONArray("legs")
+                distance = legs.getJSONObject(0).getJSONObject("distance").getInt("value")
+            }, Response.ErrorListener {
+                    _ ->
+            }){}
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(directionsRequest)
+        }catch (e:Exception){
+            Log.e("Exception: %s",e.message.toString())
+        }
         return distance
+    }
+
+    fun checkInsideRadius(center: LatLng, radius: Double, location: LatLng): Boolean {
+        if (calculateDistance(center, location) <= radius) {
+            return true
+        }
+        return false
     }
 }

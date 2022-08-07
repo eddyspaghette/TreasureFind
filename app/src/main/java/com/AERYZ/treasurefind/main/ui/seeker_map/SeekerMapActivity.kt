@@ -2,6 +2,8 @@ package com.AERYZ.treasurefind.main.ui.seeker_map
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -15,6 +17,7 @@ import com.AERYZ.treasurefind.databinding.ActivitySeekermapBinding
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.MyUser
 import com.AERYZ.treasurefind.main.services.TrackingService
+import com.AERYZ.treasurefind.main.util.Util
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -22,10 +25,10 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Polyline
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.toObject
-import java.util.*
 import kotlin.random.Random
 
 class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -37,7 +40,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private var markerOptions = MarkerOptions()
     private var circleOptions = CircleOptions()
     private lateinit var locatetreasure_btn: ImageView
-    private var treasureLocation = LatLng(0.0,0.0)
+    private var polylineArray: ArrayList<Polyline> = ArrayList()
 
     //service
     private lateinit var serviceIntent: Intent
@@ -51,6 +54,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private val uid = FirebaseAuth.getInstance().uid!!
     private var tid: String = ""
 
+
     companion object {
         var tid_KEY = "tid"
         var wid_KEY = "wid"
@@ -61,8 +65,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         binding = ActivitySeekermapBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -202,12 +204,24 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
         mapViewModel.location.observe(this) {
+            val currentLocation = LatLng(it!!.latitude,it.longitude)
             if (!isFirstTimeCenter) {
-                val location = LatLng(it!!.latitude, it.longitude)
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location,18f))
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,18f))
                 isFirstTimeCenter = true
+            }
 
+            if (!Util.checkInsideRadius(mapViewModel.treasureFakeLocation, 50.0, currentLocation))
+            {
+                polylineArray = Util.showRouteOnMap(mMap, polylineArray, currentLocation, mapViewModel.treasureFakeLocation, this)
+            } else {
 
+                while (polylineArray.size > 0 ) {
+                    if (polylineArray.size == 1) {
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mapViewModel.treasureFakeLocation,19f))
+                    }
+                    polylineArray[0].remove()
+                    polylineArray.removeFirst()
+                }
             }
         }
 
@@ -218,15 +232,17 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
                 val noise_lat = (Random.nextFloat()*2.0-1.0)*0.0002 //change this for more or less noise
                 val noise_lng = (Random.nextFloat()*2.0-1.0)*0.0002 //change this for more or less noise
 
-                treasureLocation = LatLng(it!!.latitude!! + noise_lat, it.longitude!! + noise_lng)
+                mapViewModel.treasureFakeLocation = LatLng(it!!.latitude!! + noise_lat, it.longitude!! + noise_lng)
 
                 //treasure approximate location
-                circleOptions.center(treasureLocation)
+                circleOptions.center(mapViewModel.treasureFakeLocation)
                 circleOptions.radius(50.0)
                 circleOptions.fillColor(0x220000FF)
                 circleOptions.strokeColor(0x330000FF)
                 mMap.addCircle(circleOptions)
             }
+
+
         }
 
         mapViewModel.isInteract.observe(this) {
@@ -234,7 +250,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         locatetreasure_btn.setOnClickListener() {
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(treasureLocation,18f))
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mapViewModel.treasureFakeLocation,18f))
         }
 
     }
