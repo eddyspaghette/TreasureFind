@@ -27,9 +27,6 @@ class SrFragment : Fragment() {
         val sid_KEY = "sid"
         val tid_KEY = "tid"
     }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
