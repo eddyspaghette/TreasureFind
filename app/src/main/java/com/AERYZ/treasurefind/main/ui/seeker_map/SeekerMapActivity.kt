@@ -45,6 +45,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private var tid: String = ""
 
 
+
     companion object {
         var tid_KEY = "tid"
         var wid_KEY = "wid"
@@ -55,6 +56,14 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         binding = ActivitySeekermapBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        //add quit button
+        val quitButton= findViewById<Button>(R.id.setSeekQuitButton)
+        quitButton.setOnClickListener{
+            myFirebase.removeSR(tid,sid)
+            myFirebase.removeSeeker(tid,sid)
+            myFirebase.updateTreasure(tid,"in_session",value)
+            finish()
+        }
 
 
 

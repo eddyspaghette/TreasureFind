@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
@@ -53,6 +54,14 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         binding = ActivityHidermapBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        //set quit button
+        val quitButton= findViewById<Button>(R.id.setHidQuitButton)
+        quitButton.setOnClickListener{
+            //need figure out later here
+            TODO("remove each seeker in this seesion and update hidder information")
+            finish()
+        }
+
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
