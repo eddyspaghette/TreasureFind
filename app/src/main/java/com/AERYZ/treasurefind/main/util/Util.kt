@@ -96,9 +96,6 @@ object Util {
         val latLngDestination = latlngEnd
         val mapkey=apikey
         var distance:Int=0
-        googleMap!!.addMarker(MarkerOptions().position(latLngOrigin).title("Ayala"))
-        googleMap!!.addMarker(MarkerOptions().position(latLngDestination).title("SM City"))
-        googleMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngOrigin, 14.5f))
         val path: MutableList<List<LatLng>> = ArrayList()
         val urlDirections = "https://maps.googleapis.com/maps/api/directions/json?origin=$%7BlatLngOrigin.latitude%7D,$%7BlatLngOrigin.longitude%7D&destination=$%7BlatLngDestination.latitude%7D,$%7BlatLngDestination.longitude%7D&key=$%7Bmapkey%7D"
         try {
