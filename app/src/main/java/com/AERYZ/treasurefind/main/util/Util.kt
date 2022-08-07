@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.Matrix
 import android.location.Criteria
 import android.location.Location
@@ -17,7 +18,16 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
+import com.google.maps.android.PolyUtil
+import org.json.JSONObject
 import java.lang.Math.pow
 import java.lang.Math.sqrt
 import kotlin.math.pow
@@ -80,5 +90,39 @@ object Util {
         bLocation.latitude = b.latitude
         bLocation.longitude = b.longitude
         return aLocation.distanceTo(bLocation)
+    }
+    fun showRouteOnMap(googleMap: GoogleMap, latlngStart: LatLng, latlngEnd: LatLng, apikey:String, context: Context){
+        val latLngOrigin = latlngStart
+        val latLngDestination = latlngEnd
+        val mapkey=apikey
+        googleMap!!.addMarker(MarkerOptions().position(latLngOrigin).title("Ayala"))
+        googleMap!!.addMarker(MarkerOptions().position(latLngDestination).title("SM City"))
+        googleMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngOrigin, 14.5f))
+        val path: MutableList<List<LatLng>> = ArrayList()
+        val urlDirections = "https://maps.googleapis.com/maps/api/directions/json?origin=$%7BlatLngOrigin.latitude%7D,$%7BlatLngOrigin.longitude%7D&destination=$%7BlatLngDestination.latitude%7D,$%7BlatLngDestination.longitude%7D&key=$%7Bmapkey%7D"
+        try {
+            val directionsRequest = object : StringRequest(Method.GET, urlDirections, Response.Listener<String> {
+                    response ->
+                val jsonResponse = JSONObject(response)
+                // Get routes
+                val routes = jsonResponse.getJSONArray("routes")
+                val legs = routes.getJSONObject(0).getJSONArray("legs")
+                val steps = legs.getJSONObject(0).getJSONArray("steps")
+                for (i in 0 until steps.length()) {
+                    val points = steps.getJSONObject(i).getJSONObject("polyline").getString("points")
+                    path.add(PolyUtil.decode(points))
+                }
+                for (i in 0 until path.size) {
+                    googleMap!!.addPolyline(PolylineOptions().addAll(path[i]).color(Color.RED))
+                }
+            }, Response.ErrorListener {
+                    _ ->
+            }){}
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(directionsRequest)
+        }catch (e:Exception){
+            Log.e("Exception: %s",e.message.toString())
+        }
+
     }
 }
