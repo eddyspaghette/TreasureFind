@@ -30,4 +30,5 @@
     <string name="treasure_id">Treasure ID</string>
     <string name="menu_refresh">Refresh Page</string>
     <string name="title_activity_hider_map">HiderMapActivity</string>
+    <string name="capture">capture (HOLD)</string>
 </resources>
