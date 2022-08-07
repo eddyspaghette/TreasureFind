@@ -40,9 +40,10 @@
             android:layout_gravity="center_vertical"/>
     </LinearLayout>
     <Button
+        android:id="@+id/btn_btm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="report"
+        android:text="@string/back_to_main_menu"
         android:layout_marginTop="100dp"
         android:layout_gravity="center_horizontal"/>
 </LinearLayout>
