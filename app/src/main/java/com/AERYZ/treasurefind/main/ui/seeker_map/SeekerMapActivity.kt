@@ -119,6 +119,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     myFirebase.updateUser(uid, "in_session", "")
                     val intent = Intent(this, VictoryActivity::class.java)
                     intent.putExtra(wid_KEY, it.wid)
+                    intent.putExtra(tid_KEY, tid)
                     startActivity(intent)
                     finish()
                 }
