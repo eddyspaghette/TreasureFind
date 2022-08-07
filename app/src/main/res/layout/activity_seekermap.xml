@@ -9,12 +9,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/seeker_map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".main.ui.seeker_map.SeekerMapActivity"/>
+            tools:context=".main.ui.seeker_map.SeekerMapActivity" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -34,6 +35,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/locatetreasure_btn"
+            android:layout_width="37dp"
+            android:layout_height="37dp"
+            android:src="@drawable/treasureloc_btn"
+            android:background="@drawable/btn_border"
+            android:layout_marginTop="70dp"
+            android:layout_marginRight="13dp"
+            android:layout_alignParentRight="true"/>
     </RelativeLayout>
 
     <include

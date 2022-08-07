@@ -21,7 +21,6 @@ class SeekerMapViewModel(private val tid: String): ServiceViewModel() {
     var seekers = hashMapOf<String, MutableLiveData<MyUser>>()
     var markers = hashMapOf<String, Marker>()
     var isInteract = MutableLiveData(true)
-    var curLocation = LatLng(0.0, 0.0)
     val db = Firebase.firestore
     val myFirebase = MyFirebase()
 
