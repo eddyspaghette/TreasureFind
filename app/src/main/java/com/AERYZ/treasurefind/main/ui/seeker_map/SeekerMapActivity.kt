@@ -211,24 +211,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
             }
-        }
-
-        mapViewModel.treasure.observe(this) {
-            if (!isLocateTreasureFirstTime) {
-                isLocateTreasureFirstTime = true
-
-                val noise_lat = (Random.nextFloat()*2.0-1.0)*0.0002 //change this for more or less noise
-                val noise_lng = (Random.nextFloat()*2.0-1.0)*0.0002 //change this for more or less noise
-
-                treasureLocation = LatLng(it!!.latitude!! + noise_lat, it.longitude!! + noise_lng)
-
-                //treasure approximate location
-                circleOptions.center(treasureLocation)
-                circleOptions.radius(50.0)
-                circleOptions.fillColor(0x220000FF)
-                circleOptions.strokeColor(0x330000FF)
-                mMap.addCircle(circleOptions)
-            }
 
             if (!Util.checkInsideRadius(mapViewModel.treasureFakeLocation, 50.0, currentLocation))
             {
@@ -261,8 +243,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
                 circleOptions.strokeColor(0x330000FF)
                 mMap.addCircle(circleOptions)
             }
-
-
         }
 
         mapViewModel.isInteract.observe(this) {
