@@ -2,15 +2,25 @@ package com.AERYZ.treasurefind.main.util
 
 import android.Manifest
 import android.app.Activity
+import android.app.Service
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.location.Criteria
+import android.location.Location
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
+import com.google.android.gms.maps.model.LatLng
+import java.lang.Math.pow
+import java.lang.Math.sqrt
+import kotlin.math.pow
 
 object Util {
     fun checkPermissions(activity: Activity?) {
@@ -40,5 +50,35 @@ object Util {
         val matrix = Matrix()
         matrix.postRotate(angle)
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+    }
+
+    fun getCurrentLocation(activity: Activity): LatLng {
+        var res = LatLng(0.0, 0.0)
+        try {
+            val locationManager = activity.getSystemService(Service.LOCATION_SERVICE) as LocationManager
+
+            val criteria = Criteria()
+            criteria.accuracy = Criteria.ACCURACY_FINE
+
+            //find best provider
+            val provider = locationManager.getBestProvider(criteria,true)
+            if (provider != null) {
+                val location = locationManager.getLastKnownLocation(provider)
+                res = LatLng(location!!.latitude, location.longitude)
+            }
+        } catch (e: SecurityException) {}
+        return res
+    }
+
+
+    //return distance in meters
+    fun calculateDistance(a: LatLng, b: LatLng): Float {
+        val aLocation = Location("GPS")
+        aLocation.latitude = a.latitude
+        aLocation.longitude = a.longitude
+        val bLocation = Location("GPS")
+        bLocation.latitude = b.latitude
+        bLocation.longitude = b.longitude
+        return aLocation.distanceTo(bLocation)
     }
 }
