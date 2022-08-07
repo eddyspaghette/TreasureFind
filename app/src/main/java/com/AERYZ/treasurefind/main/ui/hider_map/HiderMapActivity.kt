@@ -1,21 +1,31 @@
 package com.AERYZ.treasurefind.main.ui.hider_map
 
-
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.VictoryActivity
 import com.AERYZ.treasurefind.databinding.ActivityHidermapBinding
 import com.AERYZ.treasurefind.db.MyFirebase
+import com.AERYZ.treasurefind.db.MyUser
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CircleOptions
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.toObject
 
 class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -31,6 +41,8 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var hiderDoneFragment: HiderDoneFragment
     private lateinit var hiderValidateFragment: HiderValidateFragment
+    private var markerOptions = MarkerOptions()
+    private var circleOptions = CircleOptions()
 
     companion object {
         var tid_KEY = "tid"
@@ -94,7 +106,10 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
             val text = "Joined: ${it.seekers.size} Seekers"
             numSeekers_TextView.text = text
 
+
+
             if (it != null) {
+                //replace fragment
                 if (it.sr.size == 0) {
                     supportFragmentManager.beginTransaction().replace(R.id.hider_map_fragmentcontainerview, hiderDoneFragment).commit()
                 } else {
@@ -107,6 +122,27 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     val intent = Intent(this, VictoryActivity::class.java)
                     intent.putExtra(wid_KEY, it.wid)
                     startActivity(intent)
+                    finish()
+                }
+
+                //update seeker list
+                for (seekerID in it.seekers) {
+                    if (!mapViewModel.seekers.containsKey(seekerID)) {
+                        myFirebase.getUserDocument(seekerID).get()
+                            .addOnCompleteListener {
+                                mapViewModel.seekers[seekerID] = MutableLiveData(it.result.toObject<MyUser>())
+                                mapViewModel.seekers[seekerID]!!.observe(this) {
+                                    markerOptions.position(LatLng(it.latitude, it.longitude))
+                                    if (mapViewModel.markers[seekerID] != null) {
+                                        mapViewModel.markers[seekerID]!!.remove()
+                                    }
+                                    //change this line for issue #110
+                                    mapViewModel.markers[seekerID] = mMap.addMarker(markerOptions)!!
+                                }
+                            }
+                        Log.d("Debug Seeker location changed", seekerID)
+                        mapViewModel.SeekerUpdateListener(seekerID)
+                    }
                 }
             }
         }
@@ -131,11 +167,43 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        try {
+            mMap.isMyLocationEnabled = true
+            mMap.uiSettings.isMyLocationButtonEnabled = true
+            mMap.uiSettings.isCompassEnabled = true
+        } catch (e: SecurityException)  {
+            Log.e("Exception: %s", e.message.toString());
+        }
+
+        mMap.setOnMyLocationButtonClickListener() {
+            if (mapViewModel.treasure.value != null) {
+                val treasure = mapViewModel.treasure.value!!
+                Log.d("Debug", "on location click")
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(treasure.latitude!!,treasure.longitude!!),17f))
+            }
+            true
+        }
 
         mapViewModel.isInteract.observe(this) {
             setMapInteraction(mMap, it)
         }
 
+        mapViewModel.treasure.observe(this) {
+            if (!isFirstTimeCenter) {
+                isFirstTimeCenter = true
+                val treasureLocation = LatLng(it.latitude!!, it.longitude!!)
+                markerOptions.position(treasureLocation)
+                //change this line to treasure icon issue #103
+                mMap.addMarker(markerOptions)
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude!!,it.longitude!!),17f))
+                circleOptions.center(treasureLocation)
+                circleOptions.radius(50.0)
+                circleOptions.fillColor(0x220000FF)
+                circleOptions.strokeColor(0x330000FF)
+                mMap.addCircle(circleOptions)
+            }
+        }
     }
     override fun onBackPressed() {
         return

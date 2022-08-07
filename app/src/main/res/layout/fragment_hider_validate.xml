@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".main.ui.hider_map.HiderValidateFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/hider_validate_relativelayout">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/hider_validate_fragment"
@@ -14,21 +15,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:gravity="center"
         android:layout_alignParentBottom="true">
-
         <Button
             android:id="@+id/hider_map_accept_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="accept"
-            android:layout_margin="20dp"/>
-        <Button
-            android:id="@+id/hider_map_skip_btn"
+            android:layout_margin="10dp"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="skip"
-            android:layout_margin="20dp"/>
+            android:text="Or swipe horizonally to skip!"
+            android:layout_marginBottom="10dp"/>
     </LinearLayout>
 </RelativeLayout>

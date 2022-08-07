@@ -2,7 +2,9 @@ package com.AERYZ.treasurefind.db
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.res.Resources
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
@@ -30,8 +32,9 @@ data class MyUser(
     var email: String = "",
     var in_session: String = "",
     @Exclude @set:Exclude @get:Exclude var profileImage: Bitmap? = null,
-    var profileImagePath: String = ""
-)
+    var profileImagePath: String = "",
+    var latitude: Double = 0.0,
+    var longitude: Double = 0.0)
 
 data class Treasure(
     var oid: String? = "",
@@ -47,11 +50,14 @@ data class Treasure(
     var seekers: ArrayList<String> = arrayListOf<String>(),
     var sr: ArrayList<String> = arrayListOf<String>(),
     var length: String? = "",
-    var treasureImagePath: String? = "treasureImagePath",
-)
+    var treasureImagePath: String? = "treasureImagePath")
 
 
-data class SR(var sid: String, var sRImage: Bitmap) {
+data class SR(var tid:String = "",
+              var sid:String = "",
+              var latitude: Double = 0.0,
+              var longitude: Double = 0.0,
+              @Exclude @set:Exclude @get:Exclude var sRImage: Bitmap? = null) {
 }
 
 class MyFirebase {
@@ -176,10 +182,9 @@ class MyFirebase {
         }
     }
 
-    fun getTreasureImage(activity: Activity, tid: String, mutableLiveData: MutableLiveData<Bitmap>) {
-        var treasureImagePath = "images/treasures/${tid}/image.jpg"
-        val reference = storageReference.child(treasureImagePath)
-        mutableLiveData.value = Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888)
+    fun getImage(activity: Activity, imagePath: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+        val reference = storageReference.child(imagePath)
+        imageMutableLiveData.value = BitmapFactory.decodeResource(activity.resources, R.drawable.tf_logo)
         CoroutineScope(IO).launch {
             val bitmap = GlideApp.with(activity)
                 .asBitmap()
@@ -187,14 +192,25 @@ class MyFirebase {
                 .load(reference)
                 .submit()
                 .get()
-            withContext(Main) {
-                mutableLiveData.value = bitmap
-                Log.d("Debug", "Got Loading treasure image")
-            }
+            imageMutableLiveData.postValue(bitmap)
         }
     }
 
-    fun updateUser(uid: String, field: String, value: String) {
+    fun getProfileImage(activity: FragmentActivity, uid: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+        var profileImagePath = "images/profile/${uid}.jpg"
+        getImage(activity, profileImagePath, imageMutableLiveData)
+    }
+
+    fun getTreasureImage(activity: Activity, tid: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+        var treasureImagePath = "images/treasures/${tid}/image.jpg"
+        getImage(activity, treasureImagePath, imageMutableLiveData)
+    }
+    fun getSRImage(activity: Activity, tid: String, sid: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+        var treasureImagePath = "images/treasures/${tid}/${sid}.jpg"
+        getImage(activity, treasureImagePath, imageMutableLiveData)
+    }
+
+    fun updateUser(uid: String, field: String, value: Any?) {
         db.collection("users").document(uid).update(field, value)
     }
 
@@ -210,13 +226,22 @@ class MyFirebase {
         db.collection("treasures").document(tid).update("seekers", FieldValue.arrayRemove(sid))
     }
 
-    fun addSR(tid: String, sR: SR) {
-        db.collection("treasures").document(tid).update("sr", FieldValue.arrayUnion(sR.sid))
-        val sRImagePath =  "images/treasures/${tid}/${sR.sid}.jpg"
-        insertToFirebaseStorage(sR.sRImage, sRImagePath)
+    fun addSR(resources: Resources, sR: SR) {
+        db.collection("treasures").document(sR.tid).update("sr", FieldValue.arrayUnion(sR.sid))
+
+        db.collection("submit_requests").document(sR.sid).set(sR)
+
+        val sRImagePath =  "images/treasures/${sR.tid}/${sR.sid}.jpg"
+        if (sR.sRImage == null) {
+            sR.sRImage = BitmapFactory.decodeResource(resources, R.drawable.tf_logo)
+        }
+        insertToFirebaseStorage(sR.sRImage!!, sRImagePath)
     }
     fun removeSR(tid: String, sid: String, listener: DeletionImageListener?= null) {
         db.collection("treasures").document(tid).update("sr", FieldValue.arrayRemove(sid))
+
+        db.collection("submit_requests").document(sid).delete()
+
         val sRImagePath =  "images/treasures/${tid}/${sid}.jpg"
         deleteImage(sRImagePath, listener)
     }
@@ -224,23 +249,6 @@ class MyFirebase {
     fun updateProfileImage(uid: String, image: Bitmap) {
         var profileImagePath = "images/profile/${uid}.jpg"
         insertToFirebaseStorage(image, profileImagePath)
-    }
-
-    fun getProfileImage(activity: FragmentActivity, uid: String, mutableLiveData: MutableLiveData<Bitmap>) {
-        var profileImagePath = "images/profile/${uid}.jpg"
-        val reference = storageReference.child(profileImagePath)
-        mutableLiveData.value = Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888)
-        CoroutineScope(IO).launch {
-            val bitmap = GlideApp.with(activity)
-                .asBitmap()
-                .error(com.google.android.material.R.drawable.ic_clock_black_24dp)
-                .load(reference)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .submit()
-                .get()
-                mutableLiveData.postValue(bitmap)
-        }
     }
 
     fun deleteImage(path: String, listener: DeletionImageListener? = null) {

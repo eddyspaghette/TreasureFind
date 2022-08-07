@@ -26,7 +26,7 @@ class FeedViewModel : ViewModel(), MyFirebase.FirebaseFeedListener {
         val list: ArrayList<Treasure> = arrayListOf()
         for (treasure in snapshot) {
             val retTreasure = treasure.toObject<Treasure>()
-            if (retTreasure.wid != "" && retTreasure.oid != uid) {
+            if (retTreasure.wid == "" && retTreasure.oid != uid) {
                 list.add(retTreasure)
             }
         }

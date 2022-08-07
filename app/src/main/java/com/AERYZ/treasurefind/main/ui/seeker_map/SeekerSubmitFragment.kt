@@ -1,52 +1,89 @@
 package com.AERYZ.treasurefind.main.ui.seeker_map
 
+import android.annotation.SuppressLint
 import android.content.Context.CAMERA_SERVICE
 import android.content.Context.WINDOW_SERVICE
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraManager
 import android.media.Image
 import android.media.ImageReader
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.util.Size
 import android.view.*
-import android.widget.Button
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.SR
 import com.AERYZ.treasurefind.main.ui.livecamera.CameraConnectionFragment
 import com.AERYZ.treasurefind.main.ui.livecamera.ImageUtils
 import com.AERYZ.treasurefind.main.util.Util
+import com.AERYZ.treasurefind.main.util.Util.calculateDistance
+import com.google.android.gms.maps.model.LatLng
+import com.apachat.loadingbutton.core.customViews.CircularProgressButton
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.concurrent.schedule
 
 
+@SuppressLint("ClickableViewAccessibility")
 class SeekerSubmitFragment : Fragment(), ImageReader.OnImageAvailableListener {
 
     private var myFirebase = MyFirebase()
     private var tid = ""
+    private lateinit var mapViewModel: SeekerMapViewModel
+    private lateinit var mapViewModelFactory: SeekerMapViewModelFactory
+    private lateinit var btn_capture: CircularProgressButton
+    private lateinit var handler: Handler
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        tid = arguments?.getString(SeekerMapActivity.tid_KEY).toString()
-
-        Log.d("Debug Seeker Submit", tid)
-
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_seeker_submit, container, false)
 
+        //getting tid argument from previous
+        tid = arguments?.getString(SeekerMapActivity.tid_KEY).toString()
+        Log.d("Debug Seeker Submit", tid)
+
+        //init view model
+        mapViewModelFactory = SeekerMapViewModelFactory(tid)
+        mapViewModel = ViewModelProvider(this, mapViewModelFactory)[SeekerMapViewModel::class.java]
+
         //live camera
         setFragment()
-        val btn_capture: Button = view.findViewById(R.id.btn_capture)
-        btn_capture.setOnLongClickListener() {
+
+        handler = Handler(Looper.getMainLooper())
+        val runnable = Runnable() {
             isCapture = 1
+        }
+        btn_capture = view.findViewById(R.id.btn_capture)
+        btn_capture.setOnTouchListener { _, event ->
+            when(event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    btn_capture.startAnimation()
+                    handler.postDelayed(runnable, 2400)
+                }
+                MotionEvent.ACTION_UP -> {
+                    btn_capture.revertAnimation()
+                    handler.removeCallbacks(runnable)
+                }
+                MotionEvent.ACTION_CANCEL -> {
+                    btn_capture.revertAnimation()
+                    handler.removeCallbacks(runnable)
+                }
+            }
             true
         }
 
@@ -54,9 +91,9 @@ class SeekerSubmitFragment : Fragment(), ImageReader.OnImageAvailableListener {
     }
 
     //live camera
-    var previewHeight = 0;
+    var previewHeight = 0
     var previewWidth = 0
-    var sensorOrientation = 0;
+    var sensorOrientation = 0
     var isCapture = 0
 
     //TODO getting frames of live camera footage and passing them to model
@@ -107,7 +144,6 @@ class SeekerSubmitFragment : Fragment(), ImageReader.OnImageAvailableListener {
     }
 
 
-
     //TODO getting frames of live camera footage and passing them to model
     override fun onImageAvailable(reader: ImageReader) {
         if (isCapture == 1) {
@@ -117,17 +153,39 @@ class SeekerSubmitFragment : Fragment(), ImageReader.OnImageAvailableListener {
             if (rgbFrameBitmap != null) {
                 val bitmap = Util.rotateBitmap(rgbFrameBitmap!!, 90f)
                 val uid = FirebaseAuth.getInstance().uid
-                val sR = SR(uid!!, bitmap!!)
-                myFirebase.addSR(tid, sR)
-                Toast.makeText(activity, "Uploaded!", Toast.LENGTH_SHORT).show()
+                val location = Util.getCurrentLocation(requireActivity())
+                val treasureLocation = LatLng(mapViewModel.treasure.value!!.latitude!!, mapViewModel.treasure.value!!.longitude!!)
+                val threshold = 5.0 //in meters, change this for how far to accept the submit
+                if (calculateDistance(location, treasureLocation) <= threshold) {
+                    val sR = SR(tid, uid!!, location.latitude, location.longitude, bitmap!!)
+                    myFirebase.addSR(resources, sR)
+                    Toast.makeText(activity, "Uploaded!", Toast.LENGTH_SHORT).show()
+                }
+                else {
+                    //TODO: Dialog of failed submit (Too far from the treasure)
+                    Toast.makeText(activity, "Too far from the treasure", Toast.LENGTH_SHORT).show()
+                    val runnable = Runnable() {
+                        btn_capture.revertAnimation {
+                            btn_capture.text = "Cooldown (5s)"
+                            btn_capture.isEnabled = false
+                        }
+                    }
+                    val runnable2 = Runnable() {
+                        btn_capture.startAnimation()
+                        btn_capture.revertAnimation {
+                            btn_capture.text = getString(R.string.capture)
+                            btn_capture.isEnabled = true
+                            btn_capture.initialCorner = 15.toFloat()
+                        }
+                    }
+                    handler.post(runnable)
+                    handler.postDelayed(runnable2, 5000)
+                }
             }
         }
-        val temp = reader.acquireLatestImage()
-        if (temp!= null)
-        {
-            temp.close()
-        }
+        reader.acquireLatestImage()?.close()
     }
+
 
 
     private fun cameraprocess(reader: ImageReader) {
@@ -191,6 +249,11 @@ class SeekerSubmitFragment : Fragment(), ImageReader.OnImageAvailableListener {
             }
             buffer[yuvBytes[i]]
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        btn_capture.dispose()
     }
 
 }

@@ -2,24 +2,35 @@ package com.AERYZ.treasurefind.main.ui.seeker_map
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.VictoryActivity
 import com.AERYZ.treasurefind.databinding.ActivitySeekermapBinding
 import com.AERYZ.treasurefind.db.MyFirebase
+import com.AERYZ.treasurefind.db.MyUser
 import com.AERYZ.treasurefind.main.services.TrackingService
+import com.AERYZ.treasurefind.main.util.Util
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Polyline
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.toObject
+import java.util.*
+import kotlin.random.Random
 
 class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -27,6 +38,10 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivitySeekermapBinding
     private lateinit var submitFragment: SeekerSubmitFragment
     private lateinit var waitFragment: SeekerWaitFragment
+    private var markerOptions = MarkerOptions()
+    private var circleOptions = CircleOptions()
+    private lateinit var locatetreasure_btn: ImageView
+    private var polylineArray: ArrayList<Polyline> = ArrayList()
 
     //service
     private lateinit var serviceIntent: Intent
@@ -35,10 +50,10 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mapViewModelFactory: SeekerMapViewModelFactory
     private val BINDING_STATUS_KEY = "BINDING_STATUS"
     private var isFirstTimeCenter = false
+    private var isLocateTreasureFirstTime = false
     private val myFirebase = MyFirebase()
     private val uid = FirebaseAuth.getInstance().uid!!
     private var tid: String = ""
-
 
     companion object {
         var tid_KEY = "tid"
@@ -50,8 +65,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         binding = ActivitySeekermapBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -65,10 +78,12 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         tid  = intent.getStringExtra(tid_KEY)!!
         val tid_TextView: TextView = findViewById(R.id.Text_tid)
         val temp = "tid: ${tid}"
-        tid_TextView.setText(temp)
+        tid_TextView.text = temp
+
+        locatetreasure_btn = findViewById(R.id.locatetreasure_btn)
 
         //Service View Model
-        mapViewModelFactory = SeekerMapViewModelFactory(tid!!)
+        mapViewModelFactory = SeekerMapViewModelFactory(tid)
         mapViewModel = ViewModelProvider(this, mapViewModelFactory)[SeekerMapViewModel::class.java]
 
 
@@ -89,10 +104,11 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mapViewModel.treasure.observe(this) {
             val text = "Joined: ${it.seekers.size} Seekers"
-            numSeekers_TextView.setText(text)
+            numSeekers_TextView.text = text
 
-            //fragment replace
+
             if (it != null) {
+                //fragment replace
                 if (it.sr.indexOf(uid) == -1) {
                     supportFragmentManager.beginTransaction().replace(R.id.seeker_map_fragmentcontainerview, submitFragment).commit()
                 }
@@ -108,6 +124,33 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     startActivity(intent)
                     finish()
                 }
+
+                //update seeker list
+                for (seekerID in it.seekers) {
+                    if (!mapViewModel.seekers.containsKey(seekerID) && seekerID!=uid) {
+                        myFirebase.getUserDocument(seekerID).get()
+                            .addOnCompleteListener { task ->
+                                mapViewModel.seekers[seekerID] = MutableLiveData(task.result.toObject<MyUser>())
+                                mapViewModel.seekers[seekerID]!!.observe(this) { myUser ->
+                                    markerOptions.position(LatLng(myUser.latitude, myUser.longitude))
+                                    if (mapViewModel.markers[seekerID] != null) {
+                                        mapViewModel.markers[seekerID]!!.remove()
+                                    }
+                                    //change this line for issue #110
+                                    mapViewModel.markers[seekerID] = mMap.addMarker(markerOptions)!!
+                                }
+                            }
+                        Log.d("Debug Seeker location changed", seekerID)
+                        mapViewModel.SeekerUpdateListener(seekerID)
+                    }
+                }
+            }
+        }
+
+        //update location to database
+        mapViewModel.location.observe(this) {
+            if (it != null) {
+                mapViewModel.updateSeekerLocation(LatLng(it.latitude, it.longitude))
             }
         }
 
@@ -161,14 +204,53 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
         mapViewModel.location.observe(this) {
+            val currentLocation = LatLng(it!!.latitude,it.longitude)
             if (!isFirstTimeCenter) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it!!.latitude,it.longitude),17f))
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,18f))
                 isFirstTimeCenter = true
+
+
+            }
+
+            if (!Util.checkInsideRadius(mapViewModel.treasureFakeLocation, 50.0, currentLocation))
+            {
+                polylineArray = Util.showRouteOnMap(mMap, polylineArray, currentLocation, mapViewModel.treasureFakeLocation, this)
+            } else {
+
+                while (polylineArray.size > 0 ) {
+                    if (polylineArray.size == 1) {
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mapViewModel.treasureFakeLocation,19f))
+                    }
+                    polylineArray[0].remove()
+                    polylineArray.removeFirst()
+                }
+            }
+        }
+
+        mapViewModel.treasure.observe(this) {
+            if (!isLocateTreasureFirstTime) {
+                isLocateTreasureFirstTime = true
+
+                val noise_lat = (Random.nextFloat()*2.0-1.0)*0.0002 //change this for more or less noise
+                val noise_lng = (Random.nextFloat()*2.0-1.0)*0.0002 //change this for more or less noise
+
+                mapViewModel.treasureFakeLocation = LatLng(it!!.latitude!! + noise_lat, it.longitude!! + noise_lng)
+
+                //treasure approximate location
+                circleOptions.center(mapViewModel.treasureFakeLocation)
+                circleOptions.radius(50.0)
+                circleOptions.fillColor(0x220000FF)
+                circleOptions.strokeColor(0x330000FF)
+                mMap.addCircle(circleOptions)
             }
         }
 
         mapViewModel.isInteract.observe(this) {
             setMapInteraction(mMap, it)
+        }
+
+        locatetreasure_btn.setOnClickListener() {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mapViewModel.treasureFakeLocation,18f))
         }
 
     }
