@@ -22,11 +22,13 @@ class SeekerMapViewModel(private val tid: String): ServiceViewModel() {
     var markers = hashMapOf<String, Marker>()
     var treasureFakeLocation = LatLng(0.0, 0.0)
     var isInteract = MutableLiveData(true)
+    var hiderStatus = MutableLiveData<Int>(0)
     val db = Firebase.firestore
-    val myFirebase = MyFirebase()
+    private val myFirebase = MyFirebase()
 
     init {
         SeekerChangeListener(tid)
+        HostStatusListener(tid)
     }
 
     fun updateSeekerLocation(location: LatLng) {
@@ -35,19 +37,43 @@ class SeekerMapViewModel(private val tid: String): ServiceViewModel() {
         myFirebase.updateUser(uid, "longitude", location.longitude)
     }
 
+    fun HostStatusListener(tid: String) {
+        myFirebase.getTreasureDocument(tid)
+            .get()
+            .addOnCompleteListener {
+                val myTreasure = it.result.toObject<Treasure>()
+                if (myTreasure != null) {
+                    val docRef = db.collection("users").document(myTreasure.oid!!)
+                    docRef.addSnapshotListener { snapshot, e ->
+                        if (e != null) {
+                            return@addSnapshotListener
+                        }
+
+                        if (snapshot != null && snapshot.exists()) {
+                            myFirebase.getUserDocument(myTreasure.oid!!)
+                                .get()
+                                .addOnCompleteListener {
+                                    val hider = it.result.toObject<MyUser>()
+                                    if (hider != null) {
+                                        hiderStatus.postValue(hider.status)
+                                    }
+                                }
+                        }
+                    }
+                }
+            }
+
+    }
+
     fun SeekerChangeListener(tid:String) {
         val docRef = db.collection("treasures").document(tid)
         docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
-                Log.w("Debug", "Listen failed.", e)
                 return@addSnapshotListener
             }
 
             if (snapshot != null && snapshot.exists()) {
                 myFirebase.getTreasure(tid, treasure)
-                Log.d("Debug", "Current data: ${snapshot.data}")
-            } else {
-                Log.d("Debug", "Current data: null")
             }
         }
     }
@@ -55,7 +81,6 @@ class SeekerMapViewModel(private val tid: String): ServiceViewModel() {
         var docRef = db.collection("users").document(sid)
         docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
-                Log.w("Debug", "Listen failed.", e)
                 return@addSnapshotListener
             }
 
@@ -68,12 +93,9 @@ class SeekerMapViewModel(private val tid: String): ServiceViewModel() {
                         }
                     }
                 Log.d("Debug", "Current data: ${snapshot.data}")
-            } else {
-                Log.d("Debug", "Current data: null")
             }
         }
     }
-
 }
 class SeekerMapViewModelFactory(private val tid: String) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

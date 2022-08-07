@@ -101,6 +101,16 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         waitFragment = SeekerWaitFragment()
         waitFragment.arguments = bundle
 
+        //Getting status of hider
+        val hoststatus_TextView: TextView = findViewById(R.id.Text_hostOnline)
+        mapViewModel.hiderStatus.observe(this) {
+            if (it == 0) {
+                hoststatus_TextView.text = "Host: Offline"
+            } else {
+                hoststatus_TextView.text = "Host: Online"
+            }
+        }
+
         //Getting number of seekers
         val numSeekers_TextView: TextView = findViewById(R.id.Text_numPlayers)
 
@@ -288,7 +298,5 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onBackPressed() {
         return
     }
-
-
 
 }

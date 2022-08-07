@@ -211,8 +211,8 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onDestroy() {
+        Log.d("Debug", "On Destroy")
         myFirebase.updateUser(uid, "status", 0)
         super.onDestroy()
     }
-
 }
