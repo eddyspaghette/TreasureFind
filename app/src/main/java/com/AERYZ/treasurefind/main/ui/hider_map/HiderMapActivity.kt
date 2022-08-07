@@ -1,6 +1,7 @@
 package com.AERYZ.treasurefind.main.ui.hider_map
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
