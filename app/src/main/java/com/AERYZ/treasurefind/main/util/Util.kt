@@ -91,10 +91,11 @@ object Util {
         bLocation.longitude = b.longitude
         return aLocation.distanceTo(bLocation)
     }
-    fun showRouteOnMap(googleMap: GoogleMap, latlngStart: LatLng, latlngEnd: LatLng, apikey:String, context: Context){
+    fun showRouteOnMap(googleMap: GoogleMap, latlngStart: LatLng, latlngEnd: LatLng, apikey:String, context: Context): Int {
         val latLngOrigin = latlngStart
         val latLngDestination = latlngEnd
         val mapkey=apikey
+        var distance:Int=0
         googleMap!!.addMarker(MarkerOptions().position(latLngOrigin).title("Ayala"))
         googleMap!!.addMarker(MarkerOptions().position(latLngDestination).title("SM City"))
         googleMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngOrigin, 14.5f))
@@ -108,6 +109,7 @@ object Util {
                 val routes = jsonResponse.getJSONArray("routes")
                 val legs = routes.getJSONObject(0).getJSONArray("legs")
                 val steps = legs.getJSONObject(0).getJSONArray("steps")
+                distance = legs.getJSONObject(0).getJSONObject("distance").getInt("value")
                 for (i in 0 until steps.length()) {
                     val points = steps.getJSONObject(i).getJSONObject("polyline").getString("points")
                     path.add(PolyUtil.decode(points))
@@ -123,6 +125,6 @@ object Util {
         }catch (e:Exception){
             Log.e("Exception: %s",e.message.toString())
         }
-
+        return distance
     }
 }
