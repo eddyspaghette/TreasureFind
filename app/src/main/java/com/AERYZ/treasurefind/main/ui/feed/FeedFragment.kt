@@ -3,8 +3,10 @@ package com.AERYZ.treasurefind.main.ui.feed
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.SearchView
+import android.widget.TextView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -29,6 +31,9 @@ class FeedFragment : Fragment(), MenuProvider {
     private val myFirebase = MyFirebase()
     private lateinit var feedViewModel: FeedViewModel
     private lateinit var feedAdapter: FeedAdapter
+    private lateinit var listRecyclerView: RecyclerView
+    private lateinit var emptyTreasure: ImageView
+    private lateinit var emptyTreasureTextView: TextView
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -51,13 +56,16 @@ class FeedFragment : Fragment(), MenuProvider {
 
         val swipeRefreshLayout: SwipeRefreshLayout = root.findViewById(R.id.swiperefresh)
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        val listRecyclerView: RecyclerView = root.findViewById(R.id.feed_recyclerview)
+        listRecyclerView = root.findViewById(R.id.feed_recyclerview)
+        emptyTreasure = root.findViewById(R.id.emptyTreasure)
+        emptyTreasureTextView = root.findViewById(R.id.emptyTreasureTextView)
         listRecyclerView.layoutManager = layoutManager
         feedAdapter = FeedAdapter(requireActivity(), arrayListOf())
 
         feedViewModel.feedList.observe(requireActivity()) {
             feedAdapter.updateList(it)
             feedAdapter.notifyDataSetChanged()
+            setView()
         }
         listRecyclerView.adapter = feedAdapter
 
@@ -80,11 +88,25 @@ class FeedFragment : Fragment(), MenuProvider {
         menuInflater.inflate(R.menu.feed_toolbar, menu)
         val menuItem : MenuItem = menu.findItem(R.id.appSearchBar)
         val searchView = menuItem.actionView as SearchView
+        searchView.queryHint = "Treasure Id or Title"
         search(searchView)
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         return false
+    }
+
+    private fun setView() {
+        if (feedAdapter.itemCount == 0) {
+            listRecyclerView.visibility = View.GONE
+            emptyTreasure.visibility = View.VISIBLE
+            emptyTreasureTextView.visibility = View.VISIBLE
+        }
+        else {
+            listRecyclerView.visibility = View.VISIBLE
+            emptyTreasure.visibility = View.GONE
+            emptyTreasureTextView.visibility = View.GONE
+        }
     }
 
     private fun search(searchView: SearchView) {
@@ -95,6 +117,7 @@ class FeedFragment : Fragment(), MenuProvider {
                     it.filter { (it.tid!!.contains(query!!) or it.title!!.contains(query)) }.forEach{filteredList.add(it)}
                     feedAdapter.updateList(filteredList)
                     feedAdapter.notifyDataSetChanged()
+                    setView()
                     return false
                 }
 
@@ -103,6 +126,7 @@ class FeedFragment : Fragment(), MenuProvider {
                     it.filter { (it.tid!!.contains(newQuery!!) or it.title!!.contains(newQuery))}.forEach{filteredList.add(it)}
                     feedAdapter.updateList(filteredList)
                     feedAdapter.notifyDataSetChanged()
+                    setView()
                     return false
                 }
             })
