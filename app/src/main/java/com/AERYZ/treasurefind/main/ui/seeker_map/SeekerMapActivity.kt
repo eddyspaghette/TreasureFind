@@ -135,11 +135,14 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
 
         //Getting status of hider
         val hoststatus_TextView: TextView = findViewById(R.id.Text_hostOnline)
+        val hoststatus_ImageView: ImageView = findViewById(R.id.Image_hostOnline)
         mapViewModel.hiderStatus.observe(this) {
             if (it == 0) {
-                hoststatus_TextView.text = "Hider: Offline"
+                hoststatus_TextView.text = "Offline"
+                hoststatus_ImageView.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.offline_circle))
             } else {
-                hoststatus_TextView.text = "Hider: Online"
+                hoststatus_TextView.text = "Online"
+                hoststatus_ImageView.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.online_circle))
             }
         }
 
