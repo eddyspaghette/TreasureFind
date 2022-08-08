@@ -138,6 +138,9 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
                                     }
                                     //change this line for issue #110
                                     mapViewModel.markers[seekerID] = mMap.addMarker(markerOptions)!!
+                                    mapViewModel.markers[seekerID]?.title =seekerID
+
+
                                 }
                             }
                         Log.d("Debug Seeker location changed", seekerID)
@@ -167,6 +170,24 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.setOnMarkerClickListener { marker ->
+            Log.d("debug","gose listener")
+            for (seekerID in mapViewModel.markers.keys){
+                Log.d("debug","gose here")
+                if (seekerID == marker.title){
+                    if(marker.isInfoWindowShown){
+                        marker.hideInfoWindow()
+                    }
+                    else{
+                        marker.showInfoWindow()
+                    }
+                }
+                else{
+                    marker.hideInfoWindow()
+                }
+            }
+            true
+        }
         try {
             mMap.isMyLocationEnabled = true
             mMap.uiSettings.isMyLocationButtonEnabled = true
@@ -204,6 +225,7 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap.addCircle(circleOptions)
             }
         }
+
     }
     override fun onBackPressed() {
         return

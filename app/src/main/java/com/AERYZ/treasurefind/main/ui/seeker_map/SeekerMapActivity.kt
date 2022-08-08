@@ -138,6 +138,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
                                     }
                                     //change this line for issue #110
                                     mapViewModel.markers[seekerID] = mMap.addMarker(markerOptions)!!
+                                    mapViewModel.markers[seekerID]?.title =seekerID
                                 }
                             }
                         Log.d("Debug Seeker location changed", seekerID)
@@ -192,6 +193,24 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.setOnMarkerClickListener { marker ->
+            Log.d("debug","gose listener")
+            for (seekerID in mapViewModel.markers.keys){
+                Log.d("debug","gose here")
+                if (seekerID == marker.title){
+                    if(marker.isInfoWindowShown){
+                        marker.hideInfoWindow()
+                    }
+                    else{
+                        marker.showInfoWindow()
+                    }
+                }
+                else{
+                    marker.hideInfoWindow()
+                }
+            }
+            true
+        }
         try {
             mMap.isMyLocationEnabled = true
             mMap.uiSettings.isMyLocationButtonEnabled = true
@@ -251,6 +270,14 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         locatetreasure_btn.setOnClickListener() {
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mapViewModel.treasureFakeLocation,18f))
+        }
+        mMap.setOnMarkerClickListener { marker ->
+            if (marker.isInfoWindowShown) {
+                marker.hideInfoWindow()
+            } else {
+                marker.showInfoWindow()
+            }
+            true
         }
 
     }
