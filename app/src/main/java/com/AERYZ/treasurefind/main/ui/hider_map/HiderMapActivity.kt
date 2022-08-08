@@ -24,7 +24,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.toObject
 
-class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
+class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityHidermapBinding
@@ -52,6 +52,7 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityHidermapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        myFirebase.updateUser(uid, "status", 1)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -207,4 +208,8 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
         return
     }
 
+    override fun onPause() {
+        super.onPause()
+        myFirebase.updateUser(uid, "status", 0)
+    }
 }

@@ -64,6 +64,8 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivitySeekermapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        myFirebase.updateUser(uid, "status", 1)
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.seeker_map) as SupportMapFragment
@@ -96,6 +98,16 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         waitFragment = SeekerWaitFragment()
         waitFragment.arguments = bundle
+
+        //Getting status of hider
+        val hoststatus_TextView: TextView = findViewById(R.id.Text_hostOnline)
+        mapViewModel.hiderStatus.observe(this) {
+            if (it == 0) {
+                hoststatus_TextView.text = "Host: Offline"
+            } else {
+                hoststatus_TextView.text = "Host: Online"
+            }
+        }
 
         //Getting number of seekers
         val numSeekers_TextView: TextView = findViewById(R.id.Text_numPlayers)
@@ -276,6 +288,11 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         outState.putBoolean(BINDING_STATUS_KEY, isBind)
     }
 
+    override fun onPause() {
+        super.onPause()
+        myFirebase.updateUser(uid, "status", 0)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         unBindService()
@@ -284,7 +301,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onBackPressed() {
         return
     }
-
 
 
 }
