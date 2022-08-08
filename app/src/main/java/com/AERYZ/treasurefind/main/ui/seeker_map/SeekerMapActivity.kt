@@ -289,14 +289,19 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         outState.putBoolean(BINDING_STATUS_KEY, isBind)
     }
 
+    override fun onPause() {
+        super.onPause()
+        myFirebase.updateUser(uid, "status", 0)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        myFirebase.updateUser(uid, "status", 0)
         unBindService()
         stopService(serviceIntent)
     }
     override fun onBackPressed() {
         return
     }
+
 
 }

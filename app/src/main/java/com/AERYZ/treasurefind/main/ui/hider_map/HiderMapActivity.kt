@@ -27,7 +27,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.toObject
 
-class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
+class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityHidermapBinding
@@ -210,9 +210,8 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
         return
     }
 
-    override fun onDestroy() {
-        Log.d("Debug", "On Destroy")
+    override fun onPause() {
+        super.onPause()
         myFirebase.updateUser(uid, "status", 0)
-        super.onDestroy()
     }
 }
