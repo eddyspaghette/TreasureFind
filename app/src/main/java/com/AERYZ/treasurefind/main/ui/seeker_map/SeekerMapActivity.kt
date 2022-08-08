@@ -50,6 +50,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private val uid = FirebaseAuth.getInstance().uid!!
     private var tid: String = ""
 
+
     companion object {
         var tid_KEY = "tid"
         var wid_KEY = "wid"
@@ -182,6 +183,20 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         })
+        //add quit button
+        val quitButton = findViewById<Button>(R.id.btn_seeker_giveup)
+        quitButton.setOnClickListener{
+            myFirebase.removeSR(tid,uid)
+            myFirebase.removeSeeker(tid,uid)
+            myFirebase.updateUser(uid,"in_session","")
+            finish()
+        }
+
+        mapViewModel.myUser.observe(this) {
+            if (it != null && it.in_session == "") {
+                finish()
+            }
+        }
     }
 
     private fun setMapInteraction(mMap: GoogleMap, value: Boolean) {
@@ -299,6 +314,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onBackPressed() {
         return
     }
+
 
 
 }

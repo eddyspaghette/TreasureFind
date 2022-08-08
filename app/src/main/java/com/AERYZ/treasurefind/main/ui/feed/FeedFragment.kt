@@ -69,6 +69,7 @@ class FeedFragment : Fragment(), MenuProvider {
         }
         listRecyclerView.adapter = feedAdapter
 
+
         swipeRefreshLayout.setOnRefreshListener {
             myFirebase.getAllTreasures(feedViewModel)
             listRecyclerView.adapter!!.notifyDataSetChanged()
@@ -94,6 +95,12 @@ class FeedFragment : Fragment(), MenuProvider {
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         return false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        myFirebase.getAllTreasures(feedViewModel)
+        listRecyclerView.adapter!!.notifyDataSetChanged()
     }
 
     private fun setView() {
