@@ -31,4 +31,5 @@
     <string name="menu_refresh">Refresh Page</string>
     <string name="title_activity_hider_map">HiderMapActivity</string>
     <string name="capture">capture (HOLD)</string>
+    <string name="back_to_main_menu"><![CDATA[< Back to main menu]]></string>
 </resources>

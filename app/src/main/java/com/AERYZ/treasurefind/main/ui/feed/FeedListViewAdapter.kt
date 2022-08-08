@@ -35,6 +35,8 @@ class FeedAdapter(private var context: Context, private var feedList: ArrayList<
         val feedDateTextView: TextView
         val profileImageView: ImageView
         val tidTextView: TextView
+        val distanceTextView: TextView
+        val titleTextView: TextView
 
         init {
             imageView = view.findViewById(R.id.feed_item)
@@ -42,6 +44,8 @@ class FeedAdapter(private var context: Context, private var feedList: ArrayList<
             feedDateTextView = view.findViewById(R.id.feed_date)
             profileImageView = view.findViewById(R.id.feed_profile)
             tidTextView = view.findViewById(R.id.feed_id)
+            distanceTextView = view.findViewById(R.id.feed_distance)
+            titleTextView = view.findViewById(R.id.feed_title)
         }
     }
 
@@ -54,7 +58,9 @@ class FeedAdapter(private var context: Context, private var feedList: ArrayList<
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // https://firebase.google.com/docs/storage/android/create-reference
+        holder.titleTextView.text = "Title: ${feedList[position].title}"
         holder.tidTextView.text = "TreasureID: ${feedList[position].tid}"
+        holder.distanceTextView.text = "${feedList[position].distanceText}"
         val imageRef = feedList[position].treasureImagePath?.let { storageRef.child(it) }
         if (imageRef != null) {
             GlideApp.with(context)

@@ -2,8 +2,6 @@ package com.AERYZ.treasurefind.main.ui.seeker_map
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
-import com.AERYZ.treasurefind.VictoryActivity
+import com.AERYZ.treasurefind.main.ui.victory.VictoryActivity
 import com.AERYZ.treasurefind.databinding.ActivitySeekermapBinding
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.MyUser
@@ -22,10 +20,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.CircleOptions
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.Polyline
+import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.toObject
@@ -66,6 +61,8 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivitySeekermapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        myFirebase.updateUser(uid, "status", 1)
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.seeker_map) as SupportMapFragment
@@ -99,6 +96,16 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         waitFragment = SeekerWaitFragment()
         waitFragment.arguments = bundle
 
+        //Getting status of hider
+        val hoststatus_TextView: TextView = findViewById(R.id.Text_hostOnline)
+        mapViewModel.hiderStatus.observe(this) {
+            if (it == 0) {
+                hoststatus_TextView.text = "Host: Offline"
+            } else {
+                hoststatus_TextView.text = "Host: Online"
+            }
+        }
+
         //Getting number of seekers
         val numSeekers_TextView: TextView = findViewById(R.id.Text_numPlayers)
 
@@ -121,6 +128,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     myFirebase.updateUser(uid, "in_session", "")
                     val intent = Intent(this, VictoryActivity::class.java)
                     intent.putExtra(wid_KEY, it.wid)
+                    intent.putExtra(tid_KEY, tid)
                     startActivity(intent)
                     finish()
                 }
@@ -138,6 +146,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
                                     }
                                     //change this line for issue #110
                                     mapViewModel.markers[seekerID] = mMap.addMarker(markerOptions)!!
+                                    mapViewModel.markers[seekerID]!!.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_seeker))
                                 }
                             }
                         Log.d("Debug Seeker location changed", seekerID)
@@ -277,6 +286,11 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         outState.putBoolean(BINDING_STATUS_KEY, isBind)
     }
 
+    override fun onPause() {
+        super.onPause()
+        myFirebase.updateUser(uid, "status", 0)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         unBindService()
@@ -285,7 +299,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onBackPressed() {
         return
     }
-
 
 
 }

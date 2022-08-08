@@ -34,7 +34,9 @@ data class MyUser(
     @Exclude @set:Exclude @get:Exclude var profileImage: Bitmap? = null,
     var profileImagePath: String = "",
     var latitude: Double = 0.0,
-    var longitude: Double = 0.0)
+    var longitude: Double = 0.0,
+    var status: Int = 0,
+    var score: Int = 0)
 
 data class Treasure(
     var oid: String? = "",
@@ -50,7 +52,10 @@ data class Treasure(
     var seekers: ArrayList<String> = arrayListOf<String>(),
     var sr: ArrayList<String> = arrayListOf<String>(),
     var length: String? = "",
-    var treasureImagePath: String? = "treasureImagePath")
+    var treasureImagePath: String? = "treasureImagePath",
+    @Exclude @set:Exclude @get:Exclude var distance: Double? = 0.0,
+    @Exclude @set:Exclude @get:Exclude var distanceText: String? = "",
+)
 
 
 data class SR(var tid:String = "",
@@ -67,6 +72,11 @@ class MyFirebase {
 
     interface FirebaseFeedListener {
         fun onSuccess(snapshot: QuerySnapshot)
+        fun onFailure(exception: Exception)
+    }
+
+    interface ImageInsertionListener {
+        fun onSuccess()
         fun onFailure(exception: Exception)
     }
 
@@ -94,6 +104,19 @@ class MyFirebase {
                 Log.d("DEBUG: failure", "$exception")
                 listener.onFailure(exception)
             }
+    }
+
+    private fun insertImageToFirebaseStorage(bitmap: Bitmap, path: String, listener: ImageInsertionListener? = null) {
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+        val reference = storageReference.child(path)
+        val uploadTask = reference.putBytes(data)
+        uploadTask.addOnFailureListener {
+            listener?.onFailure(it)
+        }.addOnSuccessListener {
+            listener?.onSuccess()
+        }
     }
 
     private fun insertToFirebaseStorage(bitmap: Bitmap, path: String, id: String? = null, dialog: Dialog? = null, successDialog: Dialog? = null, listener: TreasureInsertionListener?=null) {
@@ -227,15 +250,20 @@ class MyFirebase {
     }
 
     fun addSR(resources: Resources, sR: SR) {
-        db.collection("treasures").document(sR.tid).update("sr", FieldValue.arrayUnion(sR.sid))
-
-        db.collection("submit_requests").document(sR.sid).set(sR)
-
         val sRImagePath =  "images/treasures/${sR.tid}/${sR.sid}.jpg"
         if (sR.sRImage == null) {
             sR.sRImage = BitmapFactory.decodeResource(resources, R.drawable.tf_logo)
         }
-        insertToFirebaseStorage(sR.sRImage!!, sRImagePath)
+        insertImageToFirebaseStorage(sR.sRImage!!, sRImagePath, object: ImageInsertionListener {
+            override fun onFailure(exception: Exception) {
+//                TODO("Not yet implemented")
+            }
+            override fun onSuccess() {
+                db.collection("treasures").document(sR.tid).update("sr", FieldValue.arrayUnion(sR.sid))
+                db.collection("submit_requests").document(sR.sid).set(sR)
+            }
+        })
+
     }
     fun removeSR(tid: String, sid: String, listener: DeletionImageListener?= null) {
         db.collection("treasures").document(tid).update("sr", FieldValue.arrayRemove(sid))
