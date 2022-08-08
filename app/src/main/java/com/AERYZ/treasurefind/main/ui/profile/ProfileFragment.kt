@@ -89,8 +89,8 @@ class ProfileFragment : Fragment() {
         // two layout fragments
 
         val list_fragments: ArrayList<Fragment> = ArrayList()
-        list_fragments.add(OwnTreasureFragment())
         list_fragments.add(FoundTreasureFragment())
+        list_fragments.add(OwnTreasureFragment())
 
         viewPager2.adapter = ProfileFragmentStateAdapter(requireActivity(), list_fragments)
 
