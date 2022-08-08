@@ -3,16 +3,22 @@ package com.AERYZ.treasurefind.main.ui.treasuredetails
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.db.MyFirebase
+import com.AERYZ.treasurefind.db.Treasure
+import com.AERYZ.treasurefind.main.ui.dialogs.ProgressDialog
+import com.AERYZ.treasurefind.main.ui.dialogs.TimerDialog
 import com.AERYZ.treasurefind.main.ui.feed.FeedFragment
+import com.AERYZ.treasurefind.main.ui.hider_map.HiderMapActivity
 import com.AERYZ.treasurefind.main.ui.seeker_map.SeekerMapActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
+import java.lang.Exception
 
 class TreasureDetailsActivity : AppCompatActivity() {
 
@@ -56,11 +62,17 @@ class TreasureDetailsActivity : AppCompatActivity() {
 
 
         TDAccept_btn.setOnClickListener() {
+            val dialog = TimerDialog.clockDialog(this)
+            dialog.show()
+            //update database
             myFirebase.updateUser(uid, "in_session", tid!!)
+
+            //start Map activity
             val intent = Intent(this, SeekerMapActivity::class.java)
             intent.putExtra(SeekerMapActivity.tid_KEY, tid)
             myFirebase.addSeeker(tid, FirebaseAuth.getInstance().uid!!)
             startActivity(intent)
+            finish()
         }
     }
 }

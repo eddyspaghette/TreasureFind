@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
         <item name="android:textColor">@color/title</item>
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <item name="materialButtonStyle">@style/lightButton</item>
     </style>
     <style name="LoginTheme" parent="FirebaseUI">
         <item name="colorPrimary">@color/primary</item>
@@ -28,17 +28,13 @@
     <style name="Theme.TreasureFind.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
     </style>
 
     <style name="Theme.TreasureFind.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.TreasureFind.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="AppBottomSheetDialogTheme" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
-        <item name="bottomSheetDialogTheme">@style/AppModalStyle</item>
-    </style>
-    <style name="AppModalStyle" parent="Widget.MaterialComponents.BottomSheet">
-        <item name="android:background">@drawable/dialog_rounded_bottomsheet</item>
+    <style name="lightButton" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/primary</item>
+        <item name="android:textColor">@color/title</item>
     </style>
 </resources>

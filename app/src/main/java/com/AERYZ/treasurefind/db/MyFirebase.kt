@@ -34,7 +34,9 @@ data class MyUser(
     @Exclude @set:Exclude @get:Exclude var profileImage: Bitmap? = null,
     var profileImagePath: String = "",
     var latitude: Double = 0.0,
-    var longitude: Double = 0.0)
+    var longitude: Double = 0.0,
+    var status: Int = 0,
+    var score: Int = 0)
 
 data class Treasure(
     var oid: String? = "",
@@ -50,7 +52,10 @@ data class Treasure(
     var seekers: ArrayList<String> = arrayListOf<String>(),
     var sr: ArrayList<String> = arrayListOf<String>(),
     var length: String? = "",
-    var treasureImagePath: String? = "treasureImagePath")
+    var treasureImagePath: String? = "treasureImagePath",
+    @Exclude @set:Exclude @get:Exclude var distance: Double? = 0.0,
+    @Exclude @set:Exclude @get:Exclude var distanceText: String? = "",
+)
 
 
 data class SR(var tid:String = "",
@@ -67,6 +72,11 @@ class MyFirebase {
 
     interface FirebaseFeedListener {
         fun onSuccess(snapshot: QuerySnapshot)
+        fun onFailure(exception: Exception)
+    }
+
+    interface ImageInsertionListener {
+        fun onSuccess()
         fun onFailure(exception: Exception)
     }
 
@@ -94,6 +104,19 @@ class MyFirebase {
                 Log.d("DEBUG: failure", "$exception")
                 listener.onFailure(exception)
             }
+    }
+
+    private fun insertImageToFirebaseStorage(bitmap: Bitmap, path: String, listener: ImageInsertionListener? = null) {
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+        val reference = storageReference.child(path)
+        val uploadTask = reference.putBytes(data)
+        uploadTask.addOnFailureListener {
+            listener?.onFailure(it)
+        }.addOnSuccessListener {
+            listener?.onSuccess()
+        }
     }
 
     private fun insertToFirebaseStorage(bitmap: Bitmap, path: String, id: String? = null, dialog: Dialog? = null, successDialog: Dialog? = null, listener: TreasureInsertionListener?=null) {
@@ -182,10 +205,9 @@ class MyFirebase {
         }
     }
 
-    fun getTreasureImage(activity: Activity, tid: String, mutableLiveData: MutableLiveData<Bitmap>) {
-        var treasureImagePath = "images/treasures/${tid}/image.jpg"
-        val reference = storageReference.child(treasureImagePath)
-        mutableLiveData.value = Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888)
+    fun getImage(activity: Activity, imagePath: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+        val reference = storageReference.child(imagePath)
+        imageMutableLiveData.value = BitmapFactory.decodeResource(activity.resources, R.drawable.tf_logo)
         CoroutineScope(IO).launch {
             val bitmap = GlideApp.with(activity)
                 .asBitmap()
@@ -193,11 +215,22 @@ class MyFirebase {
                 .load(reference)
                 .submit()
                 .get()
-            withContext(Main) {
-                mutableLiveData.value = bitmap
-                Log.d("Debug", "Got Loading treasure image")
-            }
+            imageMutableLiveData.postValue(bitmap)
         }
+    }
+
+    fun getProfileImage(activity: FragmentActivity, uid: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+        var profileImagePath = "images/profile/${uid}.jpg"
+        getImage(activity, profileImagePath, imageMutableLiveData)
+    }
+
+    fun getTreasureImage(activity: Activity, tid: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+        var treasureImagePath = "images/treasures/${tid}/image.jpg"
+        getImage(activity, treasureImagePath, imageMutableLiveData)
+    }
+    fun getSRImage(activity: Activity, tid: String, sid: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+        var treasureImagePath = "images/treasures/${tid}/${sid}.jpg"
+        getImage(activity, treasureImagePath, imageMutableLiveData)
     }
 
     fun updateUser(uid: String, field: String, value: Any?) {
@@ -217,15 +250,20 @@ class MyFirebase {
     }
 
     fun addSR(resources: Resources, sR: SR) {
-        db.collection("treasures").document(sR.tid).update("sr", FieldValue.arrayUnion(sR.sid))
-
-        db.collection("submit_requests").document(sR.sid).set(sR)
-
         val sRImagePath =  "images/treasures/${sR.tid}/${sR.sid}.jpg"
         if (sR.sRImage == null) {
             sR.sRImage = BitmapFactory.decodeResource(resources, R.drawable.tf_logo)
         }
-        insertToFirebaseStorage(sR.sRImage!!, sRImagePath)
+        insertImageToFirebaseStorage(sR.sRImage!!, sRImagePath, object: ImageInsertionListener {
+            override fun onFailure(exception: Exception) {
+//                TODO("Not yet implemented")
+            }
+            override fun onSuccess() {
+                db.collection("treasures").document(sR.tid).update("sr", FieldValue.arrayUnion(sR.sid))
+                db.collection("submit_requests").document(sR.sid).set(sR)
+            }
+        })
+
     }
     fun removeSR(tid: String, sid: String, listener: DeletionImageListener?= null) {
         db.collection("treasures").document(tid).update("sr", FieldValue.arrayRemove(sid))
@@ -239,23 +277,6 @@ class MyFirebase {
     fun updateProfileImage(uid: String, image: Bitmap) {
         var profileImagePath = "images/profile/${uid}.jpg"
         insertToFirebaseStorage(image, profileImagePath)
-    }
-
-    fun getProfileImage(activity: FragmentActivity, uid: String, mutableLiveData: MutableLiveData<Bitmap>) {
-        var profileImagePath = "images/profile/${uid}.jpg"
-        val reference = storageReference.child(profileImagePath)
-        mutableLiveData.value = Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888)
-        CoroutineScope(IO).launch {
-            val bitmap = GlideApp.with(activity)
-                .asBitmap()
-                .error(com.google.android.material.R.drawable.ic_clock_black_24dp)
-                .load(reference)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .submit()
-                .get()
-                mutableLiveData.postValue(bitmap)
-        }
     }
 
     fun deleteImage(path: String, listener: DeletionImageListener? = null) {

@@ -1,20 +1,16 @@
 package com.AERYZ.treasurefind.main.ui.hider_map
 
-
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
-import com.AERYZ.treasurefind.VictoryActivity
+import com.AERYZ.treasurefind.main.ui.victory.VictoryActivity
 import com.AERYZ.treasurefind.databinding.ActivityHidermapBinding
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.MyUser
@@ -22,13 +18,15 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.toObject
 
-class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
+class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityHidermapBinding
@@ -43,6 +41,7 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var hiderDoneFragment: HiderDoneFragment
     private lateinit var hiderValidateFragment: HiderValidateFragment
     private var markerOptions = MarkerOptions()
+    private var circleOptions = CircleOptions()
 
     companion object {
         var tid_KEY = "tid"
@@ -55,6 +54,7 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityHidermapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        myFirebase.updateUser(uid, "status", 1)
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -122,7 +122,9 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     myFirebase.updateUser(uid, "in_session", "")
                     val intent = Intent(this, VictoryActivity::class.java)
                     intent.putExtra(wid_KEY, it.wid)
+                    intent.putExtra(tid_KEY, tid)
                     startActivity(intent)
+                    finish()
                 }
 
                 //update seeker list
@@ -138,6 +140,7 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
                                     }
                                     //change this line for issue #110
                                     mapViewModel.markers[seekerID] = mMap.addMarker(markerOptions)!!
+                                    mapViewModel.markers[seekerID]!!.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_seeker))
                                 }
                             }
                         Log.d("Debug Seeker location changed", seekerID)
@@ -205,10 +208,19 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
         mapViewModel.treasure.observe(this) {
             if (!isFirstTimeCenter) {
                 isFirstTimeCenter = true
-                markerOptions.position(LatLng(it.latitude!!, it.longitude!!))
+                val treasureLocation = LatLng(it.latitude!!, it.longitude!!)
+                markerOptions.position(treasureLocation)
+
                 //change this line to treasure icon issue #103
-                mMap.addMarker(markerOptions)
+                mMap.addMarker(markerOptions)!!.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_treasuretwo))
+
+
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude!!,it.longitude!!),17f))
+                circleOptions.center(treasureLocation)
+                circleOptions.radius(50.0)
+                circleOptions.fillColor(0x220000FF)
+                circleOptions.strokeColor(0x330000FF)
+                mMap.addCircle(circleOptions)
             }
         }
     }
@@ -216,4 +228,8 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
         return
     }
 
+    override fun onPause() {
+        super.onPause()
+        myFirebase.updateUser(uid, "status", 0)
+    }
 }
