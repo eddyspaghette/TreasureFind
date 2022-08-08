@@ -13,7 +13,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class FoundTreasureFragment : Fragment() {
-    private val testArray = arrayOf("Dog", "Cat", "Elephant","Dog", "Cat", "Elephant","Dog", "Cat", "Elephant","Dog", "Cat", "Elephant","Dog", "Cat", "Elephant")
+    private val testArray = arrayOf("Dog", "Cat", "Elephant","Dog", "Cat", "Elephant")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
