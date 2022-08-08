@@ -43,12 +43,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
 
-        <activity
-            android:name=".main.ui.hider_map.HiderMapActivity"
-            android:theme="@style/Theme.TreasureFind.NoActionBar"
-            android:exported="false"
-            android:label="@string/title_activity_hider_map" />
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id" />
@@ -58,10 +52,12 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
         <activity
             android:name=".main.entry_point.LoginActivity"
             android:exported="true"
-            android:theme="@style/Theme.TreasureFind.NoActionBar">
+            android:theme="@style/Theme.TreasureFind.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -69,19 +65,30 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".main.ui.hider_map.HiderMapActivity"
+            android:theme="@style/Theme.TreasureFind.NoActionBar"
+            android:exported="false"
+            android:label="@string/title_activity_hider_map"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".main.ui.seeker_map.SeekerMapActivity"
             android:theme="@style/Theme.TreasureFind.NoActionBar"
             android:exported="false"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".main.entry_point.MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.TreasureFind.NoActionBar" />
-        <activity android:name=".main.entry_point.onboarding.OnboardingActivity" />
+            android:theme="@style/Theme.TreasureFind.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".main.entry_point.onboarding.OnboardingActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".main.ui.treasuredetails.TreasureDetailsActivity"
             android:exported="false"
-            android:parentActivityName=".main.entry_point.MainActivity" />
+            android:parentActivityName=".main.entry_point.MainActivity"
+            android:screenOrientation="portrait"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
