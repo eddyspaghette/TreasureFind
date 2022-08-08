@@ -137,7 +137,7 @@ object Util {
         return oldPolyLineArray
     }
 
-    fun calculateDistance(googleMap: GoogleMap, latlngStart: LatLng, latlngEnd: LatLng, context: Context): Int {
+    fun calculateDistance(latlngStart: LatLng, latlngEnd: LatLng, context: Context): Int {
         val ai: ApplicationInfo = context.applicationContext.packageManager
             .getApplicationInfo(context.applicationContext.packageName, PackageManager.GET_META_DATA)
         val MapsAPI_Key = ai.metaData["com.google.android.geo.API_KEY"].toString()

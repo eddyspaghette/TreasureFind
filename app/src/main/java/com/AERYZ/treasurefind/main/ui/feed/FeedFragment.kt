@@ -49,7 +49,7 @@ class FeedFragment : Fragment(), MenuProvider {
         savedInstanceState: Bundle?
     ): View {
         feedViewModel =
-            ViewModelProvider(this)[FeedViewModel::class.java]
+            ViewModelProvider(this, FeedFragmentViewModelFactory(requireActivity()))[FeedViewModel::class.java]
 
         _binding = FragmentFeedBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -68,6 +68,7 @@ class FeedFragment : Fragment(), MenuProvider {
             setView()
         }
         listRecyclerView.adapter = feedAdapter
+
 
         swipeRefreshLayout.setOnRefreshListener {
             myFirebase.getAllTreasures(feedViewModel)
@@ -94,6 +95,12 @@ class FeedFragment : Fragment(), MenuProvider {
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         return false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        myFirebase.getAllTreasures(feedViewModel)
+        listRecyclerView.adapter!!.notifyDataSetChanged()
     }
 
     private fun setView() {

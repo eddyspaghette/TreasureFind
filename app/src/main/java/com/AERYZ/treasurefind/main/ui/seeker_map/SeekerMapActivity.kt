@@ -158,6 +158,11 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     supportFragmentManager.beginTransaction().replace(R.id.seeker_map_fragmentcontainerview, waitFragment).commit()
                 }
 
+                // if winner is the current user
+                if (it.wid == uid) {
+                    myFirebase.addToFoundList(uid, tid)
+                }
+
                 //if winner is determined
                 if (it.wid != "") {
                     myFirebase.updateUser(uid, "in_session", "")
@@ -217,7 +222,20 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         })
+        //add quit button
+        val quitButton = findViewById<Button>(R.id.btn_seeker_giveup)
+        quitButton.setOnClickListener{
+            myFirebase.removeSR(tid,uid)
+            myFirebase.removeSeeker(tid,uid)
+            myFirebase.updateUser(uid,"in_session","")
+            finish()
+        }
 
+        mapViewModel.myUser.observe(this) {
+            if (it != null && it.in_session == "") {
+                finish()
+            }
+        }
     }
 
     private fun setMapInteraction(mMap: GoogleMap, value: Boolean) {
@@ -252,6 +270,12 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
             val currentLocation = LatLng(it!!.latitude,it.longitude)
             if (!isFirstTimeCenter) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,18f))
+
+                //further loading animation edit here.#146
+
+
+
+                ///////////////////////////////////////////
                 isFirstTimeCenter = true
 
 

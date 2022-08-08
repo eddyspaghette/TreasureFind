@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".main.ui.profile.OwnTreasureFragment">
 
-    <ListView
-        android:id="@+id/listView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ownList_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
