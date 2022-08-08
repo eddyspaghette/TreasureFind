@@ -25,11 +25,13 @@
                 android:id="@+id/Text_tid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="14sp"
                 android:textColor="@color/primary_dark"/>
             <TextView
                 android:id="@+id/Text_numPlayers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="14sp"
                 android:textColor="@color/primary_dark"/>
         </LinearLayout>
 

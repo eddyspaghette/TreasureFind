@@ -103,7 +103,7 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Ima
         }
 
         val tid_TextView: TextView = findViewById(R.id.Text_tid)
-        val temp = "tid: ${tid}"
+        val temp = "TreasureID: ${tid}"
         tid_TextView.setText(temp)
 
         //Service View Model

@@ -62,7 +62,6 @@ class HiderValidateFragment : Fragment() {
         val relativeLayout: RelativeLayout = view.findViewById(R.id.hider_validate_relativelayout)
 
         accept_btn.setOnClickListener() {
-            Toast.makeText(requireActivity(), "Ok!", Toast.LENGTH_SHORT).show()
             if (viewModel.treasure.value != null && viewModel.treasure.value!!.sr.size > 0) {
                 val wid = viewModel.treasure.value!!.sr[0]
                 myFirebase.updateTreasure(tid, "wid", wid)

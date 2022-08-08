@@ -85,8 +85,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
 
         tid  = intent.getStringExtra(tid_KEY)!!
         val tid_TextView: TextView = findViewById(R.id.Text_tid)
-        val temp = "tid: ${tid}"
-        tid_TextView.text = temp
+        tid_TextView.text = "TreasureID: ${tid}"
 
         locatetreasure_btn = findViewById(R.id.locatetreasure_btn)
 
@@ -138,9 +137,9 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
         val hoststatus_TextView: TextView = findViewById(R.id.Text_hostOnline)
         mapViewModel.hiderStatus.observe(this) {
             if (it == 0) {
-                hoststatus_TextView.text = "Host: Offline"
+                hoststatus_TextView.text = "Hider: Offline"
             } else {
-                hoststatus_TextView.text = "Host: Online"
+                hoststatus_TextView.text = "Hider: Online"
             }
         }
 
