@@ -22,7 +22,6 @@ class ProfileViewModel(private val activity: FragmentActivity) : ViewModel() {
     init {
         val uid = getUid()
         if (uid != "") {
-            println("DEBUG: uid $uid")
             myFirebase.getProfileImage(activity, uid, profilePicture)
         }
         populateLists()
@@ -37,8 +36,6 @@ class ProfileViewModel(private val activity: FragmentActivity) : ViewModel() {
                 val userObject = it.toObject<MyUser>()
                 ownedList.value = userObject!!.ownedList
                 foundList.value = userObject.foundList
-                println("DEBUG: ownedList: ${ownedList.value}")
-                println("DEBUG: foundList ${foundList.value}")
             }
             .addOnFailureListener {
                 // TODO: handle exception
