@@ -36,7 +36,10 @@ data class MyUser(
     var latitude: Double = 0.0,
     var longitude: Double = 0.0,
     var status: Int = 0,
-    var score: Int = 0)
+    var score: Int = 0,
+    var ownedList: ArrayList<String> = arrayListOf<String>(),
+    var foundList: ArrayList<String> = arrayListOf<String>(),
+)
 
 data class Treasure(
     var oid: String? = "",
@@ -186,6 +189,7 @@ class MyFirebase {
                 val treasureImagePath = "images/treasures/${it.id}/image.jpg"
                 it.update("treasureImagePath", treasureImagePath)
                 it.update("tid", it.id)
+                addToOwnedList(treasure.oid!!, it.id)
                 treasure.treasureImage?.let { it1 ->
                     insertToFirebaseStorage(it1, treasureImagePath, it.id, dialog, successDialog, listener)
                 }
@@ -239,6 +243,14 @@ class MyFirebase {
 
     fun updateTreasure(tid: String, field: String, value: String) {
         db.collection("treasures").document(tid).update(field, value)
+    }
+
+    fun addToFoundList(uid: String, tid: String) {
+        db.collection("users").document(uid).update("foundList", FieldValue.arrayUnion(tid))
+    }
+
+    fun addToOwnedList(uid: String, tid: String) {
+        db.collection("users").document(uid).update("ownedList", FieldValue.arrayUnion(tid))
     }
 
     fun addSeeker(tid: String, sid: String) {

@@ -123,6 +123,11 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     supportFragmentManager.beginTransaction().replace(R.id.seeker_map_fragmentcontainerview, waitFragment).commit()
                 }
 
+                // if winner is the current user
+                if (it.wid == uid) {
+                    myFirebase.addToFoundList(uid, tid)
+                }
+
                 //if winner is determined
                 if (it.wid != "") {
                     myFirebase.updateUser(uid, "in_session", "")
