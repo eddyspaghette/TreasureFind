@@ -245,11 +245,13 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Ima
         }
 
         mMap.setOnMarkerClickListener { marker ->
-            if (marker.isInfoWindowShown) {
-                marker.hideInfoWindow()
-            }
-            else {
-                marker.showInfoWindow()
+            if (marker.title != "Treasure") {
+                if (marker.isInfoWindowShown) {
+                    marker.hideInfoWindow()
+                }
+                else {
+                    marker.showInfoWindow()
+                }
             }
             true
         }
@@ -282,7 +284,9 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Ima
                 markerOptions.position(treasureLocation)
 
                 //change this line to treasure icon issue #103
-                mMap.addMarker(markerOptions)!!.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_treasuretwo))
+                val marker = mMap.addMarker(markerOptions)!!
+                marker.title = "Treasure"
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_treasuretwo))
 
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude!!,it.longitude!!),17f))
