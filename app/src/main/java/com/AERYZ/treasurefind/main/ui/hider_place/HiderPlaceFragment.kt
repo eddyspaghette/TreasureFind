@@ -25,6 +25,7 @@ import com.AERYZ.treasurefind.main.services.TrackingService
 import com.AERYZ.treasurefind.main.ui.dialogs.ProgressDialog
 import com.AERYZ.treasurefind.main.ui.hider_map.HiderMapActivity
 import com.AERYZ.treasurefind.main.ui.seeker_map.SeekerMapActivity
+import com.AERYZ.treasurefind.main.util.Util
 import com.google.firebase.auth.FirebaseAuth
 import java.lang.Exception
 
@@ -34,8 +35,6 @@ class HiderPlaceFragment : Fragment(), MyFirebase.TreasureInsertionListener {
     private lateinit var descEditText: EditText
     private lateinit var cameraResultListener: ActivityResultLauncher<Intent>
 
-    private var isBind = false
-    private lateinit var serviceIntent: Intent
     private var myFirebase = MyFirebase()
     private var uid = FirebaseAuth.getInstance().uid!!
 
@@ -57,14 +56,9 @@ class HiderPlaceFragment : Fragment(), MyFirebase.TreasureInsertionListener {
             treasureImageView.setImageBitmap(it)
         }
 
-        serviceIntent = Intent(requireContext(), TrackingService::class.java)
-
         titleEditText = view.findViewById(R.id.treasureTitle)
         descEditText = view.findViewById(R.id.treasureDescription)
 
-        viewModel.location.observe(requireActivity()) {
-            Log.d("Debug", "${it.latitude} ${it.longitude}")
-        }
 
         cameraResultListener = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
@@ -76,33 +70,9 @@ class HiderPlaceFragment : Fragment(), MyFirebase.TreasureInsertionListener {
 
         setButtonListeners(view)
 
-        requireActivity().startService(serviceIntent)
-        bindService()
-
         return view
     }
 
-    fun bindService(){
-        if(!isBind){
-            requireActivity().applicationContext.bindService(serviceIntent, viewModel, Context.BIND_AUTO_CREATE)
-            isBind = true
-            println("bind service!")
-        }
-    }
-
-    private fun unBindService(){
-        if (isBind) {
-            requireActivity().applicationContext.unbindService(viewModel)
-            isBind = false
-            println("unbind service!!!!!")
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unBindService()
-        requireActivity().stopService(serviceIntent)
-    }
 
     // set all the button listeners
     private fun setButtonListeners(view: View) {
@@ -113,28 +83,23 @@ class HiderPlaceFragment : Fragment(), MyFirebase.TreasureInsertionListener {
     private fun addTreasureBtnListener(view: View) {
         val btn: Button = view.findViewById(R.id.addButton)
         btn.setOnClickListener {
-            if (viewModel.location.value != null) {
-                Log.d("Debug", "Failed to locate")
-
-                val location = viewModel.location.value
-                val uid = FirebaseAuth.getInstance().currentUser?.uid
-                uid?.let {
-                    val myFirebase = MyFirebase()
-                    val myTreasure = Treasure(
-                        it,
-                        "",
-                        titleEditText.text.toString(),
-                        descEditText.text.toString(),
-                        location!!.latitude,
-                        location.longitude,
-                        viewModel.treasurePhoto.value!!
-                    )
-                    val dialog = ProgressDialog.progressDialog(requireActivity())
-                    val successDialog = ProgressDialog.successDialog(requireActivity())
-                    myFirebase.insert(myTreasure, dialog, successDialog, this)
-                }
+            val location = Util.getCurrentLocation(requireActivity())
+            uid.let {
+                val myFirebase = MyFirebase()
+                val myTreasure = Treasure(
+                    it,
+                    "",
+                    titleEditText.text.toString(),
+                    descEditText.text.toString(),
+                    location.latitude,
+                    location.longitude,
+                    viewModel.treasurePhoto.value!!
+                )
+                val dialog = ProgressDialog.progressDialog(requireActivity())
+                val successDialog = ProgressDialog.successDialog(requireActivity())
+                myFirebase.insert(myTreasure, dialog, successDialog, this)
             }
-        }
+    }
     }
 
     private fun setTakePhotoBtnListener(view: View) {

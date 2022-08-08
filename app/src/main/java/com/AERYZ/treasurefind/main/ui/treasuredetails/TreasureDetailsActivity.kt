@@ -72,6 +72,7 @@ class TreasureDetailsActivity : AppCompatActivity() {
             intent.putExtra(SeekerMapActivity.tid_KEY, tid)
             myFirebase.addSeeker(tid, FirebaseAuth.getInstance().uid!!)
             startActivity(intent)
+            finish()
         }
     }
 }
