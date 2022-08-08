@@ -184,7 +184,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         })
         //add quit button
-        val quitButton= findViewById<Button>(R.id.setSeekQuitButton)
+        val quitButton = findViewById<Button>(R.id.btn_seeker_giveup)
         quitButton.setOnClickListener{
             myFirebase.removeSR(tid,uid)
             myFirebase.removeSeeker(tid,uid)

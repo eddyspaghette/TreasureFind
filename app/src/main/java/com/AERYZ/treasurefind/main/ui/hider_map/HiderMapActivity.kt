@@ -151,9 +151,8 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
         }
 
         //set quit button
-        val quitButton= findViewById<Button>(R.id.setHidQuitButton)
+        val quitButton= findViewById<Button>(R.id.btn_hider_giveup)
         quitButton.setOnClickListener{
-            //need figure out later here
             if(mapViewModel.treasure.value!=null){
                 for (i in mapViewModel.treasure.value!!.seekers){
                     myFirebase.updateUser(i,"in_session","")

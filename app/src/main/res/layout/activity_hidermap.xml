@@ -32,11 +32,6 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/primary_dark"/>
         </LinearLayout>
-        <Button
-            android:id="@+id/setHidQuitButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Give Up" />
     </RelativeLayout>
 
     <include

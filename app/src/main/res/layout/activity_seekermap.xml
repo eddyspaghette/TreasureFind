@@ -48,11 +48,6 @@
             android:layout_marginTop="70dp"
             android:layout_marginRight="13dp"
             android:layout_alignParentRight="true"/>
-        <Button
-            android:id="@+id/setSeekQuitButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Give Up" />
     </RelativeLayout>
 
     <include
