@@ -100,16 +100,16 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
         hiderValidateFragment = HiderValidateFragment()
         hiderValidateFragment.arguments = bundle
 
-        //Getting number of seekers
+
         val numSeekers_TextView: TextView = findViewById(R.id.Text_numPlayers)
         myFirebase.getTreasure(tid, mapViewModel.treasure)
         mapViewModel.treasure.observe(this) {
-            val text = "Joined: ${it.seekers.size} Seekers"
-            numSeekers_TextView.text = text
-
-
 
             if (it != null) {
+                //Getting number of seekers
+                val text = "Joined: ${it.seekers.size} Seekers"
+                numSeekers_TextView.text = text
+                
                 //replace fragment
                 if (it.sr.size == 0) {
                     supportFragmentManager.beginTransaction().replace(R.id.hider_map_fragmentcontainerview, hiderDoneFragment).commit()
