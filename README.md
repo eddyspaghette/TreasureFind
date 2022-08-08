@@ -27,7 +27,7 @@ You can choose one of the following methods:
 You can find our realeases and install it directly [here](https://github.com/eddyspaghette/TreasureFind/releases/).
 
 ### 3. Download from store
-<a href='http://play.google.com/store/?pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+TBA
 
 ## Gameplay
 The most important step: **Have Fun**
