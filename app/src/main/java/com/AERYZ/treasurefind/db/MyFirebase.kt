@@ -199,7 +199,6 @@ class MyFirebase {
                 val treasureImagePath = "images/treasures/${it.id}/image.jpg"
                 it.update("treasureImagePath", treasureImagePath)
                 it.update("tid", it.id)
-                addToOwnedList(treasure.oid!!, it.id)
                 treasure.treasureImage?.let { it1 ->
                     insertToFirebaseStorage(it1, treasureImagePath, it.id, dialog, successDialog, listener)
                 }
@@ -277,7 +276,7 @@ class MyFirebase {
         db.collection("users").document(uid).update("foundList", FieldValue.arrayUnion(tid))
     }
 
-    private fun addToOwnedList(uid: String, tid: String) {
+    fun addToOwnedList(uid: String, tid: String) {
         db.collection("users").document(uid).update("ownedList", FieldValue.arrayUnion(tid))
     }
 

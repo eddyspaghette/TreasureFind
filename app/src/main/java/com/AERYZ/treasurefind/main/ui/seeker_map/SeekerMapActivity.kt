@@ -165,7 +165,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
 
                 // if winner is the current user
                 if (it.wid == uid) {
-                    myFirebase.addToFoundList(uid, tid)
+
                 }
 
                 //if winner is determined

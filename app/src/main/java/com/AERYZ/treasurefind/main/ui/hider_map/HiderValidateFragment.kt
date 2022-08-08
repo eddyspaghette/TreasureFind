@@ -89,6 +89,8 @@ class HiderValidateFragment : Fragment() {
                 myFirebase.updateTreasure(tid, "wid", wid)
                 myFirebase.getUserDocument(wid).update("score", FieldValue.increment(1))
                 myFirebase.getUserDocument(uid).update("score", FieldValue.increment(1))
+                myFirebase.addToFoundList(wid, tid)
+                myFirebase.addToOwnedList(uid, tid)
             }
         }
 
