@@ -40,7 +40,7 @@
         android:id="@+id/btn_hider_giveup"
         style="@style/Widget.MaterialComponents.Button.Icon"
         android:layout_width="148dp"
-        android:layout_height="65dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Destroy Session"
         android:textColor="@color/title"

@@ -3,7 +3,7 @@
     android:layout_height="match_parent">
     <com.AERYZ.treasurefind.main.ui.livecamera.AutoFitTextureView
         android:id="@+id/texture"
-        android:layout_width="480px"
-        android:layout_height="640px"
+        android:layout_width="300dp"
+        android:layout_height="600dp"
         android:layout_alignParentTop="true" />
 </RelativeLayout>
