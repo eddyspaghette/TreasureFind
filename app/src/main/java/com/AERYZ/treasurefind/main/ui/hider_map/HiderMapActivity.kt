@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -55,6 +56,7 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
 
         myFirebase.updateUser(uid, "status", 1)
 
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.hider_map) as SupportMapFragment
@@ -98,16 +100,16 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
         hiderValidateFragment = HiderValidateFragment()
         hiderValidateFragment.arguments = bundle
 
-        //Getting number of seekers
+
         val numSeekers_TextView: TextView = findViewById(R.id.Text_numPlayers)
         myFirebase.getTreasure(tid, mapViewModel.treasure)
         mapViewModel.treasure.observe(this) {
-            val text = "Joined: ${it.seekers.size} Seekers"
-            numSeekers_TextView.text = text
-
-
 
             if (it != null) {
+                //Getting number of seekers
+                val text = "Joined: ${it.seekers.size} Seekers"
+                numSeekers_TextView.text = text
+                
                 //replace fragment
                 if (it.sr.size == 0) {
                     supportFragmentManager.beginTransaction().replace(R.id.hider_map_fragmentcontainerview, hiderDoneFragment).commit()
@@ -148,6 +150,19 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
             }
         }
 
+        //set quit button
+        val quitButton= findViewById<Button>(R.id.btn_hider_giveup)
+        quitButton.setOnClickListener{
+            if(mapViewModel.treasure.value!=null){
+                for (i in mapViewModel.treasure.value!!.seekers){
+                    myFirebase.updateUser(i,"in_session","")
+                    myFirebase.removeSR(tid,i)
+                }
+            }
+            myFirebase.updateUser(uid,"in_session","")
+            myFirebase.getTreasureDocument(tid).delete()
+            finish()
+        }
 
     }
 
