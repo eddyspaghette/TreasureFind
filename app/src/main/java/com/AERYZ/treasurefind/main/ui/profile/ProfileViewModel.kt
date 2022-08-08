@@ -12,11 +12,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import java.lang.Exception
 
-class ProfileViewModel(private val activity: FragmentActivity) : ViewModel() {
+class ProfileViewModel(private val activity: FragmentActivity) : ViewModel(), MyFirebase.RankInterfaceListener {
     var profilePicture = MutableLiveData<Bitmap>()
     var ownedList = MutableLiveData<ArrayList<String>>()
     var foundList = MutableLiveData<ArrayList<String>>()
+    var foundNumber = MutableLiveData<Int>()
+    var ownNumber = MutableLiveData<Int>()
+    var rank = MutableLiveData<Int>()
+
     private val myFirebase = MyFirebase()
 
     init {
@@ -24,6 +29,7 @@ class ProfileViewModel(private val activity: FragmentActivity) : ViewModel() {
         if (uid != "") {
             myFirebase.getProfileImage(activity, uid, profilePicture)
         }
+        myFirebase.returnRank(uid, this)
         populateLists()
     }
 
@@ -34,8 +40,12 @@ class ProfileViewModel(private val activity: FragmentActivity) : ViewModel() {
             .get()
             .addOnSuccessListener {
                 val userObject = it.toObject<MyUser>()
-                ownedList.value = userObject!!.ownedList
-                foundList.value = userObject.foundList
+                val retOwnedList = userObject!!.ownedList
+                val retFoundList = userObject.foundList
+                ownedList.value = retOwnedList
+                foundList.value = retFoundList
+                foundNumber.value = retFoundList.size
+                ownNumber.value = retOwnedList.size
             }
             .addOnFailureListener {
                 // TODO: handle exception
@@ -48,6 +58,15 @@ class ProfileViewModel(private val activity: FragmentActivity) : ViewModel() {
         val fbInstance = FirebaseAuth.getInstance().currentUser
         // return uid if it exists
         return fbInstance?.uid  ?: ""
+    }
+
+    override fun onSuccess(size: Int) {
+        rank.value = size
+        println("DEBUG: size $size")
+    }
+
+    override fun onFailure(exception: Exception) {
+        TODO("Not yet implemented")
     }
 }
 

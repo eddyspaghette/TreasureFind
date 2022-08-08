@@ -97,6 +97,11 @@ class MyFirebase {
         fun onFailure(exception: Exception)
     }
 
+    interface RankInterfaceListener {
+        fun onSuccess(size: Int)
+        fun onFailure(exception: Exception)
+    }
+
     fun getAllTreasures(listener: FirebaseFeedListener) {
         db.collection("treasures")
             .get()
@@ -302,5 +307,26 @@ class MyFirebase {
         }
     }
 
+    fun returnRank(uid: String, listener: RankInterfaceListener) {
+        val userRef = getUserDocument(uid)
+        userRef
+            .get()
+            .addOnSuccessListener {
+                val myUser = it.toObject<MyUser>()
+                val query = db.collection("users")
+                    .whereGreaterThanOrEqualTo("score", myUser!!.score)
+                    .orderBy("score", Query.Direction.DESCENDING)
+                query
+                    .get()
+                    .addOnSuccessListener { snapshot ->
+                        listener.onSuccess(snapshot.size())
+                    }
+            }
+            .addOnFailureListener{
+                listener.onFailure(it)
+            }
+    }
+
 
 }
+

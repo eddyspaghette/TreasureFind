@@ -5,17 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager2.widget.ViewPager2
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.AERYZ.treasurefind.R
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 
 class FoundTreasureFragment : Fragment() {
     private lateinit var viewModel: ProfileViewModel
     private lateinit var modelFactory: ProfileFragmentViewModelFactory
+    private lateinit var listRecyclerView: RecyclerView
+    private lateinit var foundTreasureFragmentAdapter: FoundTreasureFragmentAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -23,14 +22,20 @@ class FoundTreasureFragment : Fragment() {
 
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_found_treasure, container, false)
+
+        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         modelFactory = ProfileFragmentViewModelFactory(requireActivity())
         viewModel = ViewModelProvider(this, modelFactory)[ProfileViewModel::class.java]
+        listRecyclerView = view.findViewById(R.id.foundList_recycler_view)
+        listRecyclerView.layoutManager = layoutManager
+        foundTreasureFragmentAdapter = FoundTreasureFragmentAdapter(requireActivity(), arrayListOf())
 
-        val listView: ListView = view.findViewById(R.id.listView)
         viewModel.foundList.observe(requireActivity()) {
-            val arrayAdapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, arrayOf(it))
-            listView.adapter = arrayAdapter
+            foundTreasureFragmentAdapter.updateList(it)
+            foundTreasureFragmentAdapter.notifyDataSetChanged()
         }
+
+        listRecyclerView.adapter = foundTreasureFragmentAdapter
 
 
 

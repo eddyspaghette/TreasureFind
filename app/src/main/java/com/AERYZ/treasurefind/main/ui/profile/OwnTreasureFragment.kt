@@ -5,15 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.AERYZ.treasurefind.R
 
 class OwnTreasureFragment : Fragment() {
     private lateinit var viewModel: ProfileViewModel
     private lateinit var modelFactory: ProfileFragmentViewModelFactory
-//    private val testArray = arrayOf("Mountain")
+    private lateinit var listRecyclerView: RecyclerView
+    private lateinit var ownTreasureFragmentAdapter: OwnTreasureFragmentAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -21,14 +22,19 @@ class OwnTreasureFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_own_treasure, container, false)
 
+        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         modelFactory = ProfileFragmentViewModelFactory(requireActivity())
         viewModel = ViewModelProvider(this, modelFactory)[ProfileViewModel::class.java]
+        listRecyclerView = view.findViewById(R.id.ownList_recycler_view)
+        listRecyclerView.layoutManager = layoutManager
+        ownTreasureFragmentAdapter = OwnTreasureFragmentAdapter(requireActivity(), arrayListOf())
 
-        val listView: ListView = view.findViewById(R.id.listView)
         viewModel.ownedList.observe(requireActivity()) {
-            val arrayAdapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, arrayListOf(it))
-            listView.adapter = arrayAdapter
+            ownTreasureFragmentAdapter.updateList(it)
+            ownTreasureFragmentAdapter.notifyDataSetChanged()
         }
+
+        listRecyclerView.adapter = ownTreasureFragmentAdapter
 
         return view
     }
