@@ -234,7 +234,7 @@ class MyFirebase {
         }
     }
 
-    fun skipCacheGetImage(activity: Activity, imagePath: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+    fun skipCacheGetImage(activity: Activity, imagePath: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: ImageGetListener? = null) {
         val reference = storageReference.child(imagePath)
         imageMutableLiveData.value = BitmapFactory.decodeResource(activity.resources, R.drawable.tf_logo)
         CoroutineScope(IO).launch {
@@ -247,10 +247,11 @@ class MyFirebase {
                 .submit()
                 .get()
             imageMutableLiveData.postValue(bitmap)
+            listener?.onSuccess()
         }
     }
 
-    fun getProfileImage(activity: FragmentActivity, uid: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+    fun getProfileImage(activity: FragmentActivity, uid: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: ImageGetListener? = null) {
         var profileImagePath = "images/profile/${uid}.jpg"
         skipCacheGetImage(activity, profileImagePath, imageMutableLiveData)
     }
