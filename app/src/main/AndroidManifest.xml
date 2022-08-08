@@ -58,14 +58,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
-        <activity
-            android:name=".main.ui.bottomsheet.BottomSheetActivity"
-            android:exported="true"
-            android:parentActivityName=".main.entry_point.MainActivity" />
-        <activity
-            android:name=".main.ui.livecamera.LiveCameraActivity"
-            android:exported="false" />
         <activity
             android:name=".main.entry_point.LoginActivity"
             android:exported="true"

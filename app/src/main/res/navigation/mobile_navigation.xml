@@ -15,18 +15,12 @@
         android:id="@+id/nav_hider"
         android:name="com.AERYZ.treasurefind.main.ui.hider_place.HiderPlaceFragment"
         android:label="@string/menu_hider_place"
-        tools:layout="@layout/fragment_test" />
+        tools:layout="@layout/fragment_hider_place" />
 
     <fragment
         android:id="@+id/nav_profile"
         android:name="com.AERYZ.treasurefind.main.ui.profile.ProfileFragment"
         android:label="@string/menu_profile"
         tools:layout="@layout/fragment_profile" />
-
-    <fragment
-        android:id="@+id/nav_test"
-        android:name="com.AERYZ.treasurefind.main.ui.test.TestFragment"
-        android:label="@string/menu_test"
-        tools:layout="@layout/fragment_test" />
 
 </navigation>
