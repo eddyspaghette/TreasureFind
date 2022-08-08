@@ -15,9 +15,9 @@ import com.google.firebase.firestore.ktx.toObject
 import com.mikhaellopez.circularimageview.CircularImageView
 
 
-class SeekerInfoWindowAdapter(var activity: Activity,
-                              var seekers: HashMap<String,MutableLiveData<MyUser>>,
-                              var seekersImage: HashMap<String,MutableLiveData<Bitmap>>): GoogleMap.InfoWindowAdapter {
+class MyInfoWindowAdapter(var activity: Activity,
+                          var seekers: HashMap<String,MutableLiveData<MyUser>>,
+                          var seekersImage: HashMap<String,MutableLiveData<Bitmap>>): GoogleMap.InfoWindowAdapter {
 
     override fun getInfoContents(p0: Marker): View? {
         // Getting view from the layout file info_window_layout

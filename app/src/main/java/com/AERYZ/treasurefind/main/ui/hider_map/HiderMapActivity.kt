@@ -17,6 +17,7 @@ import com.AERYZ.treasurefind.main.ui.victory.VictoryActivity
 import com.AERYZ.treasurefind.databinding.ActivityHidermapBinding
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.MyUser
+import com.AERYZ.treasurefind.main.MyInfoWindowAdapter
 import com.AERYZ.treasurefind.main.util.Util
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -29,8 +30,9 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.toObject
+import java.lang.Exception
 
-class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
+class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.ImageGetListener  {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityHidermapBinding
@@ -41,6 +43,7 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
     private val myFirebase = MyFirebase()
     private val uid = FirebaseAuth.getInstance().uid!!
     private var tid: String = ""
+    private lateinit var myInfoWindowAdapter: MyInfoWindowAdapter
 
     private lateinit var hiderDoneFragment: HiderDoneFragment
     private lateinit var hiderValidateFragment: HiderValidateFragment
@@ -178,9 +181,20 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
                                     mapViewModel.markers[seekerID]?.title = seekerID
                                     mapViewModel.markers[seekerID]!!.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_seeker))
                                 }
+                                mapViewModel.seekersImage[seekerID] = MutableLiveData()
+                                myFirebase.getProfileImage(this, seekerID, mapViewModel.seekersImage[seekerID]!!, this)
                             }
                         Log.d("Debug Seeker location changed", seekerID)
                         mapViewModel.SeekerUpdateListener(seekerID)
+                    }
+                }
+
+                for (seekerID in mapViewModel.seekers.keys) {
+                    if (!it.seekers.contains(seekerID)) {
+                        mapViewModel.seekers.remove(seekerID)
+                        mapViewModel.markers[seekerID]!!.remove()
+                        mapViewModel.seekersImage.remove(seekerID)
+                        mapViewModel.seekers_size.value = mapViewModel.seekers_size.value?.minus(1)
                     }
                 }
             }
@@ -219,24 +233,27 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+
+        myInfoWindowAdapter = MyInfoWindowAdapter(this, HashMap(), HashMap())
+        mMap.setInfoWindowAdapter(myInfoWindowAdapter)
+
+
+        mapViewModel.seekers_size.observe(this) {
+            myInfoWindowAdapter.seekers = mapViewModel.seekers
+            myInfoWindowAdapter.seekersImage = mapViewModel.seekersImage
+            println("Debug I'm here")
+        }
+
         mMap.setOnMarkerClickListener { marker ->
-            Log.d("debug","gose listener")
-            for (seekerID in mapViewModel.markers.keys){
-                Log.d("debug","gose here")
-                if (seekerID == marker.title){
-                    if(marker.isInfoWindowShown){
-                        marker.hideInfoWindow()
-                    }
-                    else{
-                        marker.showInfoWindow()
-                    }
-                }
-                else{
-                    marker.hideInfoWindow()
-                }
+            if (marker.isInfoWindowShown) {
+                marker.hideInfoWindow()
+            }
+            else {
+                marker.showInfoWindow()
             }
             true
         }
+
         try {
             mMap.isMyLocationEnabled = true
             mMap.uiSettings.isMyLocationButtonEnabled = true
@@ -281,6 +298,15 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
             }
         }
     }
+
+    override fun onSuccess() {
+        mapViewModel.seekers_size.postValue(mapViewModel.seekers_size.value?.plus(1))
+    }
+
+    override fun onFailure(exception: Exception) {
+        //TODO("Not yet implemented")
+    }
+
     override fun onBackPressed() {
         return
     }

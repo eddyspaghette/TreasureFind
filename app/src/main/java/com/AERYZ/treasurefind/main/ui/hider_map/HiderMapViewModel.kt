@@ -1,5 +1,6 @@
 package com.AERYZ.treasurefind.main.ui.hider_map
 
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,8 +16,9 @@ import com.google.firebase.ktx.Firebase
 
 class HiderMapViewModel(private val tid: String): ServiceViewModel() {
     var treasure = MutableLiveData<Treasure>()
-
     var seekers = hashMapOf<String, MutableLiveData<MyUser>>()
+    var seekersImage = hashMapOf<String, MutableLiveData<Bitmap>>()
+    var seekers_size = MutableLiveData<Int>(0)
     var markers = hashMapOf<String, Marker>()
     var isInteract = MutableLiveData(true)
     val db = Firebase.firestore

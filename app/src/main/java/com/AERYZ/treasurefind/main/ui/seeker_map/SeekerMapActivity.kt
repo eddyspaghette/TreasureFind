@@ -4,13 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
@@ -18,7 +16,7 @@ import com.AERYZ.treasurefind.main.ui.victory.VictoryActivity
 import com.AERYZ.treasurefind.databinding.ActivitySeekermapBinding
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.MyUser
-import com.AERYZ.treasurefind.main.SeekerInfoWindowAdapter
+import com.AERYZ.treasurefind.main.MyInfoWindowAdapter
 import com.AERYZ.treasurefind.main.services.TrackingService
 import com.AERYZ.treasurefind.main.util.Util
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -30,7 +28,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.toObject
 import java.lang.Exception
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.random.Random
@@ -45,7 +42,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
     private var circleOptions = CircleOptions()
     private lateinit var locatetreasure_btn: ImageView
     private var polylineArray: ArrayList<Polyline> = ArrayList()
-    private lateinit var seekerInfoWindowAdapter: SeekerInfoWindowAdapter
+    private lateinit var myInfoWindowAdapter: MyInfoWindowAdapter
 
     //service
     private lateinit var serviceIntent: Intent
@@ -266,13 +263,13 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        seekerInfoWindowAdapter = SeekerInfoWindowAdapter(this, HashMap(), HashMap())
-        mMap.setInfoWindowAdapter(seekerInfoWindowAdapter)
+        myInfoWindowAdapter = MyInfoWindowAdapter(this, HashMap(), HashMap())
+        mMap.setInfoWindowAdapter(myInfoWindowAdapter)
 
 
         mapViewModel.seekers_size.observe(this) {
-            seekerInfoWindowAdapter.seekers = mapViewModel.seekers
-            seekerInfoWindowAdapter.seekersImage = mapViewModel.seekersImage
+            myInfoWindowAdapter.seekers = mapViewModel.seekers
+            myInfoWindowAdapter.seekersImage = mapViewModel.seekersImage
             println("Debug I'm here")
         }
 
@@ -285,6 +282,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
             }
             true
         }
+
         try {
             mMap.isMyLocationEnabled = true
             mMap.uiSettings.isMyLocationButtonEnabled = true
@@ -307,8 +305,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
 
                 ///////////////////////////////////////////
                 isFirstTimeCenter = true
-
-
             }
 
             if (!Util.checkInsideRadius(mapViewModel.treasureFakeLocation, 50.0, currentLocation))
