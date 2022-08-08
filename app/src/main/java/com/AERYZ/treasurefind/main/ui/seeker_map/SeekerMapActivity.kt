@@ -56,16 +56,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         binding = ActivitySeekermapBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        //add quit button
-        val quitButton= findViewById<Button>(R.id.setSeekQuitButton)
-        quitButton.setOnClickListener{
-            myFirebase.removeSR(tid,sid)
-            myFirebase.removeSeeker(tid,sid)
-            myFirebase.updateTreasure(tid,"in_session",value)
-            finish()
-        }
-
-
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -172,6 +162,14 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         })
+        //add quit button
+        val quitButton= findViewById<Button>(R.id.setSeekQuitButton)
+        quitButton.setOnClickListener{
+            myFirebase.removeSR(tid,uid)
+            myFirebase.removeSeeker(tid,uid)
+            myFirebase.updateUser(uid,"in_session","")
+            finish()
+        }
     }
 
     private fun setMapInteraction(mMap: GoogleMap, value: Boolean) {

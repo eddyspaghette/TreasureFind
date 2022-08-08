@@ -54,13 +54,6 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         binding = ActivityHidermapBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        //set quit button
-        val quitButton= findViewById<Button>(R.id.setHidQuitButton)
-        quitButton.setOnClickListener{
-            //need figure out later here
-            TODO("remove each seeker in this seesion and update hidder information")
-            finish()
-        }
 
 
 
@@ -152,6 +145,20 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 }
             }
+        }
+        //set quit button
+        val quitButton= findViewById<Button>(R.id.setHidQuitButton)
+        quitButton.setOnClickListener{
+            //need figure out later here
+            if(mapViewModel.treasure.value!=null){
+                for (i in mapViewModel.treasure.value!!.seekers){
+                    myFirebase.updateUser(i,"in_session","")
+                    myFirebase.removeSR(tid,i)
+                }
+            }
+            myFirebase.updateUser(uid,"in_session","")
+            myFirebase.getTreasureDocument(tid).delete()
+            finish()
         }
 
 
