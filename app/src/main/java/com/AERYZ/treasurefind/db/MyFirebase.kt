@@ -253,7 +253,7 @@ class MyFirebase {
 
     fun getProfileImage(activity: FragmentActivity, uid: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: ImageGetListener? = null) {
         var profileImagePath = "images/profile/${uid}.jpg"
-        skipCacheGetImage(activity, profileImagePath, imageMutableLiveData)
+        skipCacheGetImage(activity, profileImagePath, imageMutableLiveData, listener)
     }
 
     fun getTreasureImage(activity: Activity, tid: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: ImageGetListener?=null) {
