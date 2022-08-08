@@ -12,7 +12,6 @@
     android:background="@drawable/dialog_rounded_bottomsheet"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-
     <View
         android:id="@+id/divider2"
         android:layout_width="89dp"

@@ -56,18 +56,18 @@
             app:layout_constraintTop_toTopOf="@+id/guideline5">
 
         </androidx.recyclerview.widget.RecyclerView>
-
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ImageView
         android:id="@+id/emptyTreasure"
-        android:layout_width="303dp"
-        android:layout_height="330dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:src="@drawable/emptytreasure"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toTopOf="@+id/guideline5" />
+        app:layout_constraintTop_toTopOf="@+id/guideline5"
+        app:layout_constraintVertical_bias="0.20"/>
 
     <TextView
         android:id="@+id/emptyTreasureTextView"
@@ -75,10 +75,11 @@
         android:layout_height="wrap_content"
         android:text="NO TREASURES FOUND"
         android:textAlignment="center"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emptyTreasure" />
+        app:layout_constraintTop_toBottomOf="@+id/emptyTreasure"
+        app:layout_constraintVertical_bias="0.01"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

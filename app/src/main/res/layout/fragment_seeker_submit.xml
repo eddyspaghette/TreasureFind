@@ -7,25 +7,29 @@
     tools:context=".main.ui.seeker_map.SeekerSubmitFragment"
     android:orientation="vertical">
 
-    <com.apachat.loadingbutton.core.customViews.CircularProgressButton
+    <Button
         android:id="@+id/btn_giveup"
-        android:layout_width="201dp"
-        android:layout_height="49dp"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="139dp"
+        android:layout_height="50dp"
         android:layout_gravity="center"
         android:text="GIVE UP"
+        android:textColor="@color/title"
+        app:icon="@drawable/ic_giveup"
+        app:iconTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.023" />
 
     <FrameLayout
         android:id="@+id/container"
-        android:layout_width="89dp"
-        android:layout_height="118dp"
+        android:layout_width="164dp"
+        android:layout_height="260dp"
         android:layout_gravity="center"
-        android:background="@android:color/black"
+        android:background="@android:color/white"
+        android:foregroundGravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
