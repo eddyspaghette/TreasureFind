@@ -102,6 +102,11 @@ class MyFirebase {
         fun onFailure(exception: Exception)
     }
 
+    interface ImageGetListener {
+        fun onSuccess()
+        fun onFailure(exception: Exception)
+    }
+
     fun getAllTreasures(listener: FirebaseFeedListener) {
         db.collection("treasures")
             .get()
@@ -214,7 +219,7 @@ class MyFirebase {
         }
     }
 
-    fun getImage(activity: Activity, imagePath: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+    fun getImage(activity: Activity, imagePath: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: ImageGetListener?=null) {
         val reference = storageReference.child(imagePath)
         imageMutableLiveData.value = BitmapFactory.decodeResource(activity.resources, R.drawable.tf_logo)
         CoroutineScope(IO).launch {
@@ -225,10 +230,11 @@ class MyFirebase {
                 .submit()
                 .get()
             imageMutableLiveData.postValue(bitmap)
+            listener?.onSuccess()
         }
     }
 
-    fun skipCacheGetImage(activity: Activity, imagePath: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+    fun skipCacheGetImage(activity: Activity, imagePath: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: ImageGetListener? = null) {
         val reference = storageReference.child(imagePath)
         imageMutableLiveData.value = BitmapFactory.decodeResource(activity.resources, R.drawable.tf_logo)
         CoroutineScope(IO).launch {
@@ -241,17 +247,18 @@ class MyFirebase {
                 .submit()
                 .get()
             imageMutableLiveData.postValue(bitmap)
+            listener?.onSuccess()
         }
     }
 
-    fun getProfileImage(activity: FragmentActivity, uid: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+    fun getProfileImage(activity: FragmentActivity, uid: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: ImageGetListener? = null) {
         var profileImagePath = "images/profile/${uid}.jpg"
-        skipCacheGetImage(activity, profileImagePath, imageMutableLiveData)
+        skipCacheGetImage(activity, profileImagePath, imageMutableLiveData, listener)
     }
 
-    fun getTreasureImage(activity: Activity, tid: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+    fun getTreasureImage(activity: Activity, tid: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: ImageGetListener?=null) {
         var treasureImagePath = "images/treasures/${tid}/image.jpg"
-        getImage(activity, treasureImagePath, imageMutableLiveData)
+        getImage(activity, treasureImagePath, imageMutableLiveData, listener)
     }
     fun getSRImage(activity: Activity, tid: String, sid: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
         var treasureImagePath = "images/treasures/${tid}/${sid}.jpg"
