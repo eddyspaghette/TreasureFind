@@ -26,6 +26,10 @@ class TreasureDetailsActivity : AppCompatActivity() {
     private lateinit var treasureDetailsViewModel: TreasureDetailsViewModel
     private var uid = FirebaseAuth.getInstance().uid!!
 
+    companion object {
+        val distance_KEY = "distance"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_treasure_details)
@@ -45,10 +49,11 @@ class TreasureDetailsActivity : AppCompatActivity() {
 
         val arguments = intent
         val tid = arguments.getStringExtra(FeedFragment.tid_KEY)
+        TDdistance.text = arguments.getStringExtra(distance_KEY)
         if (tid != null) {
             TDtid.text = tid
-            myFirebase.getTreasure(tid!! ,treasureDetailsViewModel.treasure)
-            myFirebase.getTreasureImage(this, tid!!, treasureDetailsViewModel.image)
+            myFirebase.getTreasure(tid ,treasureDetailsViewModel.treasure)
+            myFirebase.getTreasureImage(this, tid, treasureDetailsViewModel.image)
         }
 
         treasureDetailsViewModel.treasure.observe(this) {

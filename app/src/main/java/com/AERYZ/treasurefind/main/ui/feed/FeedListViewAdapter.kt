@@ -107,6 +107,7 @@ class FeedAdapter(private var context: Context, private var feedList: ArrayList<
                     {
                         val intent = Intent(context, TreasureDetailsActivity::class.java)
                         intent.putExtra(FeedFragment.tid_KEY, tid)
+                        intent.putExtra(TreasureDetailsActivity.distance_KEY, feedList[position].distanceText)
                         context.startActivity(intent)
                     }
                     else {
