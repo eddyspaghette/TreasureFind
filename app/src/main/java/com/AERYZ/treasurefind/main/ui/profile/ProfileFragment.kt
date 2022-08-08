@@ -73,13 +73,13 @@ class ProfileFragment : Fragment() {
                 {
                     var bitmap = getBitmap(requireActivity(), it.data!!.data!!)
                     viewModel.profilePicture.value = bitmap
+                    myFirebase.updateProfileImage(uid, bitmap)
                 }
             }
         }
 
         viewModel.profilePicture.observe(requireActivity()) {
             profileImageView.setImageBitmap(it)
-            myFirebase.updateProfileImage(uid, it)
         }
 
         profileImageView.setOnClickListener() {
