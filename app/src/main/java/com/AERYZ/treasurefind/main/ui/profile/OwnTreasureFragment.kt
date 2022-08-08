@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.ListView
+import android.widget.TextView
 import com.AERYZ.treasurefind.R
 
 class OwnTreasureFragment : Fragment() {
@@ -20,10 +22,21 @@ class OwnTreasureFragment : Fragment() {
 
         val arrayAdapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, testArray)
 
-        val listView: ListView = view.findViewById(R.id.listView)
-
+        val listView: ListView = view.findViewById(R.id.listViewOwn)
+        val emptyTreasureOwn: ImageView = view.findViewById(R.id.emptyTreasureOwn)
+        val emptyTreasureOwnTextView: TextView = view.findViewById(R.id.emptyTreasureOwnTextView)
         listView.adapter = arrayAdapter
 
+        if (arrayAdapter.count == 0) {
+            listView.visibility = View.GONE
+            emptyTreasureOwn.visibility = View.VISIBLE
+            emptyTreasureOwnTextView.visibility = View.VISIBLE
+        }
+        else {
+            listView.visibility = View.VISIBLE
+            emptyTreasureOwn.visibility = View.GONE
+            emptyTreasureOwnTextView.visibility = View.GONE
+        }
         return view
     }
 
