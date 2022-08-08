@@ -149,6 +149,7 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
                 }
             }
         }
+
         //set quit button
         val quitButton= findViewById<Button>(R.id.setHidQuitButton)
         quitButton.setOnClickListener{
@@ -163,7 +164,6 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
             myFirebase.getTreasureDocument(tid).delete()
             finish()
         }
-
 
     }
 
