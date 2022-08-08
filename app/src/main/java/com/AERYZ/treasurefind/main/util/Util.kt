@@ -78,7 +78,9 @@ object Util {
             val provider = locationManager.getBestProvider(criteria,true)
             if (provider != null) {
                 val location = locationManager.getLastKnownLocation(provider)
-                res = LatLng(location!!.latitude, location.longitude)
+                if (location != null) {
+                    res = LatLng(location.latitude, location.longitude)
+                }
             }
         } catch (e: SecurityException) {}
         return res
