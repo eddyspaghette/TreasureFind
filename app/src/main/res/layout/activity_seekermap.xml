@@ -48,6 +48,17 @@
             android:layout_marginTop="70dp"
             android:layout_marginRight="13dp"
             android:layout_alignParentRight="true"/>
+
+        <ImageView
+            android:id="@+id/seeker_preview_btn"
+            android:layout_width="37dp"
+            android:layout_height="37dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="125dp"
+            android:layout_marginRight="13dp"
+            android:background="@drawable/btn_border"
+            android:src="@drawable/eye_outline"/>
+
     </RelativeLayout>
 
     <include

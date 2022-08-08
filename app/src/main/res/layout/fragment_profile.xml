@@ -36,7 +36,7 @@
                 app:srcCompat="@android:drawable/sym_def_app_icon" />
 
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/profile_found_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="60dp"
@@ -51,60 +51,72 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="36dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="4dp"
                 android:text="Found"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/circularImageViewProfile" />
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/profile_own_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="67dp"
+                android:layout_marginStart="72dp"
                 android:layout_marginBottom="8dp"
                 android:text="1"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toTopOf="@+id/textView4"
-                app:layout_constraintStart_toEndOf="@+id/textView7" />
+                app:layout_constraintStart_toEndOf="@+id/profile_found_num" />
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="36dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="4dp"
                 android:text="Own"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView6" />
 
             <TextView
+                android:id="@+id/profile_rank_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="70dp"
+                android:layout_marginStart="68dp"
                 android:layout_marginBottom="8dp"
                 android:text="2"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toTopOf="@+id/textView5"
-                app:layout_constraintStart_toEndOf="@+id/textView8" />
+                app:layout_constraintStart_toEndOf="@+id/profile_own_num" />
 
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="36dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="4dp"
                 android:text="Rank"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView4" />
 
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Treasure Statistics"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/textView5"
+                app:layout_constraintHorizontal_bias="0.477"
+                app:layout_constraintStart_toStartOf="@+id/textView6"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_below="@id/constraintLayout">
 

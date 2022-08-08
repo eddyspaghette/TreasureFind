@@ -5,17 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.ListView
-import android.widget.TextView
-import androidx.viewpager2.widget.ViewPager2
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.AERYZ.treasurefind.R
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 
 class FoundTreasureFragment : Fragment() {
-    private val testArray = arrayOf("Dog", "Cat", "Elephant","Dog", "Cat", "Elephant","Dog", "Cat", "Elephant","Dog", "Cat", "Elephant","Dog", "Cat", "Elephant")
+    private lateinit var viewModel: ProfileViewModel
+    private lateinit var modelFactory: ProfileFragmentViewModelFactory
+    private lateinit var listRecyclerView: RecyclerView
+    private lateinit var foundTreasureFragmentAdapter: FoundTreasureFragmentAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -24,24 +23,22 @@ class FoundTreasureFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_found_treasure, container, false)
 
+        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        modelFactory = ProfileFragmentViewModelFactory(requireActivity())
+        viewModel = ViewModelProvider(this, modelFactory)[ProfileViewModel::class.java]
+        listRecyclerView = view.findViewById(R.id.foundList_recycler_view)
+        listRecyclerView.layoutManager = layoutManager
+        foundTreasureFragmentAdapter = FoundTreasureFragmentAdapter(requireActivity(), arrayListOf())
 
-        val arrayAdapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, testArray)
-
-        val listView: ListView = view.findViewById(R.id.listViewFound)
-        val emptyTreasureFound: ImageView = view.findViewById(R.id.emptyTreasureFound)
-        val emptyTreasureFoundTextView: TextView = view.findViewById(R.id.emptyTreasureFoundTextView)
-        listView.adapter = arrayAdapter
-
-        if (arrayAdapter.count == 0) {
-            listView.visibility = View.GONE
-            emptyTreasureFound.visibility = View.VISIBLE
-            emptyTreasureFoundTextView.visibility = View.VISIBLE
+        viewModel.foundList.observe(requireActivity()) {
+            foundTreasureFragmentAdapter.updateList(it)
+            foundTreasureFragmentAdapter.notifyDataSetChanged()
         }
-        else {
-            listView.visibility = View.VISIBLE
-            emptyTreasureFound.visibility = View.GONE
-            emptyTreasureFoundTextView.visibility = View.GONE
-        }
+
+        listRecyclerView.adapter = foundTreasureFragmentAdapter
+
+
+
 
         return view
     }

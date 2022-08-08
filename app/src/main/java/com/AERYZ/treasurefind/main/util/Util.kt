@@ -6,6 +6,7 @@ import android.app.Service
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -15,6 +16,7 @@ import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
+import android.util.DisplayMetrics
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -168,5 +170,9 @@ object Util {
             return true
         }
         return false
+    }
+
+    fun convertDpToPixel(dp: Float, resources: Resources): Float {
+        return 1f * dp * (resources.displayMetrics.densityDpi * 1f / DisplayMetrics.DENSITY_DEFAULT)
     }
 }

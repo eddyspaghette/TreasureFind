@@ -71,7 +71,7 @@ class TrackingService : Service(), LocationListener {
                     //find the first location
                     onLocationChanged(location)
                 }
-                locationManager.requestLocationUpdates(provider, 10000, 0f, this)
+                locationManager.requestLocationUpdates(provider, 60000, 0.5f, this)
             }
         } catch (e: SecurityException) {}
     }
