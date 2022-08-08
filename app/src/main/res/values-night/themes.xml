@@ -17,6 +17,16 @@
         <item name="materialButtonStyle">@style/darkButton</item>
     </style>
 
+    <style name="LoginTheme" parent="FirebaseUI">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_light</item>
+        <item name="colorAccent">@color/pirate_orange</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:background">@color/pirate_blue</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="AppTheme.TabLayout" parent="Widget.MaterialComponents.TabLayout">
         <item name="android:background">@color/primary</item>
         <item name="tabIndicatorColor">@color/pirate_blue</item>
@@ -24,7 +34,7 @@
 
     <style name="darkButton" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/primary</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/title</item>
     </style>
     <style name="Theme.TreasureFind.NoActionBar">
         <item name="windowActionBar">false</item>

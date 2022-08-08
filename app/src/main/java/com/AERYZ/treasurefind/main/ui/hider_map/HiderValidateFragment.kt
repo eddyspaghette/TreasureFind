@@ -14,7 +14,11 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.db.MyFirebase
+import com.AERYZ.treasurefind.db.MyUser
 import com.AERYZ.treasurefind.main.OnSwipeTouchListener
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.ktx.toObject
 
 
 class HiderValidateFragment : Fragment() {
@@ -23,6 +27,7 @@ class HiderValidateFragment : Fragment() {
     private var tid: String = ""
     private lateinit var fragment: SrFragment
     private var myFirebase = MyFirebase()
+    private var uid = FirebaseAuth.getInstance().uid!!
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
@@ -34,7 +39,7 @@ class HiderValidateFragment : Fragment() {
 
         tid = arguments?.getString(HiderMapActivity.tid_KEY).toString()
 
-        viewModelFactory = HiderMapViewModelFactory(tid!!)
+        viewModelFactory = HiderMapViewModelFactory(tid)
         viewModel = ViewModelProvider(this, viewModelFactory)[HiderMapViewModel::class.java]
 
 
@@ -59,7 +64,10 @@ class HiderValidateFragment : Fragment() {
         accept_btn.setOnClickListener() {
             Toast.makeText(requireActivity(), "Ok!", Toast.LENGTH_SHORT).show()
             if (viewModel.treasure.value != null && viewModel.treasure.value!!.sr.size > 0) {
-                myFirebase.updateTreasure(tid, "wid", viewModel.treasure.value!!.sr[0])
+                val wid = viewModel.treasure.value!!.sr[0]
+                myFirebase.updateTreasure(tid, "wid", wid)
+                myFirebase.getUserDocument(wid).update("score", FieldValue.increment(1))
+                myFirebase.getUserDocument(uid).update("score", FieldValue.increment(1))
             }
         }
 

@@ -126,7 +126,7 @@ class SeekerSubmitFragment : Fragment(), ImageReader.OnImageAvailableListener {
             },
             this,
             R.layout.fragment_camera,
-            Size(480, 480)
+            Size(640, 480)
         )
         camera2Fragment.setCamera(cameraId)
         fragment = camera2Fragment as Fragment

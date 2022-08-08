@@ -27,9 +27,6 @@ class SrFragment : Fragment() {
         val sid_KEY = "sid"
         val tid_KEY = "tid"
     }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,13 +54,14 @@ class SrFragment : Fragment() {
                         val author_text = seeker.userName
                         authorTextView.text = author_text
                         myFirebase.getProfileImage(requireActivity(), seeker.uid, avatar_image)
+                        val bitmap = MutableLiveData(BitmapFactory.decodeResource(resources, R.drawable.tf_logo))
+                        myFirebase.getSRImage(requireActivity(), tid, sid, bitmap)
+                        bitmap.observe(requireActivity()) { bm ->
+                            imageView.setImageBitmap(bm)
+                        }
                     }
                 }
-            var bitmap = MutableLiveData(BitmapFactory.decodeResource(resources, R.drawable.tf_logo))
-            myFirebase.getSRImage(requireActivity(), tid, sid, bitmap)
-            bitmap.observe(requireActivity()) {
-                imageView.setImageBitmap(it)
-            }
+
         }
         return view
     }
