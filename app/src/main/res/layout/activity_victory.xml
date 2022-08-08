@@ -62,7 +62,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="132dp"
+        android:layout_width="0dp"
         android:layout_height="51dp"
         android:layout_gravity="center_horizontal"
         android:orientation="horizontal"
@@ -77,13 +77,14 @@
             android:layout_width="35dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
+            android:layout_marginStart="150dp"
             android:src="@drawable/tf_logo"
             app:civ_border_color="@color/primary"
             app:civ_border_width="2dp" />
 
         <TextView
             android:id="@+id/author_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="10dp"

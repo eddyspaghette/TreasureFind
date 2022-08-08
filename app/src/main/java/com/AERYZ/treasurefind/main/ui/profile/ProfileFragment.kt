@@ -48,11 +48,6 @@ class ProfileFragment : Fragment() {
         viewModel = ViewModelProvider(this, modelFactory)[ProfileViewModel::class.java]
 
 
-        // observe viewmodel here
-        viewModel.profilePicture.observe(requireActivity()) {
-            profileImageView.setImageBitmap(it)
-            myFirebase.updateProfileImage(uid, it)
-        }
 
         viewModel.ownNumber.observe(requireActivity()) {
             ownNumberTextView.text = it.toString()
@@ -80,6 +75,11 @@ class ProfileFragment : Fragment() {
                     viewModel.profilePicture.value = bitmap
                 }
             }
+        }
+
+        viewModel.profilePicture.observe(requireActivity()) {
+            profileImageView.setImageBitmap(it)
+            myFirebase.updateProfileImage(uid, it)
         }
 
         profileImageView.setOnClickListener() {
