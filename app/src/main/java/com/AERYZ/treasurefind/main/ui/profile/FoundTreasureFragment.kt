@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +26,8 @@ class FoundTreasureFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_found_treasure, container, false)
 
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        val emptyTreasureFound: ImageView = view.findViewById(R.id.emptyTreasureFound)
+        val emptyTreasureFoundTextView: TextView = view.findViewById(R.id.emptyTreasureFoundTextView)
         modelFactory = ProfileFragmentViewModelFactory(requireActivity())
         viewModel = ViewModelProvider(this, modelFactory)[ProfileViewModel::class.java]
         listRecyclerView = view.findViewById(R.id.foundList_recycler_view)
@@ -36,6 +40,16 @@ class FoundTreasureFragment : Fragment() {
         }
 
         listRecyclerView.adapter = foundTreasureFragmentAdapter
+
+        if (foundTreasureFragmentAdapter.itemCount == 0) {
+            listRecyclerView.visibility = View.GONE
+            emptyTreasureFound.visibility = View.VISIBLE
+            emptyTreasureFoundTextView.visibility = View.VISIBLE
+        } else {
+            listRecyclerView.visibility = View.VISIBLE
+            emptyTreasureFound.visibility = View.GONE
+            emptyTreasureFoundTextView.visibility = View.GONE
+        }
 
 
 
