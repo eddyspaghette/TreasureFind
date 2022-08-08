@@ -20,6 +20,7 @@ import com.AERYZ.treasurefind.main.util.Util.getBitmap
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 import com.mikhaellopez.circularimageview.CircularImageView
 
 class ProfileFragment : Fragment() {
@@ -38,6 +39,8 @@ class ProfileFragment : Fragment() {
         val tabLayout: TabLayout = view.findViewById(R.id.profile_tablayout)
         val viewPager2: ViewPager2 = view.findViewById(R.id.profile_viewpager2)
 
+        val profileUserNameTextView: TextView = view.findViewById(R.id.profile_username)
+        profileUserNameTextView.text = FirebaseAuth.getInstance().currentUser?.displayName
         val profileImageView: CircularImageView = view.findViewById(R.id.circularImageViewProfile)
         val ownNumberTextView: TextView = view.findViewById(R.id.profile_own_num)
         val foundNumberTextView: TextView = view.findViewById(R.id.profile_found_num)
