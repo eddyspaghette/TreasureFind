@@ -7,12 +7,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.db.MyFirebase
+import com.AERYZ.treasurefind.db.MyUser
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
 class ProfileViewModel(private val activity: FragmentActivity) : ViewModel() {
     var profilePicture = MutableLiveData<Bitmap>()
+    var ownedList = MutableLiveData<ArrayList<String>>()
+    var foundList = MutableLiveData<ArrayList<String>>()
     private val myFirebase = MyFirebase()
 
     init {
@@ -21,8 +25,26 @@ class ProfileViewModel(private val activity: FragmentActivity) : ViewModel() {
             println("DEBUG: uid $uid")
             myFirebase.getProfileImage(activity, uid, profilePicture)
         }
+        populateLists()
     }
 
+    // populate both ownedList and foundList
+    private fun populateLists() {
+        val userDocumentRef = myFirebase.getUserDocument(getUid())
+        userDocumentRef
+            .get()
+            .addOnSuccessListener {
+                val userObject = it.toObject<MyUser>()
+                ownedList.value = userObject!!.ownedList
+                foundList.value = userObject.foundList
+                println("DEBUG: ownedList: ${ownedList.value}")
+                println("DEBUG: foundList ${foundList.value}")
+            }
+            .addOnFailureListener {
+                // TODO: handle exception
+            }
+
+    }
 
     // returns a UID if profile picture exists
     private fun getUid(): String {

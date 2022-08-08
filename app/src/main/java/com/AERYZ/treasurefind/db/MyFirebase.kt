@@ -249,7 +249,7 @@ class MyFirebase {
         db.collection("users").document(uid).update("foundList", FieldValue.arrayUnion(tid))
     }
 
-    fun addToOwnedList(uid: String, tid: String) {
+    private fun addToOwnedList(uid: String, tid: String) {
         db.collection("users").document(uid).update("ownedList", FieldValue.arrayUnion(tid))
     }
 
