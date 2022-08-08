@@ -24,10 +24,9 @@ class OwnTreasureFragment : Fragment() {
         modelFactory = ProfileFragmentViewModelFactory(requireActivity())
         viewModel = ViewModelProvider(this, modelFactory)[ProfileViewModel::class.java]
 
+        val listView: ListView = view.findViewById(R.id.listView)
         viewModel.ownedList.observe(requireActivity()) {
             val arrayAdapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, arrayListOf(it))
-            val listView: ListView = view.findViewById(R.id.listView)
-
             listView.adapter = arrayAdapter
         }
 
