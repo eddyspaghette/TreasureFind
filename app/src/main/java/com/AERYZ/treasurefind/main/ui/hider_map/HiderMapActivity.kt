@@ -17,6 +17,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -137,6 +138,7 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
                                     }
                                     //change this line for issue #110
                                     mapViewModel.markers[seekerID] = mMap.addMarker(markerOptions)!!
+                                    mapViewModel.markers[seekerID]!!.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_seeker))
                                 }
                             }
                         Log.d("Debug Seeker location changed", seekerID)
@@ -192,8 +194,10 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
                 isFirstTimeCenter = true
                 val treasureLocation = LatLng(it.latitude!!, it.longitude!!)
                 markerOptions.position(treasureLocation)
+
                 //change this line to treasure icon issue #103
-                mMap.addMarker(markerOptions)
+                mMap.addMarker(markerOptions)!!.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_treasuretwo))
+
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude!!,it.longitude!!),17f))
                 circleOptions.center(treasureLocation)
