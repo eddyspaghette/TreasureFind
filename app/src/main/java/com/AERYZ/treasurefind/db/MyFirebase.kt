@@ -234,9 +234,25 @@ class MyFirebase {
         }
     }
 
-    fun getProfileImage(activity: FragmentActivity, uid: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: ImageGetListener?=null) {
+    fun skipCacheGetImage(activity: Activity, imagePath: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
+        val reference = storageReference.child(imagePath)
+        imageMutableLiveData.value = BitmapFactory.decodeResource(activity.resources, R.drawable.tf_logo)
+        CoroutineScope(IO).launch {
+            val bitmap = GlideApp.with(activity)
+                .asBitmap()
+                .error(R.drawable.tf_logo)
+                .load(reference)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .submit()
+                .get()
+            imageMutableLiveData.postValue(bitmap)
+        }
+    }
+
+    fun getProfileImage(activity: FragmentActivity, uid: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
         var profileImagePath = "images/profile/${uid}.jpg"
-        getImage(activity, profileImagePath, imageMutableLiveData, listener)
+        skipCacheGetImage(activity, profileImagePath, imageMutableLiveData)
     }
 
     fun getTreasureImage(activity: Activity, tid: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: ImageGetListener?=null) {
@@ -320,12 +336,12 @@ class MyFirebase {
             .addOnSuccessListener {
                 val myUser = it.toObject<MyUser>()
                 val query = db.collection("users")
-                    .whereGreaterThanOrEqualTo("score", myUser!!.score)
+                    .whereGreaterThan("score", myUser!!.score)
                     .orderBy("score", Query.Direction.DESCENDING)
                 query
                     .get()
                     .addOnSuccessListener { snapshot ->
-                        listener.onSuccess(snapshot.size())
+                        listener.onSuccess(snapshot.size() + 1)
                     }
             }
             .addOnFailureListener{
@@ -335,3 +351,4 @@ class MyFirebase {
 
 
 }
+
