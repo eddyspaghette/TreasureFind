@@ -206,6 +206,12 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
             val currentLocation = LatLng(it!!.latitude,it.longitude)
             if (!isFirstTimeCenter) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,18f))
+
+                //further loading animation edit here.#146
+
+
+
+                ///////////////////////////////////////////
                 isFirstTimeCenter = true
 
 

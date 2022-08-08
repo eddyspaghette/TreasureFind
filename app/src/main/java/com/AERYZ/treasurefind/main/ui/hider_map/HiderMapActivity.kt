@@ -195,6 +195,10 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap.addMarker(markerOptions)
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude!!,it.longitude!!),17f))
+                //further loading animation edit here.#146
+
+                //////////////////////////////////////////
+
                 circleOptions.center(treasureLocation)
                 circleOptions.radius(50.0)
                 circleOptions.fillColor(0x220000FF)
