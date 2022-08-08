@@ -170,6 +170,12 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
             myFirebase.updateUser(uid,"in_session","")
             finish()
         }
+
+        mapViewModel.myUser.observe(this) {
+            if (it != null && it.in_session == "") {
+                finish()
+            }
+        }
     }
 
     private fun setMapInteraction(mMap: GoogleMap, value: Boolean) {
