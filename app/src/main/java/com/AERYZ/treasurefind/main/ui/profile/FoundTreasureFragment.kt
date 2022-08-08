@@ -27,7 +27,7 @@ class FoundTreasureFragment : Fragment() {
 
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         val emptyTreasureFound: ImageView = view.findViewById(R.id.emptyTreasureFound)
-        val emptyTreasureFoundTextView: TextView = view.findViewById(R.id.emptyTreasureFound)
+        val emptyTreasureFoundTextView: TextView = view.findViewById(R.id.emptyTreasureFoundTextView)
         modelFactory = ProfileFragmentViewModelFactory(requireActivity())
         viewModel = ViewModelProvider(this, modelFactory)[ProfileViewModel::class.java]
         listRecyclerView = view.findViewById(R.id.foundList_recycler_view)
