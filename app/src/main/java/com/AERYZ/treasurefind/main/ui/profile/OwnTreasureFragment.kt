@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +25,8 @@ class OwnTreasureFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_own_treasure, container, false)
 
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        val emptyTreasureOwn: ImageView = view.findViewById(R.id.emptyTreasureOwn)
+        val emptyTreasureOwnTextView: TextView = view.findViewById(R.id.emptyTreasureOwnTextView)
         modelFactory = ProfileFragmentViewModelFactory(requireActivity())
         viewModel = ViewModelProvider(this, modelFactory)[ProfileViewModel::class.java]
         listRecyclerView = view.findViewById(R.id.ownList_recycler_view)
@@ -35,6 +39,17 @@ class OwnTreasureFragment : Fragment() {
         }
 
         listRecyclerView.adapter = ownTreasureFragmentAdapter
+
+        if (ownTreasureFragmentAdapter.itemCount == 0) {
+            listRecyclerView.visibility = View.GONE
+            emptyTreasureOwn.visibility = View.VISIBLE
+            emptyTreasureOwnTextView.visibility = View.VISIBLE
+
+        } else {
+            listRecyclerView.visibility = View.VISIBLE
+            emptyTreasureOwn.visibility = View.GONE
+            emptyTreasureOwnTextView.visibility = View.GONE
+        }
 
         return view
     }
