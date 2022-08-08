@@ -13,6 +13,7 @@
         android:layout_width="357dp"
         android:layout_height="251dp"
         android:src="@drawable/seeker_waitingbottle"
+        android:alpha="0.80"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
