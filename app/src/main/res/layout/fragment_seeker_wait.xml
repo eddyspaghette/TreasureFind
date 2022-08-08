@@ -10,14 +10,15 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="217dp"
-        android:layout_height="209dp"
-        android:src="@drawable/seeker_waiting"
+        android:layout_width="357dp"
+        android:layout_height="251dp"
+        android:src="@drawable/seeker_waitingbottle"
+        android:alpha="0.80"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.327" />
+        app:layout_constraintVertical_bias="0.47" />
 
     <TextView
         android:layout_width="169dp"
