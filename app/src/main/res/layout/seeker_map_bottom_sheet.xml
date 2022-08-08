@@ -39,8 +39,8 @@
     <Button
         android:id="@+id/btn_seeker_giveup"
         style="@style/Widget.MaterialComponents.Button.Icon"
-        android:layout_width="130dp"
-        android:layout_height="52dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="GIVE UP"
         android:textColor="@color/title"

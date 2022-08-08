@@ -22,7 +22,7 @@
 
     <com.apachat.loadingbutton.core.customViews.CircularProgressButton
         android:id="@+id/btn_capture"
-        android:layout_width="186dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/capture"

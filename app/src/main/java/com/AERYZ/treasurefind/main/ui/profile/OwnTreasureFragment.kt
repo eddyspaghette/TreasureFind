@@ -36,20 +36,19 @@ class OwnTreasureFragment : Fragment() {
         viewModel.ownedList.observe(requireActivity()) {
             ownTreasureFragmentAdapter.updateList(it)
             ownTreasureFragmentAdapter.notifyDataSetChanged()
+
+            if (ownTreasureFragmentAdapter.itemCount == 0) {
+                listRecyclerView.visibility = View.GONE
+                emptyTreasureOwn.visibility = View.VISIBLE
+                emptyTreasureOwnTextView.visibility = View.VISIBLE
+            } else {
+                listRecyclerView.visibility = View.VISIBLE
+                emptyTreasureOwn.visibility = View.GONE
+                emptyTreasureOwnTextView.visibility = View.GONE
+            }
         }
 
         listRecyclerView.adapter = ownTreasureFragmentAdapter
-
-        if (ownTreasureFragmentAdapter.itemCount == 0) {
-            listRecyclerView.visibility = View.GONE
-            emptyTreasureOwn.visibility = View.VISIBLE
-            emptyTreasureOwnTextView.visibility = View.VISIBLE
-
-        } else {
-            listRecyclerView.visibility = View.VISIBLE
-            emptyTreasureOwn.visibility = View.GONE
-            emptyTreasureOwnTextView.visibility = View.GONE
-        }
 
         return view
     }

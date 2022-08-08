@@ -85,8 +85,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
 
         tid  = intent.getStringExtra(tid_KEY)!!
         val tid_TextView: TextView = findViewById(R.id.Text_tid)
-        val temp = "tid: ${tid}"
-        tid_TextView.text = temp
+        tid_TextView.text = "TreasureID: ${tid}"
 
         locatetreasure_btn = findViewById(R.id.locatetreasure_btn)
 
@@ -136,11 +135,14 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
 
         //Getting status of hider
         val hoststatus_TextView: TextView = findViewById(R.id.Text_hostOnline)
+        val hoststatus_ImageView: ImageView = findViewById(R.id.Image_hostOnline)
         mapViewModel.hiderStatus.observe(this) {
             if (it == 0) {
-                hoststatus_TextView.text = "Host: Offline"
+                hoststatus_TextView.text = "Offline"
+                hoststatus_ImageView.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.offline_circle))
             } else {
-                hoststatus_TextView.text = "Host: Online"
+                hoststatus_TextView.text = "Online"
+                hoststatus_ImageView.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.online_circle))
             }
         }
 
@@ -163,7 +165,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
 
                 // if winner is the current user
                 if (it.wid == uid) {
-                    myFirebase.addToFoundList(uid, tid)
+
                 }
 
                 //if winner is determined

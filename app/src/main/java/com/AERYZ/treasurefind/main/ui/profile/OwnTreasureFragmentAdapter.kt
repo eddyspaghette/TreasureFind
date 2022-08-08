@@ -50,7 +50,7 @@ class OwnTreasureFragmentAdapter(private val context: Context, private var ownLi
         treasureRef
             .get()
             .addOnSuccessListener {
-                holder.tidTextView.text = ownList[position]
+                holder.tidTextView.text = "TreasureID: ${ownList[position]}"
                 val treasureObj = it.toObject<Treasure>()
                 treasureObj?.treasureImagePath?.let { path -> storageRef.child(path) }
                     .let { reference ->

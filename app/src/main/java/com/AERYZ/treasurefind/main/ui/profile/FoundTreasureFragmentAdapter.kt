@@ -50,7 +50,7 @@ class FoundTreasureFragmentAdapter(private val context: Context, private var fou
         treasureRef
             .get()
             .addOnSuccessListener {
-                holder.tidTextView.text = foundList[position]
+                holder.tidTextView.text = "TreasureID: ${foundList[position]}"
                 val treasureObj = it.toObject<Treasure>()
                 treasureObj?.treasureImagePath?.let { path -> storageRef.child(path) }
                     .let { reference ->

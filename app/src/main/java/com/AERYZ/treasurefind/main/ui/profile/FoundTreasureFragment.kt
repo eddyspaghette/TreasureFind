@@ -37,22 +37,18 @@ class FoundTreasureFragment : Fragment() {
         viewModel.foundList.observe(requireActivity()) {
             foundTreasureFragmentAdapter.updateList(it)
             foundTreasureFragmentAdapter.notifyDataSetChanged()
-        }
 
+            if (foundTreasureFragmentAdapter.itemCount == 0) {
+                listRecyclerView.visibility = View.GONE
+                emptyTreasureFound.visibility = View.VISIBLE
+                emptyTreasureFoundTextView.visibility = View.VISIBLE
+            } else {
+                listRecyclerView.visibility = View.VISIBLE
+                emptyTreasureFound.visibility = View.GONE
+                emptyTreasureFoundTextView.visibility = View.GONE
+            }
+        }
         listRecyclerView.adapter = foundTreasureFragmentAdapter
-
-        if (foundTreasureFragmentAdapter.itemCount == 0) {
-            listRecyclerView.visibility = View.GONE
-            emptyTreasureFound.visibility = View.VISIBLE
-            emptyTreasureFoundTextView.visibility = View.VISIBLE
-        } else {
-            listRecyclerView.visibility = View.VISIBLE
-            emptyTreasureFound.visibility = View.GONE
-            emptyTreasureFoundTextView.visibility = View.GONE
-        }
-
-
-
 
         return view
     }
