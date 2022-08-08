@@ -262,7 +262,7 @@ class MyFirebase {
     }
     fun getSRImage(activity: Activity, tid: String, sid: String, imageMutableLiveData: MutableLiveData<Bitmap>) {
         var treasureImagePath = "images/treasures/${tid}/${sid}.jpg"
-        getImage(activity, treasureImagePath, imageMutableLiveData)
+        skipCacheGetImage(activity, treasureImagePath, imageMutableLiveData)
     }
 
     fun updateUser(uid: String, field: String, value: Any?) {
