@@ -52,7 +52,10 @@ data class Treasure(
     var seekers: ArrayList<String> = arrayListOf<String>(),
     var sr: ArrayList<String> = arrayListOf<String>(),
     var length: String? = "",
-    var treasureImagePath: String? = "treasureImagePath")
+    var treasureImagePath: String? = "treasureImagePath",
+    @Exclude @set:Exclude @get:Exclude var distance: Double? = 0.0,
+    @Exclude @set:Exclude @get:Exclude var distanceText: String? = "",
+)
 
 
 data class SR(var tid:String = "",

@@ -49,7 +49,7 @@ class FeedFragment : Fragment(), MenuProvider {
         savedInstanceState: Bundle?
     ): View {
         feedViewModel =
-            ViewModelProvider(this)[FeedViewModel::class.java]
+            ViewModelProvider(this, FeedFragmentViewModelFactory(requireActivity()))[FeedViewModel::class.java]
 
         _binding = FragmentFeedBinding.inflate(inflater, container, false)
         val root: View = binding.root
