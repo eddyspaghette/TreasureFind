@@ -9,38 +9,29 @@
     app:behavior_hideable="false"
     app:behavior_peekHeight="40dp"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="@drawable/dialog_rounded_bottomsheet"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <ImageView
-        android:layout_width="49dp"
-        android:layout_height="35dp"
-        android:src="@drawable/arrow_diamond"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.005" />
 
     <View
         android:id="@+id/divider2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/accent"
+        android:layout_width="89dp"
+        android:layout_height="5dp"
+        android:background="@color/pirate_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.055" />
+        app:layout_constraintVertical_bias="0.01" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/seeker_map_fragmentcontainerview"
-        android:layout_width="416dp"
-        android:layout_height="678dp"
+        android:layout_width="412dp"
+        android:layout_height="710dp"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
