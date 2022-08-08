@@ -62,8 +62,8 @@ class TreasureDetailsActivity : AppCompatActivity() {
 
 
         TDAccept_btn.setOnClickListener() {
-            val dialog = TimerDialog.clockDialog(this)
-            dialog.show()
+            //val dialog = TimerDialog.clockDialog(this)
+            //dialog.show()
             //update database
             myFirebase.updateUser(uid, "in_session", tid!!)
 

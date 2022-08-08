@@ -3,11 +3,14 @@ package com.AERYZ.treasurefind.main.ui.seeker_map
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.AERYZ.treasurefind.R
@@ -56,6 +59,10 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
     private val uid = FirebaseAuth.getInstance().uid!!
     private var tid: String = ""
 
+    //treasure bitmap
+    private lateinit var imageMutableLiveData :MutableLiveData<Bitmap>
+    private var isPreviewMode = false
+
     companion object {
         var tid_KEY = "tid"
         var wid_KEY = "wid"
@@ -68,6 +75,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
         setContentView(binding.root)
 
         myFirebase.updateUser(uid, "status", 1)
+        imageMutableLiveData = MutableLiveData(BitmapFactory.decodeResource(resources, R.drawable.tf_logo))
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -102,6 +110,33 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
         waitFragment = SeekerWaitFragment()
         waitFragment.arguments = bundle
 
+        //Preview button
+        myFirebase.getTreasureImage(this, tid, imageMutableLiveData)
+
+        val preview_btn: ImageView = findViewById(R.id.seeker_preview_btn)
+
+        preview_btn.setOnClickListener {
+            isPreviewMode = !isPreviewMode
+
+            if (isPreviewMode) {
+                preview_btn.setImageBitmap(imageMutableLiveData.value)
+                preview_btn.layoutParams.height = Util.convertDpToPixel(300f, resources).toInt()
+                preview_btn.layoutParams.width = Util.convertDpToPixel(300f, resources).toInt()
+            } else {
+                preview_btn.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.eye_outline))
+                preview_btn.layoutParams.height = Util.convertDpToPixel(37f, resources).toInt()
+                preview_btn.layoutParams.width = Util.convertDpToPixel(37f, resources).toInt()
+            }
+
+        }
+
+        imageMutableLiveData.observe(this) {
+            if (isPreviewMode) {
+                preview_btn.setImageBitmap(it)
+            }
+        }
+
+
         //Getting status of hider
         val hoststatus_TextView: TextView = findViewById(R.id.Text_hostOnline)
         mapViewModel.hiderStatus.observe(this) {
@@ -127,6 +162,11 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
                 }
                 else {
                     supportFragmentManager.beginTransaction().replace(R.id.seeker_map_fragmentcontainerview, waitFragment).commit()
+                }
+
+                // if winner is the current user
+                if (it.wid == uid) {
+                    myFirebase.addToFoundList(uid, tid)
                 }
 
                 //if winner is determined
@@ -200,6 +240,20 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
             }
 
         })
+        //add quit button
+        val quitButton = findViewById<Button>(R.id.btn_seeker_giveup)
+        quitButton.setOnClickListener{
+            myFirebase.removeSR(tid,uid)
+            myFirebase.removeSeeker(tid,uid)
+            myFirebase.updateUser(uid,"in_session","")
+            finish()
+        }
+
+        mapViewModel.myUser.observe(this) {
+            if (it != null && it.in_session == "") {
+                finish()
+            }
+        }
     }
 
     private fun setMapInteraction(mMap: GoogleMap, value: Boolean) {
@@ -246,7 +300,15 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
             val currentLocation = LatLng(it!!.latitude,it.longitude)
             if (!isFirstTimeCenter) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,18f))
+
+                //further loading animation edit here.#146
+
+
+
+                ///////////////////////////////////////////
                 isFirstTimeCenter = true
+
+
             }
 
             if (!Util.checkInsideRadius(mapViewModel.treasureFakeLocation, 50.0, currentLocation))
@@ -265,7 +327,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Im
         }
 
         mapViewModel.treasure.observe(this) {
-
             if (!isLocateTreasureFirstTime) {
                 isLocateTreasureFirstTime = true
 

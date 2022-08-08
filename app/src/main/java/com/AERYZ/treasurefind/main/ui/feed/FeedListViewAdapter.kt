@@ -5,10 +5,9 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.db.MyFirebase
@@ -101,10 +100,23 @@ class FeedAdapter(private var context: Context, private var feedList: ArrayList<
                 }
         }
         holder.itemView.setOnClickListener {
-            val intent = Intent(context, TreasureDetailsActivity::class.java)
-            val tid = feedList[position].tid
-            intent.putExtra(FeedFragment.tid_KEY, tid)
-            context.startActivity(intent)
+            val tid = feedList[position].tid!!
+            myFirebase.getTreasureDocument(tid).get()
+                .addOnCompleteListener {
+                    if (it.result.toObject<Treasure>() != null)
+                    {
+                        val intent = Intent(context, TreasureDetailsActivity::class.java)
+                        intent.putExtra(FeedFragment.tid_KEY, tid)
+                        context.startActivity(intent)
+                    }
+                    else {
+                        Toast.makeText(context, "Treasure is not available, please refresh the page!",Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .addOnCanceledListener {
+                    Toast.makeText(context, "Treasure is not available, please refresh the page!",Toast.LENGTH_SHORT).show()
+                }
+
         }
     }
 

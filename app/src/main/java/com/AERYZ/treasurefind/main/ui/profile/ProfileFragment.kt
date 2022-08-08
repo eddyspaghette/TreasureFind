@@ -1,10 +1,7 @@
 package com.AERYZ.treasurefind.main.ui.profile
 
 import android.app.Activity
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Bitmap
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.provider.MediaStore
@@ -12,12 +9,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.SearchView
+import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.MutableLiveData
 import androidx.viewpager2.widget.ViewPager2
 import com.AERYZ.treasurefind.R
 import com.AERYZ.treasurefind.db.MyFirebase
@@ -31,9 +26,8 @@ class ProfileFragment : Fragment() {
     private lateinit var viewModel: ProfileViewModel
     private lateinit var modelFactory: ProfileFragmentViewModelFactory
     private var myFirebase = MyFirebase()
-    private val tabNames = arrayOf("Own","Found")
+    private val tabNames = arrayOf("Found","Own")
     private lateinit var tabLayoutMediator : TabLayoutMediator
-    private val options = arrayOf("Open Camera", "Select from Gallery")
     private lateinit var activityResult: ActivityResultLauncher<Intent>
 
     override fun onCreateView(
@@ -45,14 +39,36 @@ class ProfileFragment : Fragment() {
         val viewPager2: ViewPager2 = view.findViewById(R.id.profile_viewpager2)
 
         val profileImageView: CircularImageView = view.findViewById(R.id.circularImageViewProfile)
+        val ownNumberTextView: TextView = view.findViewById(R.id.profile_own_num)
+        val foundNumberTextView: TextView = view.findViewById(R.id.profile_found_num)
+        val rankTextView: TextView = view.findViewById(R.id.profile_rank_num)
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
         modelFactory = ProfileFragmentViewModelFactory(requireActivity())
         viewModel = ViewModelProvider(this, modelFactory)[ProfileViewModel::class.java]
+
+
+        // observe viewmodel here
         viewModel.profilePicture.observe(requireActivity()) {
             profileImageView.setImageBitmap(it)
             myFirebase.updateProfileImage(uid, it)
         }
+
+        viewModel.ownNumber.observe(requireActivity()) {
+            ownNumberTextView.text = it.toString()
+        }
+
+        viewModel.foundNumber.observe(requireActivity()) {
+            foundNumberTextView.text = it.toString()
+        }
+
+        viewModel.rank.observe(requireActivity()) {
+            rankTextView.text = it.toString()
+        }
+
+
+        // profile picture intent launcher
+
         activityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 it : ActivityResult ->
             if (it.resultCode == Activity.RESULT_OK) {
@@ -69,6 +85,8 @@ class ProfileFragment : Fragment() {
         profileImageView.setOnClickListener() {
             activityResult.launch(Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI))
         }
+
+        // two layout fragments
 
         val list_fragments: ArrayList<Fragment> = ArrayList()
         list_fragments.add(OwnTreasureFragment())

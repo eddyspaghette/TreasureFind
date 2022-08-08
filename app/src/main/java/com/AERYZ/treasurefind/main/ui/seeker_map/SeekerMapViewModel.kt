@@ -23,6 +23,7 @@ class SeekerMapViewModel(private val tid: String): ServiceViewModel() {
     var seekersImage = hashMapOf<String, MutableLiveData<Bitmap>>()
     var seekers_size = MutableLiveData<Int>(0)
     var markers = hashMapOf<String, Marker>()
+    var myUser = MutableLiveData<MyUser>()
     var treasureFakeLocation = LatLng(0.0, 0.0)
     var isInteract = MutableLiveData(true)
     var hiderStatus = MutableLiveData<Int>(0)
@@ -32,6 +33,30 @@ class SeekerMapViewModel(private val tid: String): ServiceViewModel() {
     init {
         SeekerChangeListener(tid)
         HostStatusListener(tid)
+        MyUserListener()
+    }
+
+    fun MyUserListener() {
+        val uid = FirebaseAuth.getInstance().uid!!
+        var docRef = db.collection("users").document(uid)
+        docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w("Debug", "Listen failed.", e)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                myFirebase.getUserDocument(uid)
+                    .get()
+                    .addOnCompleteListener {
+                        myUser.value = it.result.toObject<MyUser>()
+
+                    }
+                Log.d("Debug", "Current data: ${snapshot.data}")
+            } else {
+                Log.d("Debug", "Current data: null")
+            }
+        }
     }
 
     fun updateSeekerLocation(location: LatLng) {

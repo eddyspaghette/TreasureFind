@@ -36,7 +36,10 @@ data class MyUser(
     var latitude: Double = 0.0,
     var longitude: Double = 0.0,
     var status: Int = 0,
-    var score: Int = 0)
+    var score: Int = 0,
+    var ownedList: ArrayList<String> = arrayListOf<String>(),
+    var foundList: ArrayList<String> = arrayListOf<String>(),
+)
 
 data class Treasure(
     var oid: String? = "",
@@ -91,6 +94,11 @@ class MyFirebase {
 
     interface DeletionImageListener {
         fun onSuccess()
+        fun onFailure(exception: Exception)
+    }
+
+    interface RankInterfaceListener {
+        fun onSuccess(size: Int)
         fun onFailure(exception: Exception)
     }
 
@@ -191,6 +199,7 @@ class MyFirebase {
                 val treasureImagePath = "images/treasures/${it.id}/image.jpg"
                 it.update("treasureImagePath", treasureImagePath)
                 it.update("tid", it.id)
+                addToOwnedList(treasure.oid!!, it.id)
                 treasure.treasureImage?.let { it1 ->
                     insertToFirebaseStorage(it1, treasureImagePath, it.id, dialog, successDialog, listener)
                 }
@@ -247,6 +256,14 @@ class MyFirebase {
         db.collection("treasures").document(tid).update(field, value)
     }
 
+    fun addToFoundList(uid: String, tid: String) {
+        db.collection("users").document(uid).update("foundList", FieldValue.arrayUnion(tid))
+    }
+
+    private fun addToOwnedList(uid: String, tid: String) {
+        db.collection("users").document(uid).update("ownedList", FieldValue.arrayUnion(tid))
+    }
+
     fun addSeeker(tid: String, sid: String) {
         db.collection("treasures").document(tid).update("seekers", FieldValue.arrayUnion(sid))
     }
@@ -294,6 +311,26 @@ class MyFirebase {
         }.addOnFailureListener {
             // TODO: implement failure
         }
+    }
+
+    fun returnRank(uid: String, listener: RankInterfaceListener) {
+        val userRef = getUserDocument(uid)
+        userRef
+            .get()
+            .addOnSuccessListener {
+                val myUser = it.toObject<MyUser>()
+                val query = db.collection("users")
+                    .whereGreaterThanOrEqualTo("score", myUser!!.score)
+                    .orderBy("score", Query.Direction.DESCENDING)
+                query
+                    .get()
+                    .addOnSuccessListener { snapshot ->
+                        listener.onSuccess(snapshot.size())
+                    }
+            }
+            .addOnFailureListener{
+                listener.onFailure(it)
+            }
     }
 
 

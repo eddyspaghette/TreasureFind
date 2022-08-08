@@ -1,10 +1,14 @@
 package com.AERYZ.treasurefind.main.ui.hider_map
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
+import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -13,6 +17,7 @@ import com.AERYZ.treasurefind.main.ui.victory.VictoryActivity
 import com.AERYZ.treasurefind.databinding.ActivityHidermapBinding
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.MyUser
+import com.AERYZ.treasurefind.main.util.Util
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -42,6 +47,10 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
     private var markerOptions = MarkerOptions()
     private var circleOptions = CircleOptions()
 
+    //treasure bitmap
+    private lateinit var imageMutableLiveData :MutableLiveData<Bitmap>
+    private var isPreviewMode = false
+
     companion object {
         var tid_KEY = "tid"
         var wid_KEY = "wid"
@@ -53,6 +62,8 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
         binding = ActivityHidermapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        tid  = intent.getStringExtra(tid_KEY)!!
+
         myFirebase.updateUser(uid, "status", 1)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -60,8 +71,34 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
             .findFragmentById(R.id.hider_map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        imageMutableLiveData = MutableLiveData(BitmapFactory.decodeResource(resources, R.drawable.tf_logo))
 
-        tid  = intent.getStringExtra(tid_KEY)!!
+        //Preview button
+        myFirebase.getTreasureImage(this, tid, imageMutableLiveData)
+
+        val preview_btn: ImageView = findViewById(R.id.hider_preview_btn)
+
+        preview_btn.setOnClickListener {
+            isPreviewMode = !isPreviewMode
+
+            if (isPreviewMode) {
+                preview_btn.setImageBitmap(imageMutableLiveData.value)
+                preview_btn.layoutParams.height = Util.convertDpToPixel(300f, resources).toInt()
+                preview_btn.layoutParams.width = Util.convertDpToPixel(300f, resources).toInt()
+            } else {
+                preview_btn.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.eye_outline))
+                preview_btn.layoutParams.height = Util.convertDpToPixel(37f, resources).toInt()
+                preview_btn.layoutParams.width = Util.convertDpToPixel(37f, resources).toInt()
+            }
+
+        }
+
+        imageMutableLiveData.observe(this) {
+            if (isPreviewMode) {
+                preview_btn.setImageBitmap(it)
+            }
+        }
+
         val tid_TextView: TextView = findViewById(R.id.Text_tid)
         val temp = "tid: ${tid}"
         tid_TextView.setText(temp)
@@ -98,16 +135,16 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
         hiderValidateFragment = HiderValidateFragment()
         hiderValidateFragment.arguments = bundle
 
-        //Getting number of seekers
+
         val numSeekers_TextView: TextView = findViewById(R.id.Text_numPlayers)
         myFirebase.getTreasure(tid, mapViewModel.treasure)
         mapViewModel.treasure.observe(this) {
-            val text = "Joined: ${it.seekers.size} Seekers"
-            numSeekers_TextView.text = text
-
-
 
             if (it != null) {
+                //Getting number of seekers
+                val text = "Joined: ${it.seekers.size} Seekers"
+                numSeekers_TextView.text = text
+
                 //replace fragment
                 if (it.sr.size == 0) {
                     supportFragmentManager.beginTransaction().replace(R.id.hider_map_fragmentcontainerview, hiderDoneFragment).commit()
@@ -149,6 +186,19 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
             }
         }
 
+        //set quit button
+        val quitButton= findViewById<Button>(R.id.btn_hider_giveup)
+        quitButton.setOnClickListener{
+            if(mapViewModel.treasure.value!=null){
+                for (i in mapViewModel.treasure.value!!.seekers){
+                    myFirebase.updateUser(i,"in_session","")
+                    myFirebase.removeSR(tid,i)
+                }
+            }
+            myFirebase.updateUser(uid,"in_session","")
+            myFirebase.getTreasureDocument(tid).delete()
+            finish()
+        }
 
     }
 
@@ -219,6 +269,10 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback  {
 
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude!!,it.longitude!!),17f))
+                //further loading animation edit here.#146
+
+                //////////////////////////////////////////
+
                 circleOptions.center(treasureLocation)
                 circleOptions.radius(50.0)
                 circleOptions.fillColor(0x220000FF)
