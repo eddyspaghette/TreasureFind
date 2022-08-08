@@ -5,14 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.ListView
-import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.AERYZ.treasurefind.R
 
 class OwnTreasureFragment : Fragment() {
-    private val testArray = arrayOf("Mountain", "Car", "Book","Mountain", "Car", "Book","Mountain", "Car", "Book","Mountain", "Car", "Book","Mountain", "Car", "Book")
+    private lateinit var viewModel: ProfileViewModel
+    private lateinit var modelFactory: ProfileFragmentViewModelFactory
+    private lateinit var listRecyclerView: RecyclerView
+    private lateinit var ownTreasureFragmentAdapter: OwnTreasureFragmentAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -20,23 +22,20 @@ class OwnTreasureFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_own_treasure, container, false)
 
-        val arrayAdapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, testArray)
+        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        modelFactory = ProfileFragmentViewModelFactory(requireActivity())
+        viewModel = ViewModelProvider(this, modelFactory)[ProfileViewModel::class.java]
+        listRecyclerView = view.findViewById(R.id.ownList_recycler_view)
+        listRecyclerView.layoutManager = layoutManager
+        ownTreasureFragmentAdapter = OwnTreasureFragmentAdapter(requireActivity(), arrayListOf())
 
-        val listView: ListView = view.findViewById(R.id.listViewOwn)
-        val emptyTreasureOwn: ImageView = view.findViewById(R.id.emptyTreasureOwn)
-        val emptyTreasureOwnTextView: TextView = view.findViewById(R.id.emptyTreasureOwnTextView)
-        listView.adapter = arrayAdapter
+        viewModel.ownedList.observe(requireActivity()) {
+            ownTreasureFragmentAdapter.updateList(it)
+            ownTreasureFragmentAdapter.notifyDataSetChanged()
+        }
 
-        if (arrayAdapter.count == 0) {
-            listView.visibility = View.GONE
-            emptyTreasureOwn.visibility = View.VISIBLE
-            emptyTreasureOwnTextView.visibility = View.VISIBLE
-        }
-        else {
-            listView.visibility = View.VISIBLE
-            emptyTreasureOwn.visibility = View.GONE
-            emptyTreasureOwnTextView.visibility = View.GONE
-        }
+        listRecyclerView.adapter = ownTreasureFragmentAdapter
+
         return view
     }
 
