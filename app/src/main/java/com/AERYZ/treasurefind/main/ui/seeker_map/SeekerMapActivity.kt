@@ -26,12 +26,13 @@ import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.toObject
+import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.random.Random
 
-class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
+class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.ImageGetListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivitySeekermapBinding
@@ -154,11 +155,20 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
                                     mapViewModel.markers[seekerID]!!.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_seeker))
                                     mapViewModel.markers[seekerID]?.title =seekerID
                                 }
-                                mapViewModel.seekersImage[seekerID] = MutableLiveData(BitmapFactory.decodeResource(resources,R.drawable.tf_logo))
-                                myFirebase.getProfileImage(this, seekerID, mapViewModel.seekersImage[seekerID]!!)
+                                mapViewModel.seekersImage[seekerID] = MutableLiveData()
+                                myFirebase.getProfileImage(this, seekerID, mapViewModel.seekersImage[seekerID]!!, this)
                             }
                         Log.d("Debug Seeker location changed", seekerID)
                         mapViewModel.SeekerUpdateListener(seekerID)
+                    }
+                }
+
+                for (seekerID in mapViewModel.seekers.keys) {
+                    if (!it.seekers.contains(seekerID)) {
+                        mapViewModel.seekers.remove(seekerID)
+                        mapViewModel.markers[seekerID]!!.remove()
+                        mapViewModel.seekersImage.remove(seekerID)
+                        mapViewModel.seekers_size.value = mapViewModel.seekers_size.value?.minus(1)
                     }
                 }
             }
@@ -198,15 +208,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.uiSettings.isCompassEnabled = value
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -217,7 +219,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         mapViewModel.seekers_size.observe(this) {
             seekerInfoWindowAdapter.seekers = mapViewModel.seekers
             seekerInfoWindowAdapter.seekersImage = mapViewModel.seekersImage
-            mMap.setInfoWindowAdapter(seekerInfoWindowAdapter)
             println("Debug I'm here")
         }
 
@@ -265,8 +266,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mapViewModel.treasure.observe(this) {
 
-            mapViewModel.seekers_size.value = it.seekers.size
-
             if (!isLocateTreasureFirstTime) {
                 isLocateTreasureFirstTime = true
 
@@ -292,6 +291,14 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mapViewModel.treasureFakeLocation,18f))
         }
 
+    }
+
+    override fun onSuccess() {
+        mapViewModel.seekers_size.postValue(mapViewModel.seekers_size.value?.plus(1))
+    }
+
+    override fun onFailure(exception: Exception) {
+        //TODO("Not yet implemented")
     }
 
     fun bindService(){
