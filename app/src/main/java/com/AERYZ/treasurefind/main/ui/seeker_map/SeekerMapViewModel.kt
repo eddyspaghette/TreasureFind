@@ -1,5 +1,6 @@
 package com.AERYZ.treasurefind.main.ui.seeker_map
 
+import android.graphics.Bitmap
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -19,6 +20,8 @@ import com.google.firebase.ktx.Firebase
 class SeekerMapViewModel(private val tid: String): ServiceViewModel() {
     var treasure = MutableLiveData<Treasure>()
     var seekers = hashMapOf<String, MutableLiveData<MyUser>>()
+    var seekersImage = hashMapOf<String, MutableLiveData<Bitmap>>()
+    var seekers_size = MutableLiveData<Int>(0)
     var markers = hashMapOf<String, Marker>()
     var treasureFakeLocation = LatLng(0.0, 0.0)
     var isInteract = MutableLiveData(true)

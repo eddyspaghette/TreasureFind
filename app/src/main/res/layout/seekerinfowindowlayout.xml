@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--https://stackoverflow.com/questions/15090148/custom-info-window-adapter-with-custom-data-in-map-v2-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/InfoWindowImage"
+        android:layout_width="70dp"
+        android:layout_height="70dp"/>
+    <TextView
+        android:id="@+id/InfoWindowAuthorName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:textColor="@color/title"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+</LinearLayout>

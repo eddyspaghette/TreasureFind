@@ -2,6 +2,7 @@ package com.AERYZ.treasurefind.main.ui.seeker_map
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,6 +15,7 @@ import com.AERYZ.treasurefind.main.ui.victory.VictoryActivity
 import com.AERYZ.treasurefind.databinding.ActivitySeekermapBinding
 import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.MyUser
+import com.AERYZ.treasurefind.main.SeekerInfoWindowAdapter
 import com.AERYZ.treasurefind.main.services.TrackingService
 import com.AERYZ.treasurefind.main.util.Util
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -25,6 +27,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.toObject
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import kotlin.random.Random
 
 class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -37,6 +41,7 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private var circleOptions = CircleOptions()
     private lateinit var locatetreasure_btn: ImageView
     private var polylineArray: ArrayList<Polyline> = ArrayList()
+    private lateinit var seekerInfoWindowAdapter: SeekerInfoWindowAdapter
 
     //service
     private lateinit var serviceIntent: Intent
@@ -149,6 +154,8 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
                                     mapViewModel.markers[seekerID]!!.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_seeker))
                                     mapViewModel.markers[seekerID]?.title =seekerID
                                 }
+                                mapViewModel.seekersImage[seekerID] = MutableLiveData(BitmapFactory.decodeResource(resources,R.drawable.tf_logo))
+                                myFirebase.getProfileImage(this, seekerID, mapViewModel.seekersImage[seekerID]!!)
                             }
                         Log.d("Debug Seeker location changed", seekerID)
                         mapViewModel.SeekerUpdateListener(seekerID)
@@ -202,21 +209,24 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+
+        seekerInfoWindowAdapter = SeekerInfoWindowAdapter(this, HashMap(), HashMap())
+        mMap.setInfoWindowAdapter(seekerInfoWindowAdapter)
+
+
+        mapViewModel.seekers_size.observe(this) {
+            seekerInfoWindowAdapter.seekers = mapViewModel.seekers
+            seekerInfoWindowAdapter.seekersImage = mapViewModel.seekersImage
+            mMap.setInfoWindowAdapter(seekerInfoWindowAdapter)
+            println("Debug I'm here")
+        }
+
         mMap.setOnMarkerClickListener { marker ->
-            Log.d("debug","gose listener")
-            for (seekerID in mapViewModel.markers.keys){
-                Log.d("debug","gose here")
-                if (seekerID == marker.title){
-                    if(marker.isInfoWindowShown){
-                        marker.hideInfoWindow()
-                    }
-                    else{
-                        marker.showInfoWindow()
-                    }
-                }
-                else{
-                    marker.hideInfoWindow()
-                }
+            if (marker.isInfoWindowShown) {
+                marker.hideInfoWindow()
+            }
+            else {
+                marker.showInfoWindow()
             }
             true
         }
@@ -236,8 +246,6 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
             if (!isFirstTimeCenter) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,18f))
                 isFirstTimeCenter = true
-
-
             }
 
             if (!Util.checkInsideRadius(mapViewModel.treasureFakeLocation, 50.0, currentLocation))
@@ -256,6 +264,9 @@ class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         mapViewModel.treasure.observe(this) {
+
+            mapViewModel.seekers_size.value = it.seekers.size
+
             if (!isLocateTreasureFirstTime) {
                 isLocateTreasureFirstTime = true
 
