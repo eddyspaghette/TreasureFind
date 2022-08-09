@@ -9,6 +9,7 @@ import com.AERYZ.treasurefind.R
 
 class ProgressDialog {
 
+    /* Progress Dialog shows an uploading spinner until dismissed */
     companion object {
         fun progressDialog(context: Context): Dialog {
             val dialog = Dialog(context)
@@ -19,6 +20,8 @@ class ProgressDialog {
             return dialog
         }
 
+    /* Success dialog has to be played for 2.4 seconds for animation to be finished
+    use with TimerTask */
         fun successDialog(context: Context): Dialog {
             val dialog = Dialog(context)
             val view = LayoutInflater.from(context).inflate(R.layout.dialog_success, null)

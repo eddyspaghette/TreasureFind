@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.concurrent.schedule
 
-
+/* Submit fragment for the bottom sheet */
 @SuppressLint("ClickableViewAccessibility")
 class SeekerSubmitFragment : Fragment(), ImageReader.OnImageAvailableListener {
 

@@ -12,7 +12,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.AERYZ.treasurefind.main.services.TrackingService
 
-open class ServiceViewModel:ViewModel(),ServiceConnection {
+open class ServiceViewModel:ViewModel(), ServiceConnection {
     private var myMessageHandler = MyMessageHandler(Looper.getMainLooper())
     private val _location=MutableLiveData<Location>()
     val location:LiveData<Location>

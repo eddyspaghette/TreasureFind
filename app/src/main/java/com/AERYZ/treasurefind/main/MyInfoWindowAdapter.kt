@@ -14,7 +14,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.firebase.firestore.ktx.toObject
 import com.mikhaellopez.circularimageview.CircularImageView
 
-
+/* Info Window for markers on SeekerMap and HiderMap */
 class MyInfoWindowAdapter(var activity: Activity,
                           var seekers: HashMap<String,MutableLiveData<MyUser>>,
                           var seekersImage: HashMap<String,MutableLiveData<Bitmap>>): GoogleMap.InfoWindowAdapter {

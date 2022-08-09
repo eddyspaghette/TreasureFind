@@ -9,6 +9,9 @@ import com.firebase.ui.storage.images.FirebaseImageLoader
 import com.google.firebase.storage.StorageReference
 import java.io.InputStream
 
+/* The Glide Library is used to manipulate images from references found in
+Firebase; usages include Caching, Downloading, and inserting them into ImageViews.
+ */
 @GlideModule
 class MyAppGlideModule: AppGlideModule() {
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {

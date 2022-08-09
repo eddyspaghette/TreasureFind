@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.TextureView
 
+/* Live camera for all seekers that need to upload */
 class AutoFitTextureView @JvmOverloads constructor(
     context: Context?,
     attrs: AttributeSet? = null,

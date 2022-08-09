@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 
+/* Camera functionality so we can call it from within other activities easily */
 class CameraModule(activity: FragmentActivity, var CameraOutputBitmap: MutableLiveData<Bitmap>) {
     private var cameraResultListener: ActivityResultLauncher<Intent>
 

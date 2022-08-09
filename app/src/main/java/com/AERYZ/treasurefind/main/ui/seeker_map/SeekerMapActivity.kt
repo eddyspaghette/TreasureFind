@@ -32,6 +32,9 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.random.Random
 
+/*
+ * Seeker is redirected here once they accept a treasure session
+ */
 class SeekerMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.ImageGetListener {
 
     private lateinit var mMap: GoogleMap

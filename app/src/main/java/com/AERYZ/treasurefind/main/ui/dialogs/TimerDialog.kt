@@ -8,6 +8,7 @@ import android.widget.ImageView
 import com.AERYZ.treasurefind.R
 
 class TimerDialog {
+    /* Show a timer animated vector drawable */
     companion object {
         fun clockDialog(context: Context): Dialog {
             val dialog = Dialog(context)
