@@ -32,6 +32,9 @@ A small and fun game for icebreaking utilizing modern technology to recreate a r
 [Show and Tell 2](https://www.youtube.com/watch?v=ZVXECAWutzU)
 
 
+# Release
+Please check out [the release page](https://github.com/eddyspaghette/TreasureFind/releases/tag/latest) here and download the latest release.
+
 # System Architecture
 ## App Flow
 ![Flow](flow.png)
