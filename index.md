@@ -36,19 +36,19 @@ A small and fun game for icebreaking utilizing modern technology to recreate a r
 Please check out [the release page](https://github.com/eddyspaghette/TreasureFind/releases/tag/official) here and download the latest release.
 
 # System Architecture
-## App Flow
+
 ![Flow](flow.png)
 
-## MVVM
+
 ![MVVM](MVVM_diagram.png)
 
-## Threaded Diagram
+
 ![ThreadedDiagram](threadeddiagram.png)
 
-## Database
+
 ![db](db2.png)
 
-## Workload Distribute
+
 ![workload](workload.png)
 
 For more details on the workload, please refer [here](https://github.com/eddyspaghette/TreasureFind/issues?page=1&q=is%3Aissue+is%3Aclosed).
