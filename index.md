@@ -2,7 +2,7 @@
 layout: default
 ---
 <p align="center">
-  <img src="tf_logo.JPG">
+  <img height="75%" width="75%" src="tf_logo.jpg">
 </p>
 
 # Welcome to TreasureFind
@@ -16,7 +16,7 @@ TreasureFind is a multiplayer hybrid physical-virtual space 21st-century style o
 - The score for each seeker will be calculated based on whether the “treasure” is the right one and based on the proximity of the seeker from the “treasure”.
 - The score for each hider will be calculated based on the number of seekers’ submissions.
 
-Constraint: the seekers only can submit the photos while the host(hider) is also online.
+Constraint: the seekers only can submit the photos while the host (hider) is also online.
 
 # Why is it worth approaching?
 A small and fun game for icebreaking utilizing modern technology to recreate a revamped 21st century style of Hide and Seek. It integrates both virtual and physical aspects to infuse greater physical activity in children and adults preserving the oral tradition of hide and seek through an untraditional method.
