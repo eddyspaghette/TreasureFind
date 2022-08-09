@@ -26,6 +26,9 @@ TreasureFind is a 21st century style of hide and seek revamped.
 ## MVVM
 ![MVVM](mvvm.JPG)
 
+## Threaded Diagram
+![ThreadedDiagram](threadeddiagram.png)
+
 ## Database
 ![db](db.png)
 
