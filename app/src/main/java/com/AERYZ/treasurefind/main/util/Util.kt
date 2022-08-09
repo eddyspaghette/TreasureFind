@@ -119,14 +119,16 @@ object Util {
                 val jsonResponse = JSONObject(response)
                 // Get routes
                 val routes = jsonResponse.getJSONArray("routes")
-                val legs = routes.getJSONObject(0).getJSONArray("legs")
-                val steps = legs.getJSONObject(0).getJSONArray("steps")
-                for (i in 0 until steps.length()) {
-                    val points = steps.getJSONObject(i).getJSONObject("polyline").getString("points")
-                    path.add(PolyUtil.decode(points))
-                }
-                for (i in 0 until path.size) {
-                    oldPolyLineArray.add(googleMap.addPolyline(PolylineOptions().addAll(path[i]).color(0xFF19336D.toInt())))
+                if (routes.length() != 0) {
+                    val legs = routes.getJSONObject(0).getJSONArray("legs")
+                    val steps = legs.getJSONObject(0).getJSONArray("steps")
+                    for (i in 0 until steps.length()) {
+                        val points = steps.getJSONObject(i).getJSONObject("polyline").getString("points")
+                        path.add(PolyUtil.decode(points))
+                    }
+                    for (i in 0 until path.size) {
+                        oldPolyLineArray.add(googleMap.addPolyline(PolylineOptions().addAll(path[i]).color(0xFF19336D.toInt())))
+                    }
                 }
             }, Response.ErrorListener {
                     _ ->
