@@ -2,7 +2,7 @@
 layout: default
 ---
 <p align="center">
-  <img src="tf_logo.JPG">
+  <img height="75%" width="75%" src="tf_logo.jpg">
 </p>
 
 # Welcome to TreasureFind
