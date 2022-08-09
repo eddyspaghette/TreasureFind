@@ -32,7 +32,7 @@ A small and fun game for icebreaking utilizing modern technology to recreate a r
 [Show and Tell 2](https://www.youtube.com/watch?v=ZVXECAWutzU)
 
 
-[Final Project Presentation](https://www.youtube.com/watch?v=oGx9hyuz9sU)
+[Final Project Presentation](https://www.youtube.com/watch?v=xPLFwwohDnc)
 
 # Release
 Please check out [the release page](https://github.com/eddyspaghette/TreasureFind/releases/tag/official) here and download the latest release.
