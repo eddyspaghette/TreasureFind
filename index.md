@@ -46,7 +46,7 @@ Please check out [the release page](https://github.com/eddyspaghette/TreasureFin
 ![ThreadedDiagram](threadeddiagram.png)
 
 ## Database
-![db](db.png)
+![db](db2.png)
 
 ## Workload Distribute
 ![workload](workload.png)
