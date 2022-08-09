@@ -49,6 +49,10 @@ Please check out [the release page](https://github.com/eddyspaghette/TreasureFin
 ![db](db2.png)
 
 
-![workload](workload.png)
+![w1](w1.png)
+
+![w2](w2.png)
+
+![w3](w3.png)
 
 For more details on the workload, please refer [here](https://github.com/eddyspaghette/TreasureFind/issues?page=1&q=is%3Aissue+is%3Aclosed).
