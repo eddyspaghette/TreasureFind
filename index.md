@@ -40,7 +40,7 @@ Please check out [the release page](https://github.com/eddyspaghette/TreasureFin
 ![Flow](flow.png)
 
 ## MVVM
-![MVVM](mvvm.JPG)
+![MVVM](MVVM_Diagram.png)
 
 ## Threaded Diagram
 ![ThreadedDiagram](threadeddiagram.png)
