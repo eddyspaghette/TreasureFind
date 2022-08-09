@@ -18,13 +18,13 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import java.util.*
 import kotlin.concurrent.schedule
+
+/* Custom objects used to store and retrieve from Firestore */
 
 data class MyUser(
     var uid: String = "",
@@ -73,6 +73,10 @@ class MyFirebase {
     private var db = Firebase.firestore
     private var storageReference = storage.reference
 
+    /* These interface listeners are used for callbacks, since most firebase operations
+    are asynchronous
+     */
+
     interface FirebaseFeedListener {
         fun onSuccess(snapshot: QuerySnapshot)
         fun onFailure(exception: Exception)
@@ -106,6 +110,11 @@ class MyFirebase {
         fun onSuccess()
         fun onFailure(exception: Exception)
     }
+
+    /* Wrapper functions for Firestore and FireStorage,
+    most of them include a listener to provide a
+    callback once data is retrieved
+     */
 
     fun getAllTreasures(listener: FirebaseFeedListener) {
         db.collection("treasures")

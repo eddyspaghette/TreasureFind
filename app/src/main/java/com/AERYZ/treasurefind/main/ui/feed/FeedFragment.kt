@@ -25,6 +25,10 @@ import com.AERYZ.treasurefind.db.MyFirebase
 import com.AERYZ.treasurefind.db.Treasure
 import com.AERYZ.treasurefind.main.entry_point.MainActivity
 
+/*
+The FeedFragment is responsible for providing access and information
+about the treasures
+    */
 class FeedFragment : Fragment(), MenuProvider {
 
     private var _binding: FragmentFeedBinding? = null

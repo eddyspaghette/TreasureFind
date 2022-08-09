@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.AERYZ.treasurefind.R
 
+/* Hider is redirected here once he is finished */
 class HiderDoneFragment : Fragment() {
 
     override fun onCreateView(

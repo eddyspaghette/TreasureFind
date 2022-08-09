@@ -8,6 +8,7 @@ import android.view.View
 import android.view.View.OnTouchListener
 import kotlin.math.abs
 
+/* Swipe gestures implemented for HiderMap activity */
 internal open class OnSwipeTouchListener(c: Context?) :
     OnTouchListener {
     private val gestureDetector: GestureDetector

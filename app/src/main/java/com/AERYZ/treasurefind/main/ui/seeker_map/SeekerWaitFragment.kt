@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.AERYZ.treasurefind.R
 
-
+/* Loading screen once submit request is sent */
 class SeekerWaitFragment : Fragment() {
 
 

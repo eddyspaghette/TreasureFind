@@ -29,6 +29,9 @@ import com.AERYZ.treasurefind.main.util.Util
 import com.google.firebase.auth.FirebaseAuth
 import java.lang.Exception
 
+/*
+ * Hider place is where users can upload a image to create a session
+*/
 class HiderPlaceFragment : Fragment(), MyFirebase.TreasureInsertionListener {
     private lateinit var viewModel: HiderPlaceViewModel
     private lateinit var titleEditText: EditText

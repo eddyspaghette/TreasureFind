@@ -23,6 +23,10 @@ import com.google.firebase.firestore.ktx.toObject
 import com.mikhaellopez.circularimageview.CircularImageView
 
 
+/*
+ * Hider handles the submit requests from Seekers here
+ * Hider can determine a winner or swipe to see other submit requests
+*/
 class HiderValidateFragment : Fragment() {
     private lateinit var viewModel: HiderMapViewModel
     private lateinit var viewModelFactory: HiderMapViewModelFactory

@@ -32,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.toObject
 import java.lang.Exception
 
+/* Entry point for the Hider once he starts a session */
 class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.ImageGetListener  {
 
     private lateinit var mMap: GoogleMap
@@ -303,10 +304,12 @@ class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Ima
         }
     }
 
+    /* This function is used as a callback once getProfileImage returns */
     override fun onSuccess() {
         mapViewModel.seekers_size.postValue(mapViewModel.seekers_size.value?.plus(1))
     }
 
+    /* Part of the listener interface callback as above */
     override fun onFailure(exception: Exception) {
         //TODO("Not yet implemented")
     }

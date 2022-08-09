@@ -76,6 +76,8 @@ class LoginActivity : AppCompatActivity(), MyFirebase.UserInsertionListener {
         }
     }
 
+    /* Send them to the Onboarding activity if they are a new user */
+
     override fun onSuccess() {
         val intent = Intent(applicationContext, OnboardingActivity::class.java)
         startActivity(intent)

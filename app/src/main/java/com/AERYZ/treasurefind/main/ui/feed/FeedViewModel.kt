@@ -50,6 +50,7 @@ class FeedViewModel(private val activity: FragmentActivity): ViewModel(), MyFire
 
     init {
         // this retrieves all documents in the treasure collection
+        // fires off a callback once it is ready
         myFirebase.getAllTreasures(this)
     }
 }
