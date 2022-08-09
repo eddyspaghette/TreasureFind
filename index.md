@@ -33,7 +33,7 @@ A small and fun game for icebreaking utilizing modern technology to recreate a r
 
 
 # Release
-Please check out [the release page](https://github.com/eddyspaghette/TreasureFind/releases/tag/latest) here and download the latest release.
+Please check out [the release page](https://github.com/eddyspaghette/TreasureFind/releases/tag/official) here and download the latest release.
 
 # System Architecture
 ## App Flow
