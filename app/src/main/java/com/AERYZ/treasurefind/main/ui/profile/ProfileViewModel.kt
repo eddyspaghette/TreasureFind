@@ -14,7 +14,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import java.lang.Exception
 
-class ProfileViewModel(private val activity: FragmentActivity) : ViewModel(), MyFirebase.RankInterfaceListener {
+class ProfileViewModel(private val activity: FragmentActivity) : ViewModel(), MyFirebase.IntListener {
     var profilePicture = MutableLiveData<Bitmap>()
     var ownedList = MutableLiveData<ArrayList<String>>()
     var foundList = MutableLiveData<ArrayList<String>>()

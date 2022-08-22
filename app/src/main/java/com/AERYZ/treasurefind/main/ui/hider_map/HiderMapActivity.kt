@@ -33,7 +33,7 @@ import com.google.firebase.firestore.ktx.toObject
 import java.lang.Exception
 
 /* Entry point for the Hider once he starts a session */
-class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.ImageGetListener  {
+class HiderMapActivity : AppCompatActivity(), OnMapReadyCallback, MyFirebase.Listener  {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityHidermapBinding

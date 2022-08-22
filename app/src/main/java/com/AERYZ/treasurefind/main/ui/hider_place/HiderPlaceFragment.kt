@@ -32,7 +32,7 @@ import java.lang.Exception
 /*
  * Hider place is where users can upload a image to create a session
 */
-class HiderPlaceFragment : Fragment(), MyFirebase.TreasureInsertionListener {
+class HiderPlaceFragment : Fragment(), MyFirebase.StringListener {
     private lateinit var viewModel: HiderPlaceViewModel
     private lateinit var titleEditText: EditText
     private lateinit var descEditText: EditText
