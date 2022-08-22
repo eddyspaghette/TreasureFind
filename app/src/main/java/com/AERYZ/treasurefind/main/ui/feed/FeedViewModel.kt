@@ -14,7 +14,7 @@ import com.google.firebase.firestore.ktx.toObject
 
 import java.lang.Exception
 
-class FeedViewModel(private val activity: FragmentActivity): ViewModel(), MyFirebase.FirebaseFeedListener {
+class FeedViewModel(private val activity: FragmentActivity): ViewModel(), MyFirebase.SnapshotListener {
     var feedList = MutableLiveData<ArrayList<Treasure>>()
     private val myFirebase = MyFirebase()
 

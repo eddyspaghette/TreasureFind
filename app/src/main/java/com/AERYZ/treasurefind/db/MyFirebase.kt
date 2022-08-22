@@ -77,37 +77,23 @@ class MyFirebase {
     are asynchronous
      */
 
-    interface FirebaseFeedListener {
+    interface SnapshotListener {
         fun onSuccess(snapshot: QuerySnapshot)
         fun onFailure(exception: Exception)
     }
 
-    interface ImageInsertionListener {
+    interface Listener {
         fun onSuccess()
         fun onFailure(exception: Exception)
     }
 
-    interface TreasureInsertionListener {
+    interface StringListener {
         fun onSuccess(tid: String)
         fun onFailure(exception: Exception)
     }
-    interface UserInsertionListener {
-        fun onSuccess()
-        fun onFailure(exception: Exception)
-    }
 
-    interface DeletionImageListener {
-        fun onSuccess()
-        fun onFailure(exception: Exception)
-    }
-
-    interface RankInterfaceListener {
+    interface IntListener {
         fun onSuccess(size: Int)
-        fun onFailure(exception: Exception)
-    }
-
-    interface ImageGetListener {
-        fun onSuccess()
         fun onFailure(exception: Exception)
     }
 
@@ -116,7 +102,7 @@ class MyFirebase {
     callback once data is retrieved
      */
 
-    fun getAllTreasures(listener: FirebaseFeedListener) {
+    fun getAllTreasures(listener: SnapshotListener) {
         db.collection("treasures")
             .get()
             .addOnSuccessListener { result ->
@@ -128,7 +114,7 @@ class MyFirebase {
             }
     }
 
-    private fun insertImageToFirebaseStorage(bitmap: Bitmap, path: String, listener: ImageInsertionListener? = null) {
+    private fun insertImageToFirebaseStorage(bitmap: Bitmap, path: String, listener: Listener? = null) {
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()
@@ -141,7 +127,7 @@ class MyFirebase {
         }
     }
 
-    private fun insertToFirebaseStorage(bitmap: Bitmap, path: String, id: String? = null, dialog: Dialog? = null, successDialog: Dialog? = null, listener: TreasureInsertionListener?=null) {
+    private fun insertToFirebaseStorage(bitmap: Bitmap, path: String, id: String? = null, dialog: Dialog? = null, successDialog: Dialog? = null, listener: StringListener?=null) {
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()
@@ -187,7 +173,7 @@ class MyFirebase {
         return docRef
     }
 
-    fun insert(myUser: MyUser, listener: UserInsertionListener?= null) {
+    fun insert(myUser: MyUser, listener: Listener?= null) {
         val profileImagePath = "images/profile/${myUser.uid}.jpg"
         myUser.profileImagePath = profileImagePath
         db.collection("users").document(myUser.uid).set(myUser)
@@ -201,7 +187,7 @@ class MyFirebase {
         insertToFirebaseStorage(myUser.profileImage!!, profileImagePath)
     }
 
-    fun insert(treasure: Treasure, dialog: Dialog? = null, successDialog: Dialog? = null, listener: TreasureInsertionListener? = null) {
+    fun insert(treasure: Treasure, dialog: Dialog? = null, successDialog: Dialog? = null, listener: StringListener? = null) {
         db.collection("treasures")
             .add(treasure)
             .addOnSuccessListener {
@@ -227,7 +213,7 @@ class MyFirebase {
         }
     }
 
-    fun getImage(activity: Activity, imagePath: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: ImageGetListener?=null) {
+    fun getImage(activity: Activity, imagePath: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: Listener?=null) {
         val reference = storageReference.child(imagePath)
         imageMutableLiveData.value = BitmapFactory.decodeResource(activity.resources, R.drawable.tf_logo)
         CoroutineScope(IO).launch {
@@ -242,7 +228,7 @@ class MyFirebase {
         }
     }
 
-    fun skipCacheGetImage(activity: Activity, imagePath: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: ImageGetListener? = null) {
+    fun skipCacheGetImage(activity: Activity, imagePath: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: Listener? = null) {
         val reference = storageReference.child(imagePath)
         imageMutableLiveData.value = BitmapFactory.decodeResource(activity.resources, R.drawable.tf_logo)
         CoroutineScope(IO).launch {
@@ -259,12 +245,12 @@ class MyFirebase {
         }
     }
 
-    fun getProfileImage(activity: FragmentActivity, uid: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: ImageGetListener? = null) {
+    fun getProfileImage(activity: FragmentActivity, uid: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: Listener? = null) {
         var profileImagePath = "images/profile/${uid}.jpg"
         skipCacheGetImage(activity, profileImagePath, imageMutableLiveData, listener)
     }
 
-    fun getTreasureImage(activity: Activity, tid: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: ImageGetListener?=null) {
+    fun getTreasureImage(activity: Activity, tid: String, imageMutableLiveData: MutableLiveData<Bitmap>, listener: Listener?=null) {
         var treasureImagePath = "images/treasures/${tid}/image.jpg"
         getImage(activity, treasureImagePath, imageMutableLiveData, listener)
     }
@@ -302,7 +288,7 @@ class MyFirebase {
         if (sR.sRImage == null) {
             sR.sRImage = BitmapFactory.decodeResource(resources, R.drawable.tf_logo)
         }
-        insertImageToFirebaseStorage(sR.sRImage!!, sRImagePath, object: ImageInsertionListener {
+        insertImageToFirebaseStorage(sR.sRImage!!, sRImagePath, object: Listener {
             override fun onFailure(exception: Exception) {
 //                TODO("Not yet implemented")
             }
@@ -313,7 +299,7 @@ class MyFirebase {
         })
 
     }
-    fun removeSR(tid: String, sid: String, listener: DeletionImageListener?= null) {
+    fun removeSR(tid: String, sid: String, listener: Listener?= null) {
         db.collection("treasures").document(tid).update("sr", FieldValue.arrayRemove(sid))
 
         db.collection("submit_requests").document(sid).delete()
@@ -327,7 +313,7 @@ class MyFirebase {
         insertToFirebaseStorage(image, profileImagePath)
     }
 
-    fun deleteImage(path: String, listener: DeletionImageListener? = null) {
+    fun deleteImage(path: String, listener: Listener? = null) {
         val deleteRef = storageReference.child(path)
         deleteRef.delete().addOnSuccessListener {
             listener.let{
@@ -338,7 +324,7 @@ class MyFirebase {
         }
     }
 
-    fun returnRank(uid: String, listener: RankInterfaceListener) {
+    fun returnRank(uid: String, listener: IntListener) {
         val userRef = getUserDocument(uid)
         userRef
             .get()

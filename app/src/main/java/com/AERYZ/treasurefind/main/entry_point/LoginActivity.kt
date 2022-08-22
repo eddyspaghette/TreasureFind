@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import java.lang.Exception
 
 
-class LoginActivity : AppCompatActivity(), MyFirebase.UserInsertionListener {
+class LoginActivity : AppCompatActivity(), MyFirebase.Listener {
     var myFirebase = MyFirebase()
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract()
@@ -77,7 +77,6 @@ class LoginActivity : AppCompatActivity(), MyFirebase.UserInsertionListener {
     }
 
     /* Send them to the Onboarding activity if they are a new user */
-
     override fun onSuccess() {
         val intent = Intent(applicationContext, OnboardingActivity::class.java)
         startActivity(intent)
