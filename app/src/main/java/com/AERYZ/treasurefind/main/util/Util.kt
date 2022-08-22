@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.Matrix
 import android.location.Criteria
 import android.location.Location
@@ -27,6 +28,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.PolyUtil
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.qrcode.QRCodeWriter
 import org.json.JSONObject
 
 /* Utility functions exist here, such as permissions and other misc functions*/
@@ -172,5 +175,17 @@ object Util {
 
     fun convertDpToPixel(dp: Float, resources: Resources): Float {
         return 1f * dp * (resources.displayMetrics.densityDpi * 1f / DisplayMetrics.DENSITY_DEFAULT)
+    }
+
+    fun getQR(string: String, width: Int = 512, height: Int = 512): Bitmap {
+        val writer = QRCodeWriter()
+        val bitMatrix = writer.encode(string, BarcodeFormat.QR_CODE, width, height)
+        val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                bmp.setPixel(x, y, if (bitMatrix.get(x, y)) Color.BLACK else Color.WHITE)
+            }
+        }
+        return bmp
     }
 }
